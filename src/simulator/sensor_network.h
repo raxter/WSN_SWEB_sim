@@ -1,5 +1,5 @@
-#ifndef SENSORNETWORK.H
-#define SENSORNETWORK.H
+#ifndef SENSORNETWORK_H
+#define SENSORNETWORK_H
 #include "node.h"
 #include "constants.h"
 
@@ -22,7 +22,7 @@ public:
 
     ///mem alloaction
     vector <Node*> clusterHead;
-    vector <Node> nodes ;
+    vector <Node> nodes;
 
     ///attributes
     Node BS;
@@ -35,6 +35,8 @@ public:
 
     Node* nextHop(Node * source);
     vector <Node *> getCluster(int clustNo);
+
+    std::vector <const Node *> getNodePointers() const;
 
 private:
     void init();

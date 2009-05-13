@@ -1,4 +1,4 @@
-#include "sensornetwork.h"
+#include "sensor_network.h"
 
 SensorNetwork::SensorNetwork()
 {
@@ -123,6 +123,15 @@ Node * SensorNetwork::nextHop (Node * source)
 SensorNetwork::~SensorNetwork()
 {
 
+}
+
+
+std::vector <const Node *> SensorNetwork::getNodePointers() const
+{
+  std::vector <const Node *> out;
+  for (int a = 0 ; a < noNodes ; a++)
+    out.push_back(&nodes[a]);
+  return out;
 }
 
 void SensorNetwork::init()

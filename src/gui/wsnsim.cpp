@@ -26,27 +26,27 @@ WSNsim::WSNsim ()
   WSNgraphicsView->setScene ( scene );
   
   
-  sensorNetwork = new Simulator::SensorNetwork(100,100,100); /* FIXME paramaterise these 100's*/
+  sensorNetwork = new SensorNetwork(100,100,100); /* FIXME paramaterise these 100's*/
   
-  std::vector<Simulator::Node const *> snNodes = sensorNetwork->getAllNodes();
+  QVector<const Node *> sensorNetworkNodes = QVector<const Node *>::fromStdVector (sensorNetwork->getNodePointers());
   
   
   /* draws all the nodes - TODO move to a more appropriate function*/
   
   double drawSize = 5;
-  for (int i = 0 ; i < snNodes.size() ; i++) {
+  Q_FOREACH (const Node * node, sensorNetworkNodes) {
     scene->addLine ( QLineF(
-                            +drawSize/2 + snNodes[i]->x, 
-                            +drawSize/2 + snNodes[i]->y, 
-                            -drawSize/2 + snNodes[i]->x, 
-                            -drawSize/2 + snNodes[i]->y) 
+                            +drawSize/2 + node->x, 
+                            +drawSize/2 + node->y, 
+                            -drawSize/2 + node->x, 
+                            -drawSize/2 + node->y) 
                             );
                             
     scene->addLine ( QLineF(
-                            +drawSize/2 + snNodes[i]->x, 
-                            -drawSize/2 + snNodes[i]->y, 
-                            -drawSize/2 + snNodes[i]->x, 
-                            +drawSize/2 + snNodes[i]->y) 
+                            +drawSize/2 + node->x, 
+                            -drawSize/2 + node->y, 
+                            -drawSize/2 + node->x, 
+                            +drawSize/2 + node->y) 
                             );
   }
   

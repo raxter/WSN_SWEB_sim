@@ -32,7 +32,7 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
 
   QGraphicsScene * scene;
   
-  Simulator::SensorNetwork * sensorNetwork;
+  SensorNetwork * sensorNetwork;
 
 };
 
