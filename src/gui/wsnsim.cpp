@@ -26,15 +26,15 @@ WSNsim::WSNsim ()
   WSNgraphicsView->setScene ( scene );
   
   
-  sensorNetwork = new SensorNetwork(100,100,100); /* FIXME paramaterise these 100's*/
+  sensorNetwork = new Simulator::SensorNetwork(100,100,100); /* FIXME paramaterise these 100's*/
   
-  QVector<const Node *> sensorNetworkNodes = QVector<const Node *>::fromStdVector (sensorNetwork->getNodePointers());
+  QVector<const Simulator::Node *> sensorNetworkNodes = QVector<const Simulator::Node *>::fromStdVector (sensorNetwork->getNodePointers());
   
   
   /* draws all the nodes - TODO move to a more appropriate function*/
   
   double drawSize = 5;
-  Q_FOREACH (const Node * node, sensorNetworkNodes) {
+  Q_FOREACH (const Simulator::Node * node, sensorNetworkNodes) {
     scene->addLine ( QLineF(
                             +drawSize/2 + node->x, 
                             +drawSize/2 + node->y, 

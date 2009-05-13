@@ -1,11 +1,30 @@
 #include "sensor_network.h"
 
+namespace WSN
+{
+namespace Simulator
+{
+using namespace std;
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
 SensorNetwork::SensorNetwork()
 {
     noNodes=100;
     createNodes(100,100);
     init();
 }
+
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
 
 SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int noNodesIn)
 {
@@ -19,6 +38,24 @@ SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int noNodesIn)
 
 }
 
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+SensorNetwork::~SensorNetwork()
+{
+
+}
+
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
 void SensorNetwork::route()
 {
     Node * curNode = &nodes[97];
@@ -30,6 +67,14 @@ void SensorNetwork::route()
     }
 
 }
+
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
 int SensorNetwork::determineCluster(Node * in)
 {
         int x = in->x;
@@ -48,6 +93,13 @@ int SensorNetwork::determineCluster(Node * in)
         ///
         return degreesOutward*360/scanAngle + relSlice;
 }
+
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
 
 int SensorNetwork::getSlice(int x , int y)
 {
@@ -95,6 +147,13 @@ int SensorNetwork::getSlice(int x , int y)
 
 }
 
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
 Node * SensorNetwork::nextHop (Node * source)
 {
         if (source == &BS)
@@ -120,11 +179,12 @@ Node * SensorNetwork::nextHop (Node * source)
 }
 
 
-SensorNetwork::~SensorNetwork()
-{
 
-}
-
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
 
 std::vector <const Node *> SensorNetwork::getNodePointers() const
 {
@@ -133,6 +193,13 @@ std::vector <const Node *> SensorNetwork::getNodePointers() const
     out.push_back(&nodes[a]);
   return out;
 }
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
 
 void SensorNetwork::init()
 {
@@ -227,6 +294,13 @@ void SensorNetwork::init()
 }
 
 
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
+
 vector <Node *> SensorNetwork::getCluster(int clustNo)
 {
         vector <Node *> out;
@@ -237,6 +311,13 @@ vector <Node *> SensorNetwork::getCluster(int clustNo)
         }
         return out;
 }
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
 
 void SensorNetwork::createNodes(int x , int y)
 {
@@ -252,22 +333,49 @@ void SensorNetwork::createNodes(int x , int y)
     cout<<"end of createNodes "<<noNodes<<endl;
 }
 
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
+
 double SensorNetwork::dist(int x1, int y1, int x2, int y2)
 {
 
-        return sqrt(pow(x2-x1,2) + pow(y2-y1,2) );
+  return sqrt(pow(x2-x1,2) + pow(y2-y1,2) );
 }
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
 
 double SensorNetwork::getDistFromBS(Node * which)
 {
 
-        return dist(which->x,which->y,BS.x,BS.y);
+  return dist(which->x,which->y,BS.x,BS.y);
 }
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
 
 int getCluster(int sector, int slice)
 {
-        return sector*8+slice;
+   return sector*8+slice;
 }
+
+
+
+} /* end of namespace Simulator */
+
+} /* end of WSN namespace */
+
 
 
 

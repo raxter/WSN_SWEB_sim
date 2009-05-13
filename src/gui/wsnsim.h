@@ -2,11 +2,10 @@
 #define __WSN_GUI_WSNSIM_H__
 
 #include <QMessageBox>
+#include <QVector>
 
 #include "simulator/sensor_network.h"
 #include "simulator/node.h"
-
-#include <vector>
 
 #include "ui_wsnsim.h"
 
@@ -32,7 +31,7 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
 
   QGraphicsScene * scene;
   
-  SensorNetwork * sensorNetwork;
+  Simulator::SensorNetwork * sensorNetwork;
 
 };
 

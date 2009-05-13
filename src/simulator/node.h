@@ -6,7 +6,12 @@
 
 #include <iostream>
 
-using namespace std;
+
+namespace WSN
+{
+
+namespace Simulator
+{
 
 class Node  {
 
@@ -23,7 +28,7 @@ class Node  {
 
 
     ///attributes
-    enum State {IDLE, SENDING, RECEIVING, RTS, OUT_OF_ENERGY};
+    enum State {IDLE, SENDING, RECEIVING, READY_TO_SEND, OUT_OF_ENERGY};
 
     int x,y; /* FIXME - doubles rather, perhaps (?) - raxter */
     int cluster;
@@ -41,6 +46,12 @@ class Node  {
     void printTable();
     int * getRT(int row);
 };
+
+
+} /* end of namespace Simulator */
+
+
+} /* end of namespace WSN */
 
 
 #endif

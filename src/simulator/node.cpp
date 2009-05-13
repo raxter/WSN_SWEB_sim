@@ -1,5 +1,11 @@
 #include "node.h"
 
+namespace WSN
+{
+namespace Simulator
+{
+
+using namespace std;
 
 Node::Node()
 {
@@ -77,9 +83,9 @@ void Node::setRT(int c22,int c21,int c20, int c12,  int c10, int c02, int c01, i
 
 void Node::printTable()
 {
-    cout <<routeTable[0][0]<<"  "<<routeTable[0][1]<<"  "<<routeTable[0][2]<<endl;
-    cout <<routeTable[1][0]<<"  "<<getCluster()<<"  "<<routeTable[1][2]<<endl;
-    cout <<routeTable[2][0]<<"  "<<routeTable[2][1]<<"  "<<routeTable[2][2]<<endl;
+  cout <<routeTable[0][0]<<"  "<<routeTable[0][1]<<"  "<<routeTable[0][2]<<endl;
+  cout <<routeTable[1][0]<<"  "<<getCluster()<<"  "<<routeTable[1][2]<<endl;
+  cout <<routeTable[2][0]<<"  "<<routeTable[2][1]<<"  "<<routeTable[2][2]<<endl;
 }
 
 int * Node::getRT(int row)
@@ -89,5 +95,9 @@ int * Node::getRT(int row)
     return routeTable[row];
 }
 
+
+} /* end of namespace Simulator */
+
+} /* end of namespace WSN */
 
 

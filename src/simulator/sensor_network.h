@@ -1,5 +1,7 @@
-#ifndef SENSORNETWORK_H
-#define SENSORNETWORK_H
+
+#ifndef __WSN_SIMULATOR_SENSOR_NETWORK_H__
+#define __WSN_SIMULATOR_SENSOR_NETWORK_H__
+
 #include "node.h"
 #include "constants.h"
 
@@ -8,8 +10,12 @@
 #include <cmath>
 #include <iostream>
 
-using namespace std;
 
+namespace WSN
+{
+
+namespace Simulator
+{
 
 class SensorNetwork {
 
@@ -21,8 +27,8 @@ public:
 
 
     ///mem alloaction
-    vector <Node*> clusterHead;
-    vector <Node> nodes;
+    std::vector <Node*> clusterHead;
+    std::vector <Node> nodes;
 
     ///attributes
     Node BS;
@@ -34,7 +40,7 @@ public:
     ///functions
 
     Node* nextHop(Node * source);
-    vector <Node *> getCluster(int clustNo);
+    std::vector <Node *> getCluster(int clustNo);
 
     std::vector <const Node *> getNodePointers() const;
 
@@ -52,6 +58,11 @@ private:
     ///temp
     void route();
 };
+
+} /* end of namespace Simulator */
+
+} /* end of namespace WSN */
+
 
 #endif
 
