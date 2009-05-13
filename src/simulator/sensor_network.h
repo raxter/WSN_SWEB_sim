@@ -33,7 +33,7 @@ public:
     ///attributes
     Node BS;
     double scanAngle;
-    int threshDegree;
+    double threshDegree;
     int noNodes;
     int clusterMax;
 

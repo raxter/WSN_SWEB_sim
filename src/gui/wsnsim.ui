@@ -5,16 +5,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1032</width>
+    <height>762</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>WSN Simulator</string>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <layout class="QGridLayout" name="gridLayout" >
-    <item row="0" column="0" >
+   <layout class="QHBoxLayout" name="horizontalLayout" >
+    <item>
      <widget class="QGraphicsView" name="WSNgraphicsView" />
     </item>
    </layout>
@@ -24,7 +24,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1032</width>
      <height>22</height>
     </rect>
    </property>
@@ -35,10 +35,19 @@
     <addaction name="separator" />
     <addaction name="actionQuit" />
    </widget>
+   <widget class="QMenu" name="menu_View" >
+    <property name="title" >
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actionSettings" />
+    <addaction name="actionResults" />
+    <addaction name="actionLog" />
+   </widget>
    <addaction name="menuFile" />
+   <addaction name="menu_View" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
-  <widget class="QDockWidget" name="optionsDockWidget" >
+  <widget class="QDockWidget" name="settingsDockWidget" >
    <property name="features" >
     <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
@@ -80,7 +89,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dockWidget" >
+  <widget class="QDockWidget" name="resultsDockWidget" >
    <property name="minimumSize" >
     <size>
      <width>70</width>
@@ -95,6 +104,25 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2" />
   </widget>
+  <widget class="QDockWidget" name="logDockWidget" >
+   <property name="windowTitle" >
+    <string>Log</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3" >
+    <layout class="QVBoxLayout" name="verticalLayout_2" >
+     <item>
+      <widget class="QTextEdit" name="textEdit" >
+       <property name="readOnly" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionQuit" >
    <property name="text" >
     <string>Quit</string>
@@ -106,7 +134,71 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
+  <action name="actionSettings" >
+   <property name="text" >
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionResults" >
+   <property name="text" >
+    <string>Results</string>
+   </property>
+  </action>
+  <action name="actionLog" >
+   <property name="text" >
+    <string>Log</string>
+   </property>
+  </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionSettings</sender>
+   <signal>triggered()</signal>
+   <receiver>settingsDockWidget</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>396</x>
+     <y>246</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>67</x>
+     <y>246</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionResults</sender>
+   <signal>triggered()</signal>
+   <receiver>resultsDockWidget</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>399</x>
+     <y>527</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLog</sender>
+   <signal>triggered()</signal>
+   <receiver>logDockWidget</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>728</x>
+     <y>246</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

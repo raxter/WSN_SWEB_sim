@@ -3,8 +3,10 @@
 
 #include <QMessageBox>
 #include <QVector>
+#include <QHash>
 
 #include "simulator/sensor_network.h"
+#include "simulator/discrete_simulator.h"
 #include "simulator/node.h"
 
 #include "ui_wsnsim.h"
@@ -24,14 +26,24 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
   WSNsim();
   ~WSNsim();
 
-  private slots:
-  
+  private:
+
+  QHash<const Simulator::Node*, QGraphicsPolygonItem *> polyHash;
+  QHash<QGraphicsPolygonItem *, const Simulator::Node*> nodeHash;
+
+  QGraphicsItemGroup * swebLines;
+
+  void setupScene();
+  void updateScene();
+  void setupSWebLines();
+  QPolygonF makeCircle(qint32 segments, qreal radius);
   
   private:        /* variables */
 
   QGraphicsScene * scene;
   
   Simulator::SensorNetwork * sensorNetwork;
+  Simulator::DiscreteSimulator * simulator;
 
 };
 

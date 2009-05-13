@@ -14,8 +14,7 @@ namespace Simulator
 **
 ****************************************************************************/
 
-DiscreteSimulator::DiscreteSimulator() : currentTime(0) {
-  
+DiscreteSimulator::DiscreteSimulator(SensorNetwork * sensorNetwork) : sensorNetwork(sensorNetwork), _currentTime(0) {
 
 }
 
@@ -37,7 +36,36 @@ DiscreteSimulator::~DiscreteSimulator() {
 ****************************************************************************/
 
 unsigned long DiscreteSimulator::currentTime() {
-  return currentTime;
+  return _currentTime;
+}
+
+
+/****************************************************************************
+**
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+void DiscreteSimulator::incrementTimeStep() {
+
+  _currentTime++;
+  
+  std::vector <Node>& nodes = sensorNetwork->nodes;
+
+  for (int i = 0 ; i < nodes.size() ; i++)
+    incrementTimeStep(nodes[i]);
+}
+
+
+/****************************************************************************
+**
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+void DiscreteSimulator::incrementTimeStep(Node & node) {
+  
+
 }
 
 

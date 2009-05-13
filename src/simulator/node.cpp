@@ -7,17 +7,10 @@ namespace Simulator
 
 using namespace std;
 
-Node::Node()
-{
-
-    init();
-    x=0;
-    y=0;
-
-}
 
 Node::Node(int xIn, int yIn)
 {
+    state = IDLE;
     init();
     x= xIn;
     y=yIn;
@@ -26,8 +19,8 @@ Node::Node(int xIn, int yIn)
 
 void Node::init()
 {
-    energyRemaining=100;///out of a 100 - needs to be changed to a constant MAX_NODE_ENGERGY
-
+  energyRemaining=100;///out of a 100 - needs to be changed to a constant MAX_NODE_ENGERGY
+  
 }
 
 bool Node::isHead()
@@ -66,7 +59,7 @@ void Node::setRT(int c22,int c21,int c20, int c12,  int c10, int c02, int c01, i
     //hello = {4,3,2};
 
     /*FIXME why??????????*/
-    //routeTable  = ({c00,c01,c02},{c10,0,c12},{c20,c21,c22}};
+    //routeTable  = {{c00,c01,c02},{c10,0,c12},{c20,c21,c22}};
 
     routeTable[2][2] = c22;
     routeTable[2][1] = c21;
