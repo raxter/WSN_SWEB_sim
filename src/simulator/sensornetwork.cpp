@@ -136,21 +136,21 @@ void SensorNetwork::init()
         for (int a = 0 ; a < noNodes ; a++)
         {
             nodes[a].cluster = determineCluster(&nodes[a]);
-            cout<<"node: "<<a<<" cluster "<<nodes[a].cluster<<endl;
+            cout<<"node: "<<a<<" x: "<<nodes[a].x<<" y: "<<nodes[a].y<<" cluster "<<nodes[a].cluster<<endl;
 
         }
 
         ///set initial cluster heads
-        for (int b = 0 ; b < clusterMax ; b++)
+        for (int b = 0 ; b <= clusterMax ; b++)
         {
             vector <Node*> cluster = getCluster(b);
-            cout <<"size: "<< cluster.size()<< endl;
+            cout <<"\nsize: "<< cluster.size()<< endl;
 
             int lowestRemEnergy = MAX_NODE_ENGERGY+1;
             Node * newHead = NULL;
             for (int c = 0 ; c < cluster.size(); c++)
             {
-                cout << "max cluster: "<<clusterMax<< " current cluster: "<<cluster[c]->cluster<<endl;
+                cout << "there are actual nodes in this cluster: "<< " current node in cluster: "<<cluster[c]->cluster<<endl;
                 if (cluster[c]->energyRemaining < lowestRemEnergy)
                 {
                         lowestRemEnergy = cluster[c]->energyRemaining;
@@ -237,7 +237,7 @@ void SensorNetwork::createNodes(int x , int y)
 
         int randx = x/2 - rand()%(x+1);
         int randy = y/2 - rand()%(y+1);
-        nodes[a] = Node(randx,randy);
+        nodes.push_back( Node(randx,randy));
 
     }
     cout<<"end of createNodes "<<noNodes<<endl;

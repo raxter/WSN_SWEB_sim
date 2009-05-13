@@ -22,7 +22,7 @@ public:
 
     ///mem alloaction
     vector <Node*> clusterHead;
-    Node nodes [1000];
+    vector <Node> nodes ;
 
     ///attributes
     Node BS;
