@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QVector>
 #include <QHash>
+#include <QGraphicsPolygonItem>
 
 #include "simulator/sensor_network.h"
 #include "simulator/discrete_simulator.h"
@@ -27,12 +28,8 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
   ~WSNsim();
 
   private:
-
-  QHash<const Simulator::Node*, QGraphicsPolygonItem *> polyHash;
-  QHash<QGraphicsPolygonItem *, const Simulator::Node*> nodeHash;
-
-  QGraphicsItemGroup * swebLines;
-
+  
+  /* graphics */
   void setupScene();
   void updateScene();
   void setupSWebLines();
@@ -40,8 +37,14 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
   
   private:        /* variables */
 
+  /* graphics */
   QGraphicsScene * scene;
+  QVector<const Simulator::Node *> sensorNetworkNodes;
+  QHash<const Simulator::Node*, QGraphicsPolygonItem *> polyHash;
+  //QHash<QGraphicsPolygonItem *, const Simulator::Node*> nodeHash; /*FIXME do we really need two hashs? - rax*/
+  QGraphicsItemGroup * swebLines;
   
+  /* simulator */
   Simulator::SensorNetwork * sensorNetwork;
   Simulator::DiscreteSimulator * simulator;
 

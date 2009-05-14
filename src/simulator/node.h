@@ -18,7 +18,7 @@ class Node  {
   public:
 
   ///Constructors/Destructors
-  Node(int x = 0, int y = 0);
+  Node(int id, int x = 0, int y = 0);
   ~Node();
 
   ///mem allocation
@@ -27,8 +27,9 @@ class Node  {
   ///attributes
   enum State {IDLE, SENDING, RECEIVING, READY_TO_SEND, OUT_OF_ENERGY};
   State state;
+  int otherNode; /* depending on state, could represent the node that this node is sending to or receiving from*/
   
-  int otherNode;
+  int id; // this node's id, if id == -1, it means this node is the (or a) base station
 
   int x,y; /* FIXME - doubles rather, perhaps (?) - raxter */
   int cluster;
@@ -37,9 +38,11 @@ class Node  {
 
   ///functions
   bool isHead();
-  void setHead(bool trueForIsTheHead);
+  void setHead(int nodeId);
+  int getHead();
+
   void init();
-  Node getNextHop();
+  int getNextHop();
   void setCluster(int cluIn);
   int getCluster();
   void setRT(int  c22,int  c21,int  c20,int  c12, int  c10, int  c02, int  c01, int  c00);

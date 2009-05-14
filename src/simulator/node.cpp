@@ -7,15 +7,35 @@ namespace Simulator
 
 using namespace std;
 
+/****************************************************************************
+**
+** Author: Julian Hulme
+** Author: Richard Baxter
+**
+****************************************************************************/
 
-Node::Node(int xIn, int yIn)
+
+Node::Node(int id, int x, int y) : id (id), x(x), y(y), cluster(-1), state(IDLE)
 {
-    state = IDLE;
     init();
-    x= xIn;
-    y=yIn;
-    cluster=-1;
 }
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
+Node::~Node()
+{
+}
+
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
 
 void Node::init()
 {
@@ -23,43 +43,84 @@ void Node::init()
   
 }
 
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
 bool Node::isHead()
 {
-        return routeTable[1][1];
+  return routeTable[1][1] == id;
 }
 
-void Node::setHead(bool trueForIsTheHead)
+/****************************************************************************
+**
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+int Node::getHead() // get head... lol
 {
-    routeTable [1][1] = trueForIsTheHead;
+  return routeTable[1][1];
 }
 
-void Node::setCluster(int cluIn)
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
+void Node::setHead(int nodeId)
 {
-    cluster = cluIn;
+    routeTable [1][1] = nodeId;
 }
 
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
+void Node::setCluster(int cluster)
+{
+  this->cluster = cluster;
+}
+
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
 
 int Node::getCluster()
 {
     return cluster;
 }
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+** Returns id of next hop
+**
+****************************************************************************/
 
-Node::~Node()
+int Node::getNextHop()
 {
+  
+  /*FIXME routing algorithms should go here since in real life this is where it would be calculated*/
+  return getHead(); /*FIXME must implement, this method should definitly not go to sensor network*/
 }
 
-Node Node::getNextHop()
-{
-    return Node();
-}
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
 
-void Node::setRT(int c22,int c21,int c20, int c12,  int c10, int c02, int c01, int c00)
+void Node::setRT(int c22, int c21,int c20, int c12,  int c10, int c02, int c01, int c00)
 {
-    //int hello [3];
-    //hello = {4,3,2};
-
-    /*FIXME why??????????*/
-    //routeTable  = {{c00,c01,c02},{c10,0,c12},{c20,c21,c22}};
 
     routeTable[2][2] = c22;
     routeTable[2][1] = c21;
@@ -74,18 +135,31 @@ void Node::setRT(int c22,int c21,int c20, int c12,  int c10, int c02, int c01, i
     routeTable[0][0] = c00;
 }
 
-void Node::printTable()
-{
-  cout <<routeTable[0][0]<<"  "<<routeTable[0][1]<<"  "<<routeTable[0][2]<<endl;
-  cout <<routeTable[1][0]<<"  "<<getCluster()<<"  "<<routeTable[1][2]<<endl;
-  cout <<routeTable[2][0]<<"  "<<routeTable[2][1]<<"  "<<routeTable[2][2]<<endl;
-}
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
 
 int * Node::getRT(int row)
 {
     /*FIXME why cant an int ** return routeTable FFFFFFFFFUUUUUUUUUUUU????*/
     //return routeTable
     return routeTable[row];
+}
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
+void Node::printTable()
+{
+  /* FIXME i removed this because it was generating too much spew */
+  //cout <<routeTable[0][0]<<"  "<<routeTable[0][1]<<"  "<<routeTable[0][2]<<endl;
+  //cout <<routeTable[1][0]<<"  "<<getCluster()<<"  "<<routeTable[1][2]<<endl;
+  //cout <<routeTable[2][0]<<"  "<<routeTable[2][1]<<"  "<<routeTable[2][2]<<endl;
 }
 
 

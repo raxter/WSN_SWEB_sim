@@ -29,7 +29,12 @@ WSNsim::WSNsim () : swebLines(0)
   WSNgraphicsView->scale ( zoom, zoom );
   
   sensorNetwork = new Simulator::SensorNetwork(100,100,100); /* FIXME paramaterise these 100's*/
+  
+
+  sensorNetworkNodes = QVector<const Simulator::Node *>::fromStdVector (sensorNetwork->getNodePointers()); /* FIXME, still deciding whether this should be a class variable or not*/ 
+
   simulator = new Simulator::DiscreteSimulator(sensorNetwork);
+
   setupScene();
 }
 
@@ -59,8 +64,6 @@ WSNsim::~WSNsim ()
 
 void WSNsim::setupScene() {
 
-  QVector<const Simulator::Node *> sensorNetworkNodes = QVector<const Simulator::Node *>::fromStdVector (sensorNetwork->getNodePointers());  
-
   Q_FOREACH (const Simulator::Node * node, sensorNetworkNodes) {
 
  // QHash<const Simulator::Node*, QPolygon polygon> polyHash;
@@ -77,7 +80,7 @@ void WSNsim::setupScene() {
     poly.translate(node->x, node->y);
 
     polyHash[node] = scene->addPolygon ( poly , QPen(), Qt::SolidPattern);
-    nodeHash[polyHash[node]] = node;
+    //nodeHash[polyHash[node]] = node;
 
   }
 
@@ -146,7 +149,18 @@ QPolygonF WSNsim::makeCircle(qint32 segments, qreal radius) {
 
 void WSNsim::updateScene() {
 
+  Q_FOREACH(const Simulator::Node * node, sensorNetworkNodes) {
   
+    QGraphicsPolygonItem * polyItem = polyHash[node];
+    
+    if (node->state != Simulator::Node::IDLE) {
+      polyItem->setBrush(QBrush(Qt::red));
+    }
+    else {
+      polyItem->setBrush(QBrush(Qt::black));
+    }
+
+  }
   
 }
 

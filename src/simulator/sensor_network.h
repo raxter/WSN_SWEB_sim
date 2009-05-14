@@ -21,17 +21,16 @@ class SensorNetwork {
 
 public:
     ///Constructors & Destructors
-    SensorNetwork();
-    SensorNetwork(int xRangeIn, int yRangeIn, int noNodesIn);
+    SensorNetwork(int xRangeIn = 100, int yRangeIn = 100, int noNodesIn = 100);
     ~SensorNetwork();
 
 
     ///mem alloaction
-    std::vector <Node*> clusterHead;
+    std::vector <Node*> clusterHeads;
     std::vector <Node> nodes;
+    Node baseStation;
 
     ///attributes
-    Node BS;
     double scanAngle;
     double threshDegree;
     int noNodes;
@@ -39,7 +38,7 @@ public:
 
     ///functions
 
-    Node* nextHop(Node * source);
+    Node* nextHop(Node * source); /*needs to move to Node class, see cpp file - rax*/
     std::vector <Node *> getCluster(int clustNo);
 
     std::vector <const Node *> getNodePointers() const;
