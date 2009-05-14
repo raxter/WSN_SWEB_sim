@@ -2,6 +2,7 @@
 #define __WSN_SIMULATOR_DISCRETESIMULATOR__
 
 #include "sensor_network.h"
+//#include <>
 
 namespace WSN
 {
@@ -10,6 +11,8 @@ namespace Simulator
 {
 
 class DiscreteSimulator  {
+
+ //Q_OBJECT
 
   public: /* class specific */
   ///Constructors/Destructors
@@ -23,6 +26,8 @@ class DiscreteSimulator  {
 
   private: /* methods */
 
+    
+  void timeStepCompleted(); // notification that a time step has been completed TODO should this be in SensorNetwork?
   void incrementTimeStep(Node & node);
 
   private: /* variables */

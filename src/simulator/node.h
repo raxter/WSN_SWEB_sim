@@ -24,13 +24,24 @@ class Node  {
   ///mem allocation
 
 
-  ///attributes
-  enum State {IDLE, SENDING, RECEIVING, READY_TO_SEND, OUT_OF_ENERGY};
-  State state;
-  int otherNode; /* depending on state, could represent the node that this node is sending to or receiving from*/
+  ///attributes for simulation
+  enum State {
+    IDLE, 
+    SENDING, 
+    RECEIVING, 
+    READY_TO_SEND /*alse serves as RECEIVED*/, 
+    OUT_OF_ENERGY
+  };
   
-  int id; // this node's id, if id == -1, it means this node is the (or a) base station
-
+  State state;
+  State nextState;
+  Node* otherNode; /* depending on state, could represent the node that this node is sending to or receiving from*/
+  int timer;
+  
+  //general attributes
+  
+  int id; // this node's id, if id == -1, it means this node is the base station, -2 means undefined
+  
   int x,y; /* FIXME - doubles rather, perhaps (?) - raxter */
   int cluster;
   int routeTable [3][3];

@@ -15,7 +15,7 @@ using namespace std;
 ****************************************************************************/
 
 
-Node::Node(int id, int x, int y) : id (id), x(x), y(y), cluster(-1), state(IDLE)
+Node::Node(int id, int x, int y) : id (id), x(x), y(y), cluster(-1), state(IDLE), otherNode(NULL)
 {
     init();
 }

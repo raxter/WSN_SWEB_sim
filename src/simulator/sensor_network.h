@@ -24,8 +24,10 @@ public:
     SensorNetwork(int xRangeIn = 100, int yRangeIn = 100, int noNodesIn = 100, int noSectors = 16);
 
     ~SensorNetwork();
+    
 
-
+    Node* getNode(int id);
+    
     ///mem alloaction
     std::vector <Node*> clusterHeads; /*TODO shouldn't be here - rax*/
     std::vector <Node> nodes;

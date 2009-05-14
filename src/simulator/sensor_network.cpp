@@ -87,6 +87,16 @@ int SensorNetwork::determineCluster(Node * in)
 
 /****************************************************************************
 **
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+Node* SensorNetwork::getNode(int id) {
+  return &nodes[id];
+}
+
+/****************************************************************************
+**
 ** Author: Julian Hulme
 **
 ****************************************************************************/
@@ -195,16 +205,9 @@ std::vector <const Node *> SensorNetwork::getNodePointers() const
 ****************************************************************************/
 
 
-void SensorNetwork::init()
-<<<<<<< Updated upstream:src/simulator/sensor_network.cpp
-{ 
+void SensorNetwork::init() {
   baseStation = Node(-1, 0, 0);
-  scanAngle = 45;//*PI/180;
-=======
-{
-  BS = Node(0,0);
-
->>>>>>> Stashed changes:src/simulator/sensor_network.cpp
+  scanAngle = 45;//*PI/180; /*FIXME, should be based on numberOfSectors, doesn't have to be radians though :) */
   threshDegree=25;
   clusterMax=0;
 
