@@ -21,18 +21,21 @@ class SensorNetwork {
 
 public:
     ///Constructors & Destructors
-    SensorNetwork(int xRangeIn = 100, int yRangeIn = 100, int noNodesIn = 100);
+    SensorNetwork(int xRangeIn = 100, int yRangeIn = 100, int noNodesIn = 100, int noSectors = 16);
+
     ~SensorNetwork();
 
 
     ///mem alloaction
-    std::vector <Node*> clusterHeads;
+    std::vector <Node*> clusterHeads; /*TODO shouldn't be here - rax*/
     std::vector <Node> nodes;
     Node baseStation;
 
     ///attributes
     double scanAngle;
     double threshDegree;
+    int noSectors;
+
     int noNodes;
     int clusterMax;
 

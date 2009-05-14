@@ -13,14 +13,16 @@ using namespace std;
 **
 ****************************************************************************/
 
-SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int noNodesIn) : baseStation(-1)
+
+SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int noNodesIn, int noSectorsIn) : baseStation(-1)
 {
 
+  noSectors = noSectorsIn;
+  scanAngle = 360/noSectors;
   noNodes = noNodesIn;
   createNodes(xRangeIn,yRangeIn);
 
   init();
-  ////cout<<"pac from node 97 is in cluster: "<<nodes[97].getCluster()<<endl;
   route();
 
 }
@@ -73,13 +75,13 @@ int SensorNetwork::determineCluster(Node * in)
 
   int relSlice = getSlice(x , y);
 
-  int output = degreesOutward*360/scanAngle + relSlice;
+  int output = degreesOutward*noSectors + relSlice;
 
   ///global degreesOutputMax used as a reference later as to how far the web goes
   if (clusterMax < output)
       clusterMax = output;
   ///
-  return degreesOutward*360/scanAngle + relSlice;
+  return degreesOutward*noSectors + relSlice;
 }
 
 
@@ -194,9 +196,15 @@ std::vector <const Node *> SensorNetwork::getNodePointers() const
 
 
 void SensorNetwork::init()
+<<<<<<< Updated upstream:src/simulator/sensor_network.cpp
 { 
   baseStation = Node(-1, 0, 0);
   scanAngle = 45;//*PI/180;
+=======
+{
+  BS = Node(0,0);
+
+>>>>>>> Stashed changes:src/simulator/sensor_network.cpp
   threshDegree=25;
   clusterMax=0;
 
@@ -240,24 +248,24 @@ void SensorNetwork::init()
       double dist = getDistFromBS(&nodes[c]);
       int degreesOutward = (int)dist/(int)threshDegree;
 
-      int noClustersInASector = 360/scanAngle;
+
 
       int relCluster = nodes[c].getCluster();
       ///[2][2]:
-      int c22 = (relCluster+1)%noClustersInASector + (degreesOutward+1)*noClustersInASector;
+      int c22 = (relCluster+1)%noSectors + (degreesOutward+1)*noSectors;
       ///[2][1]:
-      int c21 = relCluster+noClustersInASector;
+      int c21 = relCluster+noSectors;
       ///[2][0]:
-      int c20 = (relCluster-1)%noClustersInASector + (degreesOutward+1)*noClustersInASector;
+      int c20 = (relCluster-1)%noSectors + (degreesOutward+1)*noSectors;
 
       ///[1][2]:
-      int c12 = (relCluster +1)%noClustersInASector + degreesOutward*noClustersInASector;
+      int c12 = (relCluster +1)%noSectors + degreesOutward*noSectors;
       ///[1][0]:
-      int c10 = (relCluster -1)%noClustersInASector + degreesOutward*noClustersInASector;
+      int c10 = (relCluster -1)%noSectors + degreesOutward*noSectors;
 
       ///[0][*]
       int c02,c01,c00 = 0;
-      if (relCluster < noClustersInASector)
+      if (relCluster < noSectors)
       {
           ///[0][2]:
           c02 = -1;///-1 = base station
@@ -269,11 +277,11 @@ void SensorNetwork::init()
       else
       {
           ///[0][2]:
-          c02 = (relCluster+1)%noClustersInASector + (degreesOutward-1)*noClustersInASector;
+          c02 = (relCluster+1)%noSectors + (degreesOutward-1)*noSectors;
             ///[2][1]:
-          c01 = relCluster-noClustersInASector;
+          c01 = relCluster-noSectors;
           ///[2][0]:
-          c00 = (relCluster-1)%noClustersInASector + (degreesOutward-1)*noClustersInASector;
+          c00 = (relCluster-1)%noSectors + (degreesOutward-1)*noSectors;
       }
 
       nodes[c].setRT(c22,c21,c20,c12,c10,c02,c01,c00) ;
