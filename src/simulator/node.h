@@ -36,7 +36,8 @@ class Node  {
   State state;
   State nextState;
   Node* otherNode; /* depending on state, could represent the node that this node is sending to or receiving from*/
-  int timer;
+  int sendReceiveTimer;
+  int headAllocTimer;
   
   //general attributes
   

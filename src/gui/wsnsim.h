@@ -27,13 +27,19 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
   WSNsim();
   ~WSNsim();
 
-  private:
+  private slots: 
+
+  void incrementTimeStep();
+
+
+  private: /* methods */
   
   /* graphics */
   void setupScene();
   void updateScene();
   void setupSWebLines();
   QPolygonF makeCircle(qint32 segments, qreal radius);
+  QGraphicsSimpleTextItem * timerItem;
   
   private:        /* variables */
 

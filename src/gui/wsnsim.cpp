@@ -36,6 +36,11 @@ WSNsim::WSNsim () : swebLines(0)
   simulator = new Simulator::DiscreteSimulator(sensorNetwork);
 
   setupScene();
+  
+  
+  connect (stepButton, SIGNAL(released ()), this, SLOT(incrementTimeStep()));
+  
+  
 }
 
 
@@ -118,8 +123,9 @@ void WSNsim::setupSWebLines() {
     items.append((QGraphicsItem*)scene->addPolygon ( makeCircle( 64, thresh ) ));
   }
 
-
   swebLines = scene->createItemGroup (items);
+  
+  timerItem = scene->addSimpleText ( "Timer: " );
 }
 
 
@@ -162,6 +168,14 @@ void WSNsim::updateScene() {
 
   }
   
+}
+
+
+void WSNsim::incrementTimeStep() {
+  
+  
+  timerItem->setText ( "Timer: " + QString().setNum(simulator->currentTime()) );
+  simulator->incrementTimeStep();
 }
 
 

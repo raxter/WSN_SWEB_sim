@@ -67,11 +67,11 @@ void DiscreteSimulator::incrementTimeStep() {
   timeStepCompleted();
 }
 
-
+/* should this be in the simulator class as round complete or check base station or something*/
 void DiscreteSimulator::timeStepCompleted() {
   
   if (sensorNetwork->baseStation.state == Node::READY_TO_SEND)
-  ;
+    /*TODO, ask it to send the next signal*/;
   
 }
 
@@ -98,13 +98,13 @@ void DiscreteSimulator::incrementTimeStep(Node & node) {
   case Node::READY_TO_SEND :
     node.state = Node::SENDING;
     node.otherNode = sensorNetwork->getNode(node.getNextHop());
-    node.timer = 30; // 30 ms, TODO make time based on bandwidth and packet length
+    node.sendReceiveTimer = 30; // 30 ms, TODO make time based on bandwidth and packet length
     
     break;
   //-------------------------------------------------------------------------------
   case Node::SENDING : 
-    if (node.timer)
-      node.timer--;
+    if (node.sendReceiveTimer)
+      node.sendReceiveTimer--;
     else
     {
       //finished sending

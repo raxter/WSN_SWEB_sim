@@ -60,14 +60,14 @@
    <widget class="QWidget" name="dockWidgetContents" >
     <layout class="QVBoxLayout" name="verticalLayout" >
      <item>
-      <widget class="QPushButton" name="pushButton" >
+      <widget class="QPushButton" name="startButton" >
        <property name="text" >
         <string>Start</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2" >
+      <widget class="QPushButton" name="stepButton" >
        <property name="text" >
         <string>Step</string>
        </property>
@@ -159,8 +159,8 @@
    <slot>show()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>396</x>
-     <y>246</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel" >
      <x>67</x>

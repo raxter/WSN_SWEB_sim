@@ -2,7 +2,6 @@
 #define __WSN_SIMULATOR_DISCRETESIMULATOR__
 
 #include "sensor_network.h"
-//#include <>
 
 namespace WSN
 {
@@ -12,16 +11,17 @@ namespace Simulator
 
 class DiscreteSimulator  {
 
- //Q_OBJECT
 
   public: /* class specific */
   ///Constructors/Destructors
   DiscreteSimulator(SensorNetwork * sensorNetwork);
   ~DiscreteSimulator();
 
+
+
   public: /* methods */
-  void incrementTimeStep();
   
+  void incrementTimeStep();
   unsigned long currentTime();
 
   private: /* methods */
