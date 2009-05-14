@@ -114,7 +114,7 @@
    <widget class="QWidget" name="dockWidgetContents_3" >
     <layout class="QVBoxLayout" name="verticalLayout_2" >
      <item>
-      <widget class="QTextEdit" name="textEdit" >
+      <widget class="QTextEdit" name="logTextEdit" >
        <property name="readOnly" >
         <bool>true</bool>
        </property>

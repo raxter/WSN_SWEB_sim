@@ -49,7 +49,7 @@ void Node::init()
 **
 ****************************************************************************/
 
-bool Node::isHead()
+bool Node::isHead() const
 {
   return routeTable[1][1] == id;
 }
@@ -110,7 +110,7 @@ int Node::getNextHop()
 {
   
   /*FIXME routing algorithms should go here since in real life this is where it would be calculated*/
-  return getHead(); /*FIXME must implement, this method should definitly not go to sensor network*/
+  return id+1;//getHead(); /*FIXME must implement, this method should definitly not go to sensor network*/
 }
 
 /****************************************************************************

@@ -29,7 +29,7 @@ class Node  {
     IDLE, 
     SENDING, 
     RECEIVING, 
-    READY_TO_SEND /*alse serves as RECEIVED*/, 
+    READY_TO_SEND, /*alse serves as RECEIVED*/ 
     OUT_OF_ENERGY
   };
   
@@ -49,12 +49,13 @@ class Node  {
   int energyRemaining;
 
   ///functions
-  bool isHead();
+  int getNextHop();
+  
+  bool isHead() const;
   void setHead(int nodeId);
   int getHead();
 
   void init();
-  int getNextHop();
   void setCluster(int cluIn);
   int getCluster();
   void setRT(int  c22,int  c21,int  c20,int  c12, int  c10, int  c02, int  c01, int  c00);

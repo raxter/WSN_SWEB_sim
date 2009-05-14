@@ -16,7 +16,7 @@ using namespace std;
 
 SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int noNodesIn, int noSectorsIn) : baseStation(-1)
 {
-
+  baseStation.state = Node::READY_TO_SEND;
   noSectors = noSectorsIn;
   scanAngle = 360/noSectors;
   noNodes = noNodesIn;
@@ -183,6 +183,20 @@ Node * SensorNetwork::nextHop (Node * source)
 }
 
 
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
+std::vector <Node *> SensorNetwork::getNodePointers()
+{
+  std::vector <Node *> out;
+  out.push_back(&baseStation);
+  for (int a = 0 ; a < noNodes ; a++)
+    out.push_back(&nodes[a]);
+  return out;
+}
 
 /****************************************************************************
 **
@@ -190,9 +204,10 @@ Node * SensorNetwork::nextHop (Node * source)
 **
 ****************************************************************************/
 
-std::vector <const Node *> SensorNetwork::getNodePointers() const
+std::vector <const Node *> SensorNetwork::getConstNodePointers() const
 {
   std::vector <const Node *> out;
+  out.push_back(&baseStation);
   for (int a = 0 ; a < noNodes ; a++)
     out.push_back(&nodes[a]);
   return out;
@@ -206,7 +221,6 @@ std::vector <const Node *> SensorNetwork::getNodePointers() const
 
 
 void SensorNetwork::init() {
-  baseStation = Node(-1, 0, 0);
   scanAngle = 45;//*PI/180; /*FIXME, should be based on numberOfSectors, doesn't have to be radians though :) */
   threshDegree=25;
   clusterMax=0;

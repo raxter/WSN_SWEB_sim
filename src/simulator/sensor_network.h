@@ -27,11 +27,6 @@ public:
     
 
     Node* getNode(int id);
-    
-    ///mem alloaction
-    std::vector <Node*> clusterHeads; /*TODO shouldn't be here - rax*/
-    std::vector <Node> nodes;
-    Node baseStation;
 
     ///attributes
     double scanAngle;
@@ -46,9 +41,17 @@ public:
     Node* nextHop(Node * source); /*needs to move to Node class, see cpp file - rax*/
     std::vector <Node *> getCluster(int clustNo);
 
-    std::vector <const Node *> getNodePointers() const;
+    std::vector <Node *> getNodePointers();
+    std::vector <const Node *> getConstNodePointers() const;
 
 private:
+    
+    ///mem alloaction
+    std::vector <Node*> clusterHeads; /*TODO shouldn't be here - rax*/
+    std::vector <Node> nodes;
+    Node baseStation;
+    
+    
     void init();
     void createNodes(int x,int y);
     int getClusterNo (int sector, int slice);

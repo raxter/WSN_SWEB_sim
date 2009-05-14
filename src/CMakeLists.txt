@@ -25,6 +25,7 @@ SET(WSN_SIMULATOR_SRCS_CXX
 SET(WSN_SIMULATOR_MOC_SRCS
 
   gui/wsnsim.h
+  simulator/discrete_simulator.h
   
 )
 

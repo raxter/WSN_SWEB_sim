@@ -2,6 +2,8 @@
 #define __WSN_SIMULATOR_DISCRETESIMULATOR__
 
 #include "sensor_network.h"
+#include <QObject>
+#include <QVector>
 
 namespace WSN
 {
@@ -9,29 +11,36 @@ namespace WSN
 namespace Simulator
 {
 
-class DiscreteSimulator  {
+class DiscreteSimulator : public QObject  {
 
+  Q_OBJECT
 
   public: /* class specific */
   ///Constructors/Destructors
   DiscreteSimulator(SensorNetwork * sensorNetwork);
   ~DiscreteSimulator();
 
+  signals:
+  
+  void logEvent( const QString & event );
+  void finishedTimeStep ();
 
+  public slots:
+
+  void incrementTimeStep();
 
   public: /* methods */
   
-  void incrementTimeStep();
   unsigned long currentTime();
 
   private: /* methods */
 
-    
   void timeStepCompleted(); // notification that a time step has been completed TODO should this be in SensorNetwork?
-  void incrementTimeStep(Node & node);
+  void incrementTimeStep(Node * node);
 
   private: /* variables */
   SensorNetwork * sensorNetwork;
+  QVector<Node *> nodes;
 
   unsigned long _currentTime;// in milliseconds
 

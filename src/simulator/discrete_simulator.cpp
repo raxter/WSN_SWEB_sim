@@ -16,6 +16,7 @@ namespace Simulator
 
 DiscreteSimulator::DiscreteSimulator(SensorNetwork * sensorNetwork) : sensorNetwork(sensorNetwork), _currentTime(0) {
 
+  nodes = QVector<Node *>::fromStdVector (sensorNetwork->getNodePointers()); /* FIXME, still deciding whether this should be a class variable or not*/ 
 }
 
 /****************************************************************************
@@ -48,13 +49,12 @@ unsigned long DiscreteSimulator::currentTime() {
 
 void DiscreteSimulator::incrementTimeStep() {
 
+   emit logEvent(QString("incrementTimeStep()"));
   _currentTime++;
-  
-  std::vector <Node>& nodes = sensorNetwork->nodes;
 
   // assuming that the next state will remain unchanged
   for (int i = 0 ; i < nodes.size() ; i++)
-    nodes[i].nextState = nodes[i].state;
+    nodes[i]->nextState = nodes[i]->state;
     
   // simulating node hardware
   for (int i = 0 ; i < nodes.size() ; i++)
@@ -62,15 +62,17 @@ void DiscreteSimulator::incrementTimeStep() {
   
   //updating states
   for (int i = 0 ; i < nodes.size() ; i++)
-    nodes[i].state = nodes[i].nextState;
+    nodes[i]->state = nodes[i]->nextState;
     
   timeStepCompleted();
+  emit finishedTimeStep ();
 }
 
 /* should this be in the simulator class as round complete or check base station or something*/
 void DiscreteSimulator::timeStepCompleted() {
   
-  if (sensorNetwork->baseStation.state == Node::READY_TO_SEND)
+  if (nodes[0]->state == Node::READY_TO_SEND) /* checking the baseStation state*/
+  
     /*TODO, ask it to send the next signal*/;
   
 }
@@ -84,34 +86,39 @@ void DiscreteSimulator::timeStepCompleted() {
 ****************************************************************************/
 
 /* NOTE don't set state in the nodes here, only nextState*/
-void DiscreteSimulator::incrementTimeStep(Node & node) {
+void DiscreteSimulator::incrementTimeStep(Node * node) {
+  
 
-  if (node.energyRemaining <= 0) {
-    node.nextState = Node::OUT_OF_ENERGY;
+  if (node->energyRemaining <= 0) {
+    node->nextState = Node::OUT_OF_ENERGY;
     return;
   }
   //else
 
-  switch (node.state) {
+  switch (node->state) {
   //-------------------------------------------------------------------------------
   
   case Node::READY_TO_SEND :
-    node.state = Node::SENDING;
-    node.otherNode = sensorNetwork->getNode(node.getNextHop());
-    node.sendReceiveTimer = 30; // 30 ms, TODO make time based on bandwidth and packet length
+    node->nextState = Node::SENDING;
+    node->otherNode = sensorNetwork->getNode(node->getNextHop());
+    node->sendReceiveTimer = 5; // 30 ms, TODO make time based on bandwidth and packet length
+    emit logEvent(QString("Node %1 sending packet to Node %2").arg(node->id).arg(node->otherNode->id));
+    
+    emit logEvent(QString("node id %1 state %2").arg(node->id).arg(node->state));
     
     break;
   //-------------------------------------------------------------------------------
   case Node::SENDING : 
-    if (node.sendReceiveTimer)
-      node.sendReceiveTimer--;
+    emit logEvent(QString("node id %1 state %2 timer = %3").arg(node->id).arg(node->state).arg(node->sendReceiveTimer));
+    if (node->sendReceiveTimer)
+      node->sendReceiveTimer--;
     else
     {
       //finished sending
-      node.nextState = Node::IDLE;
+      node->nextState = Node::IDLE;
       
       
-      node.otherNode->nextState = Node::READY_TO_SEND; /* the other node is now ready to send */
+      node->otherNode->nextState = Node::READY_TO_SEND; /* the other node is now ready to send */
     }
   
     break;

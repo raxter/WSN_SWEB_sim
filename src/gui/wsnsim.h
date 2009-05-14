@@ -30,16 +30,18 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
   private slots: 
 
   void incrementTimeStep();
+  void updateScene();
 
 
   private: /* methods */
   
   /* graphics */
   void setupScene();
-  void updateScene();
   void setupSWebLines();
   QPolygonF makeCircle(qint32 segments, qreal radius);
   QGraphicsSimpleTextItem * timerItem;
+  qreal penWidth;
+  QPen getPen(const QColor& c, qreal width = -1);
   
   private:        /* variables */
 
@@ -47,8 +49,10 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
   QGraphicsScene * scene;
   QVector<const Simulator::Node *> sensorNetworkNodes;
   QHash<const Simulator::Node*, QGraphicsPolygonItem *> polyHash;
+  QHash<const Simulator::Node*, QGraphicsPolygonItem *> backPolyHash;
   //QHash<QGraphicsPolygonItem *, const Simulator::Node*> nodeHash; /*FIXME do we really need two hashs? - rax*/
   QGraphicsItemGroup * swebLines;
+  QGraphicsItemGroup * sendingLines;
   
   /* simulator */
   Simulator::SensorNetwork * sensorNetwork;
