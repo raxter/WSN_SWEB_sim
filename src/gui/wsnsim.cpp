@@ -199,7 +199,6 @@ void WSNsim::updateScene() {
 
   }
   
-  
 }
 
 
