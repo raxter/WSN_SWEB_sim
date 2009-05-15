@@ -19,6 +19,7 @@ class Node  {
 
   ///Constructors/Destructors
   Node(int id, int x = 0, int y = 0);
+  Node();
   ~Node();
 
   ///mem allocation
@@ -26,41 +27,43 @@ class Node  {
 
   ///attributes for simulation
   enum State {
-    IDLE, 
-    SENDING, 
-    RECEIVING, 
-    READY_TO_SEND, /*alse serves as RECEIVED*/ 
+    IDLE,
+    SENDING,
+    RECEIVING,
+    READY_TO_SEND, /*alse serves as RECEIVED*/
     OUT_OF_ENERGY
   };
-  
+
   State state;
   State nextState;
   Node* otherNode; /* depending on state, could represent the node that this node is sending to or receiving from*/
   int sendReceiveTimer;
   int headAllocTimer;
-  
+
   //general attributes
-  
+  //Node nul;
   int id; // this node's id, if id == -1, it means this node is the base station, -2 means undefined
-  
+
   int x,y; /* FIXME - doubles rather, perhaps (?) - raxter */
   int cluster;
-  int routeTable [3][3];
+  Node * routeTable [3][3];
   int energyRemaining;
 
   ///functions
-  int getNextHop();
-  
+
   bool isHead() const;
-  void setHead(int nodeId);
-  int getHead();
+  void setHead(Node * nodeId);
+  Node * getHead();
 
   void init();
+  Node * getNextHop();
+
   void setCluster(int cluIn);
   int getCluster();
-  void setRT(int  c22,int  c21,int  c20,int  c12, int  c10, int  c02, int  c01, int  c00);
+  void setRouteTable(Node * c22, Node * c21, Node * c20,Node * c12, Node * c10, Node * c02, Node * c01, Node * c00);
   void printTable();
-  int * getRT(int row);
+  Node * getRouteTable(int row, int col);
+  void assignToRouteTable(int row, int col, Node * in);
 };
 
 

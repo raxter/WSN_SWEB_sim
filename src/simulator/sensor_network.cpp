@@ -14,12 +14,12 @@ using namespace std;
 ****************************************************************************/
 
 
-SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int noNodesIn, int noSectorsIn) : baseStation(-1)
+SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int numNodesIn, int noSectorsIn) : baseStation(-1)
 {
   baseStation.state = Node::READY_TO_SEND;
   noSectors = noSectorsIn;
   scanAngle = 360/noSectors;
-  noNodes = noNodesIn;
+  numNodes = numNodesIn;
   createNodes(xRangeIn,yRangeIn);
 
   init();
@@ -48,13 +48,13 @@ SensorNetwork::~SensorNetwork()
 void SensorNetwork::route()
 {
   /*RAGE my changes caused this to infinite loop! FIXME - rax*/
-  /*Node * curNode = &nodes[97];
+  Node * curNode = &nodes[97];
   while (curNode != &baseStation)
   {
 
-    curNode = nextHop(curNode);
-    ////cout<<"pac from node 97 is in cluster: "<<curNode->getCluster()<<endl;
-  }*/
+    curNode = curNode->getNextHop();
+    cout<<"pac from node 97 is in cluster: "<<curNode->getCluster()<<endl;
+  }
 
 }
 
@@ -156,7 +156,7 @@ int SensorNetwork::getSlice(int x , int y)
 
 /*FIXME if this is the routeing algorithm is should definitly go to the node class, this is a non-centralised routing algo, requires non-centralised routing ;) */
 /* should return id maybe? - rax*/
-Node * SensorNetwork::nextHop (Node * source)
+/*Node * SensorNetwork::nextHop (Node * source)
 {
   if (source == &baseStation)
       return source;
@@ -165,14 +165,14 @@ Node * SensorNetwork::nextHop (Node * source)
   {
     ///Get the next nearest head node: contenders are [0][0], [0][1] and [0][2] if they exist
 
-    int nextClusterNo = source->getRT(0)[1];//ur here
+    int nextClusterNo = source->getRouteTable(0,1);//ur here
 
 
 
 
     if (nextClusterNo == -1)
       return &baseStation;
-    else 
+    else
       return clusterHeads[nextClusterNo];
 
   }
@@ -180,7 +180,7 @@ Node * SensorNetwork::nextHop (Node * source)
   {
       return clusterHeads[source->getCluster()];
   }
-}
+}*/
 
 
 /****************************************************************************
@@ -193,7 +193,7 @@ std::vector <Node *> SensorNetwork::getNodePointers()
 {
   std::vector <Node *> out;
   out.push_back(&baseStation);
-  for (int a = 0 ; a < noNodes ; a++)
+  for (int a = 0 ; a < numNodes ; a++)
     out.push_back(&nodes[a]);
   return out;
 }
@@ -207,8 +207,9 @@ std::vector <Node *> SensorNetwork::getNodePointers()
 std::vector <const Node *> SensorNetwork::getConstNodePointers() const
 {
   std::vector <const Node *> out;
+
   out.push_back(&baseStation);
-  for (int a = 0 ; a < noNodes ; a++)
+  for (int a = 0 ; a < numNodes ; a++)
     out.push_back(&nodes[a]);
   return out;
 }
@@ -226,7 +227,7 @@ void SensorNetwork::init() {
   clusterMax=0;
 
   ///determine all nodes clusters
-  for (int a = 0 ; a < noNodes ; a++)
+  for (int a = 0 ; a < numNodes ; a++)
   {
       nodes[a].cluster = determineCluster(&nodes[a]);
       //cout<<"node: "<<a<<" x: "<<nodes[a].x<<" y: "<<nodes[a].y<<" cluster "<<nodes[a].cluster<<endl;
@@ -236,75 +237,126 @@ void SensorNetwork::init() {
   ///set initial cluster heads
   for (int b = 0 ; b <= clusterMax ; b++)
   {
-      vector <Node*> cluster = getCluster(b);
-      //cout <<"\nsize: "<< cluster.size()<< endl;
+    vector <Node*> cluster = getCluster(b);
+    //cout <<"\nsize: "<< cluster.size()<< endl;
 
-      int lowestRemEnergy = MAX_NODE_ENGERGY+1;
-      Node * newHead = NULL;
-      for (int c = 0 ; c < cluster.size(); c++)
-      {
-          //cout << "there are actual nodes in this cluster: "<< " current node in cluster: "<<cluster[c]->cluster<<endl;
-          if (cluster[c]->energyRemaining < lowestRemEnergy)
-          {
-                  lowestRemEnergy = cluster[c]->energyRemaining;
-                  newHead = cluster[c];
-                  cluster[c]->setHead(true);
-          }
-      }
-      clusterHeads.push_back(newHead);
-      //cout<<"cluster "<<b<<" headnode "<<newHead;
+    int highestRemEnergy = 0;
+    Node * newHead = NULL;
+    for (int c = 0 ; c < cluster.size(); c++)
+    {
+        //cout << "there are actual nodes in this cluster: "<< " current node in cluster: "<<cluster[c]->cluster<<endl;
+        if (cluster[c]->energyRemaining > highestRemEnergy)
+        {
+                highestRemEnergy = cluster[c]->energyRemaining;
+                newHead = cluster[c];
+                //cluster[c]->setHead(&newHead);
+        }
+    }
+    for (int d = 0 ; d < cluster.size() ; d++)
+      cluster[d]->setHead(newHead);
+
+
+    clusterHeads.push_back(newHead);
+    cout<<"cluster "<<b<<" headnode "<<newHead<<endl;
 
   }
   for (int hnC = 0 ; hnC < clusterHeads.size() ; hnC++)
-      //cout<<"clust no: "<<hnC<<" CH: "<<getCluster(hnC).size()<<" - "<<clusterHeads[hnC]<<endl;
+      cout<<"clust no: "<<hnC<<" CH: "<<getCluster(hnC).size()<<" - "<<clusterHeads[hnC]<<endl;
 
   ///since head nodes have been determined
   ///create routing tables
-  for (int c = 0 ; c < noNodes ; c++)
+  for (int c = 0 ; c < numNodes ; c++)
   {
       double dist = getDistFromBS(&nodes[c]);
       int degreesOutward = (int)dist/(int)threshDegree;
 
-
-
       int relCluster = nodes[c].getCluster();
       ///[2][2]:
       int c22 = (relCluster+1)%noSectors + (degreesOutward+1)*noSectors;
+      Node * c22Head ;
+      if (c22 > clusterMax)
+        c22Head = NULL;
+      else
+        c22Head = clusterHeads[c22];
+      //assignNodeToRouteTable(&c22Head,c22);
+
       ///[2][1]:
-      int c21 = relCluster+noSectors;
+      int c21=0;
+      Node * c21Head;
+      if (relCluster == 0 )
+        c21 = 2*noSectors-1;
+      else
+        c21 = relCluster+noSectors;
+
+
+      if (c21 > clusterMax)
+        c21Head = NULL;
+      else
+        c21Head = clusterHeads[c21];
+
       ///[2][0]:
       int c20 = (relCluster-1)%noSectors + (degreesOutward+1)*noSectors;
+      Node * c20Head;
+       if (c20 > clusterMax)
+        c20Head = NULL;
+      else
+        c20Head = clusterHeads[c20];
 
       ///[1][2]:
       int c12 = (relCluster +1)%noSectors + degreesOutward*noSectors;
+      Node * c12Head;
+       if (c12 > clusterMax)
+        c12Head = NULL;
+      else
+        c12Head = clusterHeads[c12];
+
       ///[1][0]:
-      int c10 = (relCluster -1)%noSectors + degreesOutward*noSectors;
+      int c10=0;
+      Node * c10Head;
+      if (relCluster == 0 )///special case where cluster num = 0
+        c10 = noSectors;
+      else
+        c10 = (relCluster -1)%noSectors + degreesOutward*noSectors;
+
+      if (c10 > clusterMax)
+          c10Head = NULL;
+        else
+          c10Head = clusterHeads[c10];
 
       ///[0][*]
       int c02,c01,c00 = 0;
+      Node * c02Head, * c01Head,*c00Head;
       if (relCluster < noSectors)
       {
           ///[0][2]:
-          c02 = -1;///-1 = base station
+          //c02 = -1;///-1 = base station
+          c02Head = &baseStation;
           ///[0][1]:
-          c01 = -1;///-1 = base station
+          //c01 = -1;///-1 = base station
+          c01Head = &baseStation;
           ///[0][0]:
-          c00 = -1;///-1 = base station
+          //c00 = -1;///-1 = base station
+          c00Head = &baseStation;
       }
       else
       {
           ///[0][2]:
           c02 = (relCluster+1)%noSectors + (degreesOutward-1)*noSectors;
+          c02Head = clusterHeads[c02];
             ///[2][1]:
           c01 = relCluster-noSectors;
+          c01Head = clusterHeads[c01];
           ///[2][0]:
           c00 = (relCluster-1)%noSectors + (degreesOutward-1)*noSectors;
+          c00Head = clusterHeads[c00];
       }
 
-      nodes[c].setRT(c22,c21,c20,c12,c10,c02,c01,c00) ;
-      //cout<<c<<endl;
+      //nodes[c].setRouteTable(c22Head,c21Head,c20Head,c12Head,c10Head,c02Head,c01Head,c00Head) ;
+      //cout <<"clust of "<< c01Head->cluster<<endl;
+      nodes[c].setRouteTable(c22Head,c21Head,c20Head,c12Head,c10Head,c02Head,c01Head,c00Head) ;
+      cout<<"nodes ["<<c<<"] cl: "<<nodes[c].cluster<<endl;
       nodes[c].printTable();
-      //cout<<endl;
+
 
   }
 
@@ -316,12 +368,23 @@ void SensorNetwork::init() {
 ** Author: Julian Hulme
 **
 ****************************************************************************/
+void SensorNetwork::assignNodeToRouteTable(Node * nodeIn, int clusterNo)
+{
+  if (clusterNo > clusterMax)
+        nodeIn = NULL;
+        else
+        nodeIn = clusterHeads[clusterNo];
+}
 
-
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
 vector <Node *> SensorNetwork::getCluster(int clustNo)
 {
   vector <Node *> out;
-  for (int a = 0 ; a < noNodes ; a++)
+  for (int a = 0 ; a < numNodes ; a++)
   {
           if (nodes[a].cluster == clustNo)
               out.push_back(&nodes[a]);
@@ -338,8 +401,8 @@ vector <Node *> SensorNetwork::getCluster(int clustNo)
 
 void SensorNetwork::createNodes(int x , int y)
 {
-  //cout<<"start of createNodes "<<noNodes<<endl;
-  for (int a = 0 ; a < noNodes ; a++)
+  //cout<<"start of createNodes "<<numNodes<<endl;
+  for (int a = 0 ; a < numNodes ; a++)
   {
 
       int randx = x/2 - rand()%(x+1);
@@ -347,7 +410,7 @@ void SensorNetwork::createNodes(int x , int y)
       nodes.push_back( Node(a, randx, randy));
 
   }
-  //cout<<"end of createNodes "<<noNodes<<endl;
+  //cout<<"end of createNodes "<<numNodes<<endl;
 }
 
 /****************************************************************************

@@ -24,34 +24,35 @@ public:
     SensorNetwork(int xRangeIn = 100, int yRangeIn = 100, int noNodesIn = 100, int noSectors = 16);
 
     ~SensorNetwork();
-    
+
 
     Node* getNode(int id);
+    ///mem alloaction
+    std::vector <Node*> clusterHeads; /*TODO shouldn't be here - rax*/
+    std::vector <Node> nodes;
+    Node baseStation;
+
 
     ///attributes
     double scanAngle;
     double threshDegree;
     int noSectors;
 
-    int noNodes;
+    int numNodes;
     int clusterMax;
 
     ///functions
 
-    Node* nextHop(Node * source); /*needs to move to Node class, see cpp file - rax*/
+   // Node* nextHop(Node * source); /*needs to move to Node class, see cpp file - rax*/
     std::vector <Node *> getCluster(int clustNo);
 
     std::vector <Node *> getNodePointers();
     std::vector <const Node *> getConstNodePointers() const;
 
 private:
-    
-    ///mem alloaction
-    std::vector <Node*> clusterHeads; /*TODO shouldn't be here - rax*/
-    std::vector <Node> nodes;
-    Node baseStation;
-    
-    
+
+
+
     void init();
     void createNodes(int x,int y);
     int getClusterNo (int sector, int slice);
@@ -60,7 +61,7 @@ private:
     double dist(int x1, int y1, int x2, int y2);
     double getDistFromBS(Node * which);
     int determineCluster(Node * in);
-
+    void assignNodeToRouteTable(Node * nodeIn, int clusterNo);
 
     ///temp
     void route();
