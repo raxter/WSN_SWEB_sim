@@ -28,10 +28,22 @@ class BaseStation : public DiscreteSim {
   
   public: /* overridden methods */
   
-  Node * getNextHop() const ;
+  Node * getNextHop();
   
-  Node * targetNode;
-  //std::vector<Nodes::DiscreteSim * > sectionHeadNodes;
+  Node * targetNode; /*FIXME, this was just put in for testing*/
+  
+  protected: /* overridden methods */
+  void stateIdle();
+  void packetSendStart();
+  void packetReceiveFinished(Packet * packet);
+
+  public: /* methods */
+  
+  void initiate();
+
+  protected: /* variables*/
+  
+  bool waitingForReply;
 
 };
 

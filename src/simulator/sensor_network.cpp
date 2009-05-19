@@ -425,12 +425,9 @@ void SensorNetwork::init() {
 
 
   }
-
-  for (int num = 0 ; num < numberOfNodes ; num++)
-    sensors[num]->baseStation = this->baseStation;
-
-  baseStation->targetNode = sensors[9];
-
+  
+  baseStation->targetNode = sensors[97];
+  baseStation->initiate();
   /*cout <<  numberOfSectors << endl << endl;
   for (int i = 0 ; i < numberOfSectors; i++) {
     baseStation->sectionHeadNodes.push_back(clusterHeads[i]);

@@ -26,7 +26,7 @@ class Sensor : public DiscreteSim {
     ~Sensor();
 
   public: /* overridden methods */
-    Node * getNextHop() const;
+    Node * getNextHop();
 
   public: /* methods */
 

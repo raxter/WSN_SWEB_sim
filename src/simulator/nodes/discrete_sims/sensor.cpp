@@ -111,7 +111,7 @@ void Sensor::setCluster(int cluster)
 **
 ****************************************************************************/
 
-Node * Sensor::getNextHop()  const
+Node * Sensor::getNextHop()
 {
   std::cout << isHead() << std::endl;
   printTable();

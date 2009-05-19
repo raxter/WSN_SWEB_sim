@@ -1,16 +1,32 @@
-#ifndef PACKET_H_INCLUDED
-#define PACKET_H_INCLUDED
+#ifndef __WSN_SIMULATOR_PACKET_H__
+#define __WSN_SIMULATOR_PACKET_H__
 
 #include "node.h"
 
+namespace WSN
+{
+
+namespace Simulator
+{
+
 class Packet    {
 
-      Packet ();
-      ~Packet ();
+  public:
+
+    Packet ();
+    ~Packet ();
 
 
-      Node * source;
-      Node * dest;
-      double data;
-    };
-#endif // PACKET_H_INCLUDED
+    Node * source;
+    Node * dest;
+    double data;
+    int size; // in bytes
+};
+
+} /* end of namespace Simulator */
+
+
+} /* end of namespace WSN */
+
+
+#endif // __WSN_SIMULATOR_PACKET_H__

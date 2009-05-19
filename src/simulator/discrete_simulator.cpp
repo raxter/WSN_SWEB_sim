@@ -62,7 +62,7 @@ void DiscreteSimulator::incrementTimeStep() {
   
   for (int phase = 0 ; phase < Nodes::DiscreteSim::numberOfPhases ; phase++)
     for (int n = 0 ; n < nodes.size() ; n++)
-      nodes[n]->doTimeStep(phase);
+      nodes[n]->doNextPhaseOfTimeStep();
     
   emit finishedTimeStep ();
 }

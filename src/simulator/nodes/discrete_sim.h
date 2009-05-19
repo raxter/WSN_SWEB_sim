@@ -3,6 +3,8 @@
 
 #include "../node.h"
 
+#include "simulator/packet.h"
+
 namespace WSN
 {
 
@@ -24,13 +26,14 @@ class DiscreteSim : public Node {
   ~DiscreteSim();
   
   
-  private: /* overridden methods (public -> private) */
+  protected: /* overridden methods */
   void setState(State state);
   
   public: /* methods */
   
   const DiscreteSim * getOtherNode() const;
-  void doTimeStep(int phase);
+  void doNextPhaseOfTimeStep();
+  const Packet * getPacket() const;
   
   double getPercentageDone() const;
   
@@ -40,11 +43,31 @@ class DiscreteSim : public Node {
   void hardwareSimPhase();
   void stateUpdatePhase();
   
+  protected: /* methods */
+  
+  virtual void stateIdle();
+  void stateSending();
+  void stateReceiving();
+  void stateReadyToSend();
+  void stateOutOfEnergy();
+  
+  void packetReceiveStart();
+  virtual void packetReceiveFinished(Packet * packet);
+  virtual void packetSendStart();
+  void packetSendFinish();
+  
+  
   public: /* variables */
+  
   int energyRemaining;
   Type type;
   
   protected: /* variables */
+  Packet * packet;
+  private: /* variables */
+  
+  int phase;
+  
   Node::State nextState;
     
   DiscreteSim* otherNode; /* depending on state, could represent the node that this node is sending to or receiving from*/

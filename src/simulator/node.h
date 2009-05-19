@@ -31,20 +31,23 @@ class Node {
 
     double x() const;
     double y() const;
-    State state() const;
-    virtual void setState(State state);
-    double  distTo(Node * otherSensor) const;
     int getId() const;
+    State state() const;
+    double  distTo(Node * otherSensor) const;
+    
+  protected: /* methods */
+    virtual void setState(State state);
 
   protected: /* variables */
 
-    virtual Node * getNextHop() const = 0;
+    virtual Node * getNextHop() = 0;
 
     //Packet * packet;
     //Packet * headReallocPacket;
 
 
     int id; // this node's id, if id == -1 it means undefined
+  private: /* variables */
     double _x,_y;
 
     State _state;

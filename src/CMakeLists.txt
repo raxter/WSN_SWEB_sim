@@ -17,6 +17,7 @@ SET(WSN_SIMULATOR_SRCS_CXX
   simulator/sensor_network.cpp
   simulator/discrete_simulator.cpp
   
+  simulator/packet.cpp
   simulator/node.cpp
   simulator/nodes/discrete_sim.cpp
   simulator/nodes/discrete_sims/sensor.cpp
