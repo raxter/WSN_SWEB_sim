@@ -28,7 +28,7 @@ public:
 
 
   public: /* methods */
-  
+
     ///functions
 
     // Node* nextHop(Node * source); /*needs to move to Node class, see cpp file - rax*/
@@ -39,33 +39,34 @@ public:
 
     double getScanAngle() const;
     double getThreshDegree() const;
-    
+
 
   private: /* methods */
 
-    
+
     void    init();
     void    createNodes(int x,int y);
-    
+
     int     getClusterNo (int sector, int slice);
     int *   getClusterCoor(int cluNo);
     int     getSlice(double x , double y) const;
-    
+
     double  dist(int x1, int y1, int x2, int y2) const; /* make a static function ?*/
     double  getDistFromBS(const SensorNode * which) const;
     int     determineCluster(const SensorNode * in) const;
+    int     getCluster(int sector, int slice);
     //void    assignNodeToRouteTable(SensorNode * nodeIn, int clusterNo);
 
   public: /* variables */
     int numberOfSectors;
-  
-  
+
+
   private: /* variables */
-  
+
     std::vector <SensorNode*> clusterHeads; /*TODO shouldn't be here - rax*/
     std::vector <SensorNode*> sensors; /*NOTE sensors are now stored dynamically so that the vtable look up will work*/
     Nodes::DiscreteSims::BaseStation * baseStation;
-    
+
     double scanAngle;
     double threshDegree;
 

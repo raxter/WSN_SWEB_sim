@@ -1,5 +1,6 @@
 
 #include "node.h"
+#include <cmath>
 
 namespace WSN
 {
@@ -25,7 +26,7 @@ Node::Node(int id, double x, double y, State state) : id (id), _x(x), _y(y), _st
 ****************************************************************************/
 
 Node::~Node(){
-  
+
 }
 
 
@@ -83,9 +84,21 @@ void Node::setState(State state) {
   _state = state;
 }
 
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+double  Node::distTo(Node * otherSensor) const {
+
+  return sqrt(pow(otherSensor->_x-this->_x,2) + pow(otherSensor->_y-this->_y,2) );
+}
+
+
 } /* end of namespace Simulator */
 
 
 } /* end of namespace WSN */
+
 
 

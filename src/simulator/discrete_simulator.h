@@ -21,7 +21,7 @@ class DiscreteSimulator : public QObject  {
   ~DiscreteSimulator();
 
   signals:
-  
+
   void logEvent( const QString & event );
   void finishedTimeStep ();
 
@@ -30,7 +30,7 @@ class DiscreteSimulator : public QObject  {
   void incrementTimeStep();
 
   public: /* methods */
-  
+
   unsigned long currentTime();
 
   private: /* methods */

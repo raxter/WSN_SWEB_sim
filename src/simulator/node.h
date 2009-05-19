@@ -12,8 +12,8 @@ namespace Simulator
 class Node {
 
   public: /* class specific*/
-  
-  
+
+
     enum State {
       Idle,
       Sending,
@@ -21,36 +21,36 @@ class Node {
       ReadyToSend, /*also serves as Received*/
       OutOfEnergy
     };
-    
-    
+
+
     Node(int id = 0, double x = 0.0, double y = 0.0, State state = Idle);
     virtual ~Node();
-  
-  
+
+
   public: /* methods */
-  
+
     double x() const;
     double y() const;
     State state() const;
     virtual void setState(State state);
-    
+    double  distTo(Node * otherSensor) const;
     int getId() const;
-  
+
   protected: /* variables */
-    
+
     virtual Node * getNextHop() const = 0;
-  
+
     //Packet * packet;
     //Packet * headReallocPacket;
-    
-  
+
+
     int id; // this node's id, if id == -1 it means undefined
     double _x,_y;
 
     State _state;
 
     //State reallocState; /* to be used to store the reallocation channel state (if we use the dual channel method for reallocation)*/
-  
+
 
 
 };

@@ -21,10 +21,10 @@ using namespace std;
 ****************************************************************************/
 
 
-SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int numberOfNodes, int numberOfSectors) : 
-      baseStation(), 
-      numberOfSectors(numberOfSectors), 
-      numberOfNodes(numberOfNodes), 
+SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int numberOfNodes, int numberOfSectors) :
+      baseStation(),
+      numberOfSectors(numberOfSectors),
+      numberOfNodes(numberOfNodes),
       scanAngle(360.0/numberOfSectors)
 {
   createNodes(xRangeIn,yRangeIn);
@@ -44,7 +44,7 @@ SensorNetwork::~SensorNetwork()
   for (int c = 0 ; c < sensors.size(); c++)
     delete sensors[c];
   delete baseStation;
-  
+
 }
 
 
@@ -227,7 +227,7 @@ std::vector <const Nodes::DiscreteSim *> SensorNetwork::getConstSimNodePointers(
   out.push_back(baseStation);
   for (int a = 0 ; a < numberOfNodes ; a++) {
     out.push_back(sensors[a]);
-    
+
   }
   return out;
 }
@@ -268,27 +268,27 @@ void SensorNetwork::init() {
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   ///determine number of clusters
-    
+
   // determining the nodes' cluster numbers and finding out the number of total clusters
   numberOfClusters = 0;
   for (int a = 0 ; a < numberOfNodes ; a++) {
       int cluster = determineCluster(sensors[a]);
       sensors[a]->setCluster(cluster);
-      
+
       if (numberOfClusters < cluster+1)
         numberOfClusters = cluster+1;
   }
-  
+
   typedef std::vector <SensorNode*> ClusterVec;
-  
+
   std::vector <ClusterVec> clusters(numberOfClusters);
-    
+
   ///determine all nodes clusters
   for (int a = 0 ; a < numberOfNodes ; a++) {
       int cluster = sensors[a]->getCluster();
       clusters[cluster].push_back(sensors[a]);
   }
-  
+
   ///set initial cluster heads
   for (int b = 0 ; b < numberOfClusters ; b++)
   {
@@ -315,11 +315,11 @@ void SensorNetwork::init() {
     //cout<<"cluster "<<b<<" headnode "<<newHead<<endl;
 
   }
-  
+
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  
+
   //for (int hnC = 0 ; hnC < clusterHeads.size() ; hnC++)
   //    cout<<"clust no: "<<hnC<<" CH: "<<getCluster(hnC).size()<<" - "<<clusterHeads[hnC]<<endl;
 
@@ -425,9 +425,12 @@ void SensorNetwork::init() {
 
 
   }
-  
-  baseStation->targetNode = sensors[97];
-  
+
+  for (int num = 0 ; num < numberOfNodes ; num++)
+    sensors[num]->baseStation = this->baseStation;
+
+  baseStation->targetNode = sensors[9];
+
   /*cout <<  numberOfSectors << endl << endl;
   for (int i = 0 ; i < numberOfSectors; i++) {
     baseStation->sectionHeadNodes.push_back(clusterHeads[i]);
@@ -483,9 +486,9 @@ double SensorNetwork::getDistFromBS(const SensorNode * node) const
 **
 ****************************************************************************/
 
-int getCluster(int sector, int slice)
+int SensorNetwork::getCluster(int sector, int slice)
 {
-   return sector*8+slice;
+   return sector*numberOfSectors+slice;
 }
 
 

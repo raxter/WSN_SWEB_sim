@@ -121,13 +121,36 @@ Node * Sensor::getNextHop()  const
 
     DiscreteSim * nextSensor;
 
+    DiscreteSim * rightBelow = routeTable[0][0];
+    DiscreteSim * leftBelow = routeTable[0][2];
+    bool rightBelowIsNull;
+    bool leftBelowIsNull;
 
+
+    if (rightBelow == NULL)
+    {
+      rightBelowIsNull = true;
+      cout <<"right below is null"<<endl;
+    }
+    if (leftBelow == NULL)
+    {
+      leftBelowIsNull = true;
+      cout <<"right below is null"<<endl;
+    }
+
+    ///the simple SWEB routing algorithm
     if (routeTable[0][1] != NULL)
       nextSensor = routeTable[0][1];
-    else if (routeTable[0][0] != NULL)
-      nextSensor = routeTable[0][0];
-    else if (routeTable[0][2] != NULL)
-      nextSensor = routeTable[0][2];
+    else if ((!rightBelowIsNull) && (!leftBelowIsNull)) {
+      if (rightBelow->distTo(baseStation) < leftBelow->distTo(baseStation))
+        return rightBelow;
+        else return leftBelow;
+        }
+    else if (rightBelow != NULL)
+      return rightBelow;
+    else if (leftBelow != NULL)
+      return leftBelow;
+    else return baseStation;
     //else nextSensor = & ///this is the current SWEB problem where to go if node is isolated
     return nextSensor;
 
@@ -199,8 +222,8 @@ void Sensor::printTable() const
         else
           cout << "X";
       }
-      else 
-        cout << "N  ";
+      else
+        cout << " N ";
     }
     cout<<endl;
   }
