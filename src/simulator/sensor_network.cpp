@@ -426,7 +426,7 @@ void SensorNetwork::init() {
 
   }
   
-  baseStation->targetNode = sensors[97];
+  baseStation->targetNode = sensors[10];
   baseStation->initiate();
   /*cout <<  numberOfSectors << endl << endl;
   for (int i = 0 ; i < numberOfSectors; i++) {

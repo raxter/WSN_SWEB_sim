@@ -27,6 +27,11 @@ class Sensor : public DiscreteSim {
 
   public: /* overridden methods */
     Node * getNextHop();
+    
+    
+  protected: /* overridden methods */
+    void stateSending();
+    void packetReceiveFinished(Packet * recPacket);
 
   public: /* methods */
 

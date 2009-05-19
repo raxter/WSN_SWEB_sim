@@ -46,10 +46,10 @@ class DiscreteSim : public Node {
   protected: /* methods */
   
   virtual void stateIdle();
-  void stateSending();
-  void stateReceiving();
-  void stateReadyToSend();
-  void stateOutOfEnergy();
+  virtual void stateSending();
+  virtual void stateReceiving();
+  virtual void stateReadyToSend();
+  virtual void stateOutOfEnergy();
   
   void packetReceiveStart();
   virtual void packetReceiveFinished(Packet * packet);

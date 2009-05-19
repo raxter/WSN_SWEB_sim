@@ -235,6 +235,41 @@ void Sensor::printTable() const
 
 }
 
+
+
+void Sensor::stateSending() {
+  //energy--;
+  
+  DiscreteSim::stateSending();
+}
+
+
+/****************************************************************************
+**
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+void Sensor::packetReceiveFinished(Packet * recPacket) {
+
+  if (false/*packet->dst == this*/) {/*TODO*/
+    DiscreteSim::packetReceiveFinished(recPacket);
+    /*do stuff*/
+    Packet * newPacket = new Packet(/* new dst == base */);
+    
+    delete packet; /* delete old packet, it is done */
+    
+    packet = newPacket;
+    
+    setState(Node::ReadyToSend);
+  }
+  else {
+    DiscreteSim::packetReceiveFinished(recPacket); /* stores to memory */
+    
+    setState(Node::ReadyToSend);
+  }
+}
+
 } /* end of namespace DiscreteSims */
 
 } /* end of namespace Nodes */

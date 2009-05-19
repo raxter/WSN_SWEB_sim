@@ -148,6 +148,19 @@ void DiscreteSim::stateUpdatePhase() {
 
 
 /****************************************************************************
+   __ __            __                   
+  / // /__ ________/ /    _____ ________ 
+ / _  / _ `/ __/ _  / |/|/ / _ `/ __/ -_)
+/_//_/\_,_/_/  \_,_/|__,__/\_,_/_/  \__/ 
+                                         
+   ____              __  _             
+  / __/_ _____  ____/ /_(_)__  ___  ___
+ / _// // / _ \/ __/ __/ / _ \/ _ \(_-<
+/_/  \_,_/_//_/\__/\__/_/\___/_//_/___/
+                                       
+****************************************************************************/
+
+/****************************************************************************
 **
 ** Author: Richard Baxter
 **
@@ -230,8 +243,7 @@ void DiscreteSim::packetReceiveStart(){
 
 void DiscreteSim::packetReceiveFinished(Packet * packet){
   
-  this->packet = packet; //FIXME multiple received packets will overwite eachother!
-  setState(Node::ReadyToSend);
+  this->/*incoming_*/packet = packet; //FIXME multiple received packets will overwite eachother!
 }
 
 /****************************************************************************

@@ -69,10 +69,12 @@ void BaseStation::stateIdle() {
 **
 ** Author: Richard Baxter
 **
+** overrided method
+**
 ****************************************************************************/
 
 void BaseStation::packetSendStart() {
-  packet = new Packet();
+  packet = new Packet(/*blah blah stuff TODO*/);
   waitingForReply = true;
   DiscreteSim::packetSendStart();
 }
@@ -84,9 +86,11 @@ void BaseStation::packetSendStart() {
 ****************************************************************************/
 
 void BaseStation::packetReceiveFinished(Packet * packet) {
+  //DiscreteSim::packetReceiveFinished(NULL);
   delete packet;
   waitingForReply = false;
-  DiscreteSim::packetReceiveFinished(NULL);
+  
+  setState(Node::ReadyToSend);
 }
 
 

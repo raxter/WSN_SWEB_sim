@@ -13,6 +13,7 @@ class Node {
 
   public: /* class specific*/
 
+   static const double bandwidth = 5; // kb/s
 
     enum State {
       Idle,
