@@ -13,7 +13,7 @@ class Node {
 
   public: /* class specific*/
 
-   static const double bandwidth = 5; // kb/s
+   static const double bandwidth = 54; // kb/s
 
     enum State {
       Idle,
@@ -35,7 +35,7 @@ class Node {
     int getId() const;
     State state() const;
     double  distTo(Node * otherSensor) const;
-    
+
   protected: /* methods */
     virtual void setState(State state);
 

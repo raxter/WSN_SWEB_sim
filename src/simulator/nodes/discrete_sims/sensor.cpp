@@ -4,6 +4,7 @@
 
 #include "sensor.h"
 #include <iostream>
+#include <cmath>
 #include <typeinfo>
 
 namespace WSN
@@ -31,7 +32,7 @@ using namespace std;
 
 Sensor::Sensor(int id, double x, double y) : DiscreteSim(Nodes::DiscreteSim::Sensor, id, x, y, Node::Idle), cluster(-1)
 {
-  energyRemaining=100;
+  energyRemaining = 1000000000/*nano J*/;
   for (int i = 0 ; i < 3 ; i++)
     for (int j = 0 ; j < 3 ; j++)
       routeTable [i][j] = 0;
@@ -128,15 +129,10 @@ Node * Sensor::getNextHop()
 
 
     if (rightBelow == NULL)
-    {
       rightBelowIsNull = true;
-      cout <<"right below is null"<<endl;
-    }
     if (leftBelow == NULL)
-    {
       leftBelowIsNull = true;
-      cout <<"right below is null"<<endl;
-    }
+
 
     ///the simple SWEB routing algorithm
     if (routeTable[0][1] != NULL)
@@ -239,7 +235,22 @@ void Sensor::printTable() const
 
 void Sensor::stateSending() {
   //energy--;
-  
+
+  /// Energy loss
+  /// assumptions are: timesteps are 1 msec each
+  ///                  54 kb/s = 54 bits/msec transmission speed,
+  ///                  50nJ/bit circuitry tax,
+  ///                  100pJ / bit / m^2 sending transmission tax
+  /// (see page 6/7 of SWEB doc)
+  cout << "sensor stateSending\n";
+  double dist = distTo(otherNode);
+  double depletedCircuitryTax = 50/*nano J*/*54;
+  double depletedTransTax     = 100*pow(10,-3)/*nano J*/*54*pow(dist,2);
+
+  energyRemaining -= depletedCircuitryTax;
+  energyRemaining -= depletedTransTax;
+
+  cout << depletedTransTax<<endl<<depletedCircuitryTax<<endl <<dist <<endl << energyRemaining<<endl;
   DiscreteSim::stateSending();
 }
 
@@ -256,16 +267,16 @@ void Sensor::packetReceiveFinished(Packet * recPacket) {
     DiscreteSim::packetReceiveFinished(recPacket);
     /*do stuff*/
     Packet * newPacket = new Packet(/* new dst == base */);
-    
+
     delete packet; /* delete old packet, it is done */
-    
+
     packet = newPacket;
-    
+
     setState(Node::ReadyToSend);
   }
   else {
     DiscreteSim::packetReceiveFinished(recPacket); /* stores to memory */
-    
+
     setState(Node::ReadyToSend);
   }
 }

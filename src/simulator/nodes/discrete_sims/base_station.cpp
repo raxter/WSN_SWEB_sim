@@ -59,7 +59,7 @@ void BaseStation::initiate() {
 ****************************************************************************/
 
 void BaseStation::stateIdle() {
-  
+
   if (!waitingForReply) {
     setState(ReadyToSend);
   }
@@ -89,7 +89,7 @@ void BaseStation::packetReceiveFinished(Packet * packet) {
   //DiscreteSim::packetReceiveFinished(NULL);
   delete packet;
   waitingForReply = false;
-  
+
   setState(Node::ReadyToSend);
 }
 

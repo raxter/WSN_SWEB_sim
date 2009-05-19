@@ -12,16 +12,16 @@ namespace Simulator
 namespace Nodes
 {
 
-  
+
 /****************************************************************************
 **
 ** Author: Richard Baxter
 **
 ****************************************************************************/
 
-DiscreteSim::DiscreteSim(Type type, int id, double x, double y, Node::State state) : Node(id,x,y,state), energyRemaining(100), type(type), otherNode(0), packet(0), phase(-1) {
+DiscreteSim::DiscreteSim(Type type, int id, double x, double y, Node::State state) : Node(id,x,y,state), energyRemaining(1000000000/*nano joules*/), type(type), otherNode(0), packet(0), phase(-1) {
 }
-  
+
 /****************************************************************************
 **
 ** Author: Richard Baxter
@@ -29,6 +29,8 @@ DiscreteSim::DiscreteSim(Type type, int id, double x, double y, Node::State stat
 ****************************************************************************/
 
 DiscreteSim::~DiscreteSim() {
+
+
   if (packet)
     delete packet; /* in case program is exited in the middle of simulation and it needs to be cleaned up*/
 }
@@ -41,6 +43,8 @@ DiscreteSim::~DiscreteSim() {
 ****************************************************************************/
 
 const DiscreteSim * DiscreteSim::getOtherNode() const {
+
+
   return (DiscreteSim *)otherNode;
 }
 
@@ -90,7 +94,7 @@ void DiscreteSim::setState(Node::State state) {
 void DiscreteSim::doNextPhaseOfTimeStep() {
 
   this->phase++;
-  
+
         if (phase == 0) stateSetupPhase();
   else  if (phase == 1) hardwareSimPhase();
   else  if (phase == 2) { stateUpdatePhase(); phase = -1;}
@@ -121,13 +125,13 @@ void DiscreteSim::hardwareSimPhase() {
   case Node::Receiving :    stateReceiving();     break;
   case Node::OutOfEnergy :  stateOutOfEnergy();   break;
   case Node::Idle :         stateIdle();          break;
-  
+
   default:
     //ERROR
     break;
-    
+
   }
-  
+
   if (energyRemaining <= 0) {
     nextState = Node::OutOfEnergy;
   }
@@ -148,16 +152,16 @@ void DiscreteSim::stateUpdatePhase() {
 
 
 /****************************************************************************
-   __ __            __                   
-  / // /__ ________/ /    _____ ________ 
+   __ __            __
+  / // /__ ________/ /    _____ ________
  / _  / _ `/ __/ _  / |/|/ / _ `/ __/ -_)
-/_//_/\_,_/_/  \_,_/|__,__/\_,_/_/  \__/ 
-                                         
-   ____              __  _             
+/_//_/\_,_/_/  \_,_/|__,__/\_,_/_/  \__/
+
+   ____              __  _
   / __/_ _____  ____/ /_(_)__  ___  ___
  / _// // / _ \/ __/ __/ / _ \/ _ \(_-<
 /_/  \_,_/_//_/\__/\__/_/\___/_//_/___/
-                                       
+
 ****************************************************************************/
 
 /****************************************************************************
@@ -242,7 +246,7 @@ void DiscreteSim::packetReceiveStart(){
 ****************************************************************************/
 
 void DiscreteSim::packetReceiveFinished(Packet * packet){
-  
+
   this->/*incoming_*/packet = packet; //FIXME multiple received packets will overwite eachother!
 }
 
@@ -253,16 +257,16 @@ void DiscreteSim::packetReceiveFinished(Packet * packet){
 ** assumes that packet is not NULL
 **
 ****************************************************************************/
-    
+
 void DiscreteSim::packetSendStart() {
   //std::cout << "DiscreteSim::packetSendStart()" << std::endl;
   setState(Node::Sending);
-  
+
   otherNode = (DiscreteSim*)getNextHop();
-  
+
   sendTimerTotal = 5-1; // in ms, TODO make time based on bandwidth and packet length
   sendTimer = sendTimerTotal;
-  
+
   otherNode->packetReceiveStart();
 }
 
@@ -271,14 +275,14 @@ void DiscreteSim::packetSendStart() {
 ** Author: Richard Baxter
 **
 ****************************************************************************/
-    
+
 void DiscreteSim::packetSendFinish() {
-  
+
   setState(Node::Idle);
   otherNode->packetReceiveFinished(packet);
   packet = NULL;
 }
-    
+
 
 
 
