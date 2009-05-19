@@ -14,7 +14,6 @@ class Node {
   public: /* class specific*/
   
   
-  
     enum State {
       Idle,
       Sending,
@@ -36,10 +35,14 @@ class Node {
     virtual void setState(State state);
     
     int getId() const;
+  
+  protected: /* variables */
     
     virtual Node * getNextHop() const = 0;
   
-  protected: /* variables */
+    //Packet * packet;
+    //Packet * headReallocPacket;
+    
   
     int id; // this node's id, if id == -1 it means undefined
     double _x,_y;

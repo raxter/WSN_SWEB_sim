@@ -37,6 +37,14 @@ BaseStation::~BaseStation()
 
 }
 
+/****************************************************************************
+**
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+
+
 
 /****************************************************************************
 **
@@ -47,8 +55,7 @@ BaseStation::~BaseStation()
 Node * BaseStation::getNextHop() const /*overloaded*/
 {
   /* TODO implement routing for the base station*/
-  
-  return sectionHeadNodes[2];
+  return targetNode;
 }
 
 

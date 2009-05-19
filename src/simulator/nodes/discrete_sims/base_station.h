@@ -30,8 +30,8 @@ class BaseStation : public DiscreteSim {
   
   Node * getNextHop() const ;
   
-  
-  std::vector<Nodes::DiscreteSim * > sectionHeadNodes;
+  Node * targetNode;
+  //std::vector<Nodes::DiscreteSim * > sectionHeadNodes;
 
 };
 

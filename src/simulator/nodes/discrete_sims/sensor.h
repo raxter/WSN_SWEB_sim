@@ -48,7 +48,7 @@ class Sensor : public DiscreteSim {
   private: /* variables */  
   
     int cluster;
-    DiscreteSim * routeTable [3][3];
+    Nodes::DiscreteSim * routeTable [3][3];
 
 };
 

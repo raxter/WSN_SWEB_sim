@@ -108,6 +108,7 @@ void DiscreteSim::hardwareSimPhase() {
   //-------------------------------------------------------------------------------
   
   case Node::ReadyToSend : /* TODO these should be delegated to a sendTo function of some sort if it gets too messy*/
+  
     nextState = Node::Sending;
     
     otherNode = (DiscreteSim*)getNextHop();
@@ -121,7 +122,7 @@ void DiscreteSim::hardwareSimPhase() {
     //qDebug() << node->otherNode;
     //qDebug() << node->otherNode->id;
     
-    sendTimerTotal = 30-1; // in ms, TODO make time based on bandwidth and packet length
+    sendTimerTotal = 5-1; // in ms, TODO make time based on bandwidth and packet length
     sendTimer = sendTimerTotal;
     //emit logEvent(QString("Node %1 sending packet to Node %2").arg(id).arg(otherNode->id));
     

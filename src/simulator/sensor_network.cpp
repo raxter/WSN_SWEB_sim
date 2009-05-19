@@ -426,11 +426,13 @@ void SensorNetwork::init() {
 
   }
   
-  cout <<  numberOfSectors << endl << endl;
+  baseStation->targetNode = sensors[97];
+  
+  /*cout <<  numberOfSectors << endl << endl;
   for (int i = 0 ; i < numberOfSectors; i++) {
     baseStation->sectionHeadNodes.push_back(clusterHeads[i]);
     cout <<  (clusterHeads[i]?clusterHeads[i]->getId():-1) << endl;
-  }
+  }*/
 
 }
 
