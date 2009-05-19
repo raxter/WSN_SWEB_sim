@@ -11,6 +11,8 @@ INCLUDE(${QT_USE_FILE})
 SET(WSN_SIMULATOR_SRCS_CXX
 
   gui/wsnsim.cpp
+  gui/graphics_scene.cpp
+  gui/graphics_view.cpp
   
   simulator/sensor_network.cpp
   simulator/discrete_simulator.cpp
@@ -27,6 +29,8 @@ SET(WSN_SIMULATOR_SRCS_CXX
 SET(WSN_SIMULATOR_MOC_SRCS
 
   gui/wsnsim.h
+  gui/graphics_scene.h
+  gui/graphics_view.h
   simulator/discrete_simulator.h
   
 )

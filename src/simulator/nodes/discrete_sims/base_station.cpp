@@ -48,7 +48,7 @@ Node * BaseStation::getNextHop() const /*overloaded*/
 {
   /* TODO implement routing for the base station*/
   
-  return sectionHeadNodes[0];
+  return sectionHeadNodes[2];
 }
 
 

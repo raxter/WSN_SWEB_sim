@@ -37,9 +37,8 @@ public:
     std::vector <Nodes::DiscreteSim *> getSimNodePointers();
     std::vector <const Nodes::DiscreteSim *> getConstSimNodePointers() const;
 
-    double scanAngle() const;
-
-    double threshDegree() const;
+    double getScanAngle() const;
+    double getThreshDegree() const;
     
 
   private: /* methods */
@@ -69,8 +68,8 @@ public:
     std::vector <SensorNode*> sensors; /*NOTE sensors are now stored dynamically so that the vtable look up will work*/
     Nodes::DiscreteSims::BaseStation * baseStation;
     
-    double _scanAngle;
-    double _threshDegree;
+    double scanAngle;
+    double threshDegree;
 
     int numberOfNodes;
     int clusterMax; /*TODO what's this do? - rax*/

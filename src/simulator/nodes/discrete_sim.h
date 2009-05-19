@@ -29,7 +29,10 @@ class DiscreteSim : public Node {
   
   public: /* methods */
   
+  const DiscreteSim * getOtherNode() const;
   void doTimeStep(int phase);
+  
+  double getPercentageDone() const;
   
   private: /* methods */
   
@@ -43,11 +46,14 @@ class DiscreteSim : public Node {
   
   protected: /* variables */
   Node::State nextState;
-  
-  int sendReceiveTimer;
-  int headAllocTimer;
-  
+    
   DiscreteSim* otherNode; /* depending on state, could represent the node that this node is sending to or receiving from*/
+  
+  /* state == Node::Sending specific */
+  int sendTimer;
+  int sendTimerTotal;
+  
+  //int headAllocTimer; /* for head cluster reorganisation */
 
 };
 

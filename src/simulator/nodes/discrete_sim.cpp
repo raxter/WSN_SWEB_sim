@@ -19,7 +19,7 @@ namespace Nodes
 **
 ****************************************************************************/
 
-DiscreteSim::DiscreteSim(Type type, int id, double x, double y, Node::State state) : Node(id,x,y,state), type(type), otherNode(0) {
+DiscreteSim::DiscreteSim(Type type, int id, double x, double y, Node::State state) : Node(id,x,y,state), energyRemaining(100), type(type), otherNode(0) {
 }
   
 /****************************************************************************
@@ -39,6 +39,28 @@ DiscreteSim::~DiscreteSim() {
 
 void DiscreteSim::setState(Node::State state){
   Node::setState(state);
+}
+
+
+/****************************************************************************
+**
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+const DiscreteSim * DiscreteSim::getOtherNode() const {
+  return (DiscreteSim *)otherNode;
+}
+
+
+/****************************************************************************
+**
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+double DiscreteSim::getPercentageDone() const {
+  return sendTimerTotal == -1?-1:(double)(sendTimer)/(sendTimerTotal);
 }
 
 /****************************************************************************
@@ -85,7 +107,7 @@ void DiscreteSim::hardwareSimPhase() {
   switch (_state) {
   //-------------------------------------------------------------------------------
   
-  case Node::ReadyToSend :
+  case Node::ReadyToSend : /* TODO these should be delegated to a sendTo function of some sort if it gets too messy*/
     nextState = Node::Sending;
     
     otherNode = (DiscreteSim*)getNextHop();
@@ -98,19 +120,22 @@ void DiscreteSim::hardwareSimPhase() {
     //qDebug() << node->id;
     //qDebug() << node->otherNode;
     //qDebug() << node->otherNode->id;
-    sendReceiveTimer = 5; // 30 ms, TODO make time based on bandwidth and packet length
+    
+    sendTimerTotal = 30-1; // in ms, TODO make time based on bandwidth and packet length
+    sendTimer = sendTimerTotal;
     //emit logEvent(QString("Node %1 sending packet to Node %2").arg(id).arg(otherNode->id));
     
     //emit logEvent(QString("node id %1 state %2").arg(id).arg(state));
     
     break;
   //-------------------------------------------------------------------------------
-  case Node::Sending : 
+  case Node::Sending :
     //emit logEvent(QString("node id %1 state %2 timer = %3").arg(id).arg(state).arg(sendReceiveTimer));
-    if (sendReceiveTimer)
-      sendReceiveTimer--;
+    if (sendTimer)
+      sendTimer--;
     else
     {
+      sendTimerTotal = -1;
       //finished sending
       nextState = Node::Idle;
       
@@ -120,7 +145,7 @@ void DiscreteSim::hardwareSimPhase() {
   
     break;
   //-------------------------------------------------------------------------------
-  case Node::Receiving :
+  case Node::Receiving :  /* TODO check for multiple receives */
   
     std::cout << id <<" State == Receiving, recieving from " << otherNode->getId() << std::endl;
   

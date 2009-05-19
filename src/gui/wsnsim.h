@@ -4,7 +4,10 @@
 #include <QMessageBox>
 #include <QVector>
 #include <QHash>
-#include <QGraphicsPolygonItem>
+
+
+#include "graphics_scene.h"
+#include "graphics_view.h"
 
 
 #include "simulator/nodes/discrete_sim.h"
@@ -33,33 +36,19 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
   private slots: 
 
   void incrementTimeStep();
-  void updateScene();
 
 
   private: /* methods */
   
-  /* graphics */
-  void setupScene();
-  void setupSWebLines();
-  QPolygonF makeCircle(qint32 segments, qreal radius);
-  QGraphicsSimpleTextItem * timerItem;
-  qreal penWidth;
-  QPen getPen(const QColor& c, qreal width = -1);
   
   private:        /* variables */
 
   /* graphics */
-  QGraphicsScene * scene;
-  QVector<const Simulator::Nodes::DiscreteSim *> sensorNetworkNodes;
-  QHash<const Simulator::Nodes::DiscreteSim *, QGraphicsPolygonItem *> polyHash;
-  QHash<const Simulator::Nodes::DiscreteSim *, QGraphicsPolygonItem *> backPolyHash;
-  //QHash<QGraphicsPolygonItem *, const Simulator::Node*> nodeHash; /*FIXME do we really need two hashs? - rax*/
-  QGraphicsItemGroup * swebLines;
-  //QGraphicsItemGroup * sendingLines;
-  QGraphicsItemGroup * sendingLine;
+  GraphicsView  * graphicsView;
+  GraphicsScene * graphicsScene;
   
   /* simulator */
-  Simulator::SensorNetwork * sensorNetwork; /*FIXME - this should be in the Discrete Simulator*/
+  Simulator::SensorNetwork * sensorNetwork;
   Simulator::DiscreteSimulator * simulator;
 
 };

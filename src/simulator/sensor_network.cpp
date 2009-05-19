@@ -25,7 +25,7 @@ SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int numberOfNodes, int 
       baseStation(), 
       numberOfSectors(numberOfSectors), 
       numberOfNodes(numberOfNodes), 
-      _scanAngle(360.0/numberOfSectors)
+      scanAngle(360.0/numberOfSectors)
 {
   createNodes(xRangeIn,yRangeIn);
 
@@ -84,7 +84,7 @@ int SensorNetwork::determineCluster(const SensorNode * in) const
   double y = in->y();
 
   double dist = getDistFromBS(in);
-  int degreesOutward = (int)dist/(int)_threshDegree;
+  int degreesOutward = (int)dist/(int)threshDegree;
 
   int relSlice = getSlice(x , y);
 
@@ -145,10 +145,10 @@ int SensorNetwork::getSlice(double x , double y) const
   angle = angle *180/M_PI;
 
   int relivantSlice = 0;
-  while (angle >= _scanAngle)
+  while (angle >= scanAngle)
   {
       relivantSlice++;
-      angle -= _scanAngle;
+      angle -= scanAngle;
 
   }
 
@@ -237,8 +237,8 @@ std::vector <const Nodes::DiscreteSim *> SensorNetwork::getConstSimNodePointers(
 **
 ****************************************************************************/
 
-double SensorNetwork::scanAngle() const {
-  return _scanAngle;
+double SensorNetwork::getScanAngle() const {
+  return scanAngle;
 }
 
 /****************************************************************************
@@ -247,8 +247,8 @@ double SensorNetwork::scanAngle() const {
 **
 ****************************************************************************/
 
-double SensorNetwork::threshDegree() const {
-  return _threshDegree;
+double SensorNetwork::getThreshDegree() const {
+  return threshDegree;
 }
 
 /****************************************************************************
@@ -259,8 +259,8 @@ double SensorNetwork::threshDegree() const {
 
 
 void SensorNetwork::init() {
-  _scanAngle = 360.0/numberOfSectors;
-  _threshDegree = 25;
+  scanAngle = 360.0/numberOfSectors;
+  threshDegree = 25;
 
   clusterMax = 0;
   ///determine number of clusters
@@ -319,7 +319,7 @@ void SensorNetwork::init() {
   for (int c = 0 ; c < numberOfNodes ; c++)
   {
       double dist = getDistFromBS(sensors[c]);
-      int degreesOutward = (int)dist/(int)_threshDegree;
+      int degreesOutward = (int)dist/(int)threshDegree;
 
       int relCluster = sensors[c]->cluster();
       ///---------------------------------------------------------------------

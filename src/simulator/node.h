@@ -45,7 +45,8 @@ class Node {
     double _x,_y;
 
     State _state;
-    
+
+    //State reallocState; /* to be used to store the reallocation channel state (if we use the dual channel method for reallocation)*/
   
 
 
