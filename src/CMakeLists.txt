@@ -12,12 +12,14 @@ SET(WSN_SIMULATOR_SRCS_CXX
 
   gui/wsnsim.cpp
   
-  simulator/node.cpp
   simulator/sensor_network.cpp
   simulator/discrete_simulator.cpp
   
+  simulator/node.cpp
+  simulator/nodes/discrete_sim.cpp
+  simulator/nodes/discrete_sims/sensor.cpp
+  simulator/nodes/discrete_sims/base_station.cpp
   
-
   main.cpp
 )
 

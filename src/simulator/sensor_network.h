@@ -2,13 +2,10 @@
 #ifndef __WSN_SIMULATOR_SENSOR_NETWORK_H__
 #define __WSN_SIMULATOR_SENSOR_NETWORK_H__
 
-#include "node.h"
-#include "constants.h"
+#include "nodes/discrete_sims/sensor.h"
+#include "nodes/discrete_sims/base_station.h"
 
 #include <vector>
-#include <cstdlib>
-#include <cmath>
-#include <iostream>
 
 
 namespace WSN
@@ -16,6 +13,9 @@ namespace WSN
 
 namespace Simulator
 {
+
+ /* so we don't have to go using namespace Node::DiscretelySimulated */
+typedef Nodes::DiscreteSims::Sensor SensorNode;
 
 class SensorNetwork {
 
@@ -26,45 +26,49 @@ public:
     ~SensorNetwork();
 
 
-    Node* getNode(int id);
-    ///mem alloaction
-    std::vector <Node*> clusterHeads; /*TODO shouldn't be here - rax*/
-    std::vector <Node> nodes;
-    Node baseStation;
 
-
-    ///attributes
-    double scanAngle;
-    double threshDegree;
-    int noSectors;
-
-    int numNodes;
-    int clusterMax;
-
+  public: /* methods */
+  
     ///functions
 
-   // Node* nextHop(Node * source); /*needs to move to Node class, see cpp file - rax*/
-    std::vector <Node *> getCluster(int clustNo);
+    // Node* nextHop(Node * source); /*needs to move to Node class, see cpp file - rax*/
+    const SensorNode* getSensor(int id) const;
 
-    std::vector <Node *> getNodePointers();
-    std::vector <const Node *> getConstNodePointers() const;
+    std::vector <Nodes::DiscreteSim *> getSimNodePointers();
+    std::vector <const Nodes::DiscreteSim *> getConstSimNodePointers() const;
 
-private:
+    double scanAngle() const;
 
+    double threshDegree() const;
 
+  private: /* methods */
 
-    void init();
-    void createNodes(int x,int y);
-    int getClusterNo (int sector, int slice);
-    int * getClusterCoor(int cluNo);
-    int getSlice(int x , int y);
-    double dist(int x1, int y1, int x2, int y2);
-    double getDistFromBS(Node * which);
-    int determineCluster(Node * in);
-    void assignNodeToRouteTable(Node * nodeIn, int clusterNo);
+    
+    void    init();
+    void    createNodes(int x,int y);
+    
+    std::vector <SensorNode *> getCluster(int clustNo);
+    int     getClusterNo (int sector, int slice);
+    int *   getClusterCoor(int cluNo);
+    int     getSlice(double x , double y);
+    
+    double  dist(int x1, int y1, int x2, int y2);
+    double  getDistFromBS(SensorNode * which);
+    int     determineCluster(SensorNode * in);
+    void    assignNodeToRouteTable(SensorNode * nodeIn, int clusterNo);
 
-    ///temp
-    void route();
+  private: /* variables*/
+  
+    std::vector <SensorNode*> clusterHeads; /*TODO shouldn't be here - rax*/
+    std::vector <SensorNode> sensors;
+    Nodes::DiscreteSims::BaseStation baseStation;
+    
+    double _scanAngle;
+    double _threshDegree;
+    int numberOfSectors;
+
+    int numberOfNodes;
+    int clusterMax; /*TODO what's this do? - rax*/
 };
 
 } /* end of namespace Simulator */

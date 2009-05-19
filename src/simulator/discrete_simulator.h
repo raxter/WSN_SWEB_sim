@@ -40,7 +40,7 @@ class DiscreteSimulator : public QObject  {
 
   private: /* variables */
   SensorNetwork * sensorNetwork;
-  QVector<Node *> nodes;
+  QVector<Nodes::DiscreteSim *> nodes;
 
   unsigned long _currentTime;// in milliseconds
 

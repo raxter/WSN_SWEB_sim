@@ -6,6 +6,9 @@
 #include <QHash>
 #include <QGraphicsPolygonItem>
 
+
+#include "simulator/nodes/discrete_sim.h"
+
 #include "simulator/sensor_network.h"
 #include "simulator/discrete_simulator.h"
 #include "simulator/node.h"
@@ -47,15 +50,15 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
 
   /* graphics */
   QGraphicsScene * scene;
-  QVector<const Simulator::Node *> sensorNetworkNodes;
-  QHash<const Simulator::Node*, QGraphicsPolygonItem *> polyHash;
-  QHash<const Simulator::Node*, QGraphicsPolygonItem *> backPolyHash;
+  QVector<const Simulator::Nodes::DiscreteSim *> sensorNetworkNodes;
+  QHash<const Simulator::Nodes::DiscreteSim *, QGraphicsPolygonItem *> polyHash;
+  QHash<const Simulator::Nodes::DiscreteSim *, QGraphicsPolygonItem *> backPolyHash;
   //QHash<QGraphicsPolygonItem *, const Simulator::Node*> nodeHash; /*FIXME do we really need two hashs? - rax*/
   QGraphicsItemGroup * swebLines;
   QGraphicsItemGroup * sendingLines;
   
   /* simulator */
-  Simulator::SensorNetwork * sensorNetwork;
+  Simulator::SensorNetwork * sensorNetwork; /*FIXME - this should be in the Discrete Simulator*/
   Simulator::DiscreteSimulator * simulator;
 
 };

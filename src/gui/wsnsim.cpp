@@ -1,5 +1,8 @@
 #include "wsnsim.h"
 
+#include <typeinfo>
+
+#include <QDebug>
 
 namespace WSN
 {
@@ -30,8 +33,7 @@ WSNsim::WSNsim () : swebLines(0)
   
   sensorNetwork = new Simulator::SensorNetwork(100,100,100); /* FIXME paramaterise these 100's*/
   
-
-  sensorNetworkNodes = QVector<const Simulator::Node *>::fromStdVector (sensorNetwork->getConstNodePointers()); /* FIXME, still deciding whether this should be a class variable or not*/ 
+  sensorNetworkNodes = QVector<const Simulator::Nodes::DiscreteSim *>::fromStdVector (sensorNetwork->getConstSimNodePointers());
 
   simulator = new Simulator::DiscreteSimulator(sensorNetwork);
 
@@ -76,7 +78,7 @@ void WSNsim::setupScene() {
   scene->setBackgroundBrush(QBrush(Qt::black));
   scene->setForegroundBrush(QBrush(Qt::white,0));
 
-  Q_FOREACH (const Simulator::Node * node, sensorNetworkNodes) {
+  Q_FOREACH (const Simulator::Nodes::DiscreteSim * node, sensorNetworkNodes) {
 
  // QHash<const Simulator::Node*, QPolygon polygon> polyHash;
 
@@ -90,8 +92,8 @@ void WSNsim::setupScene() {
     QPolygonF backPoly = makeCircle( 32, 1.3 );
     QPolygonF poly = makeCircle( 32, 0.5 );
 
-    poly.translate(node->x, node->y);
-    backPoly.translate(node->x, node->y);
+    poly.translate(node->x(), node->y());
+    backPoly.translate(node->x(), node->y());
 
     polyHash[node] = scene->addPolygon ( poly , QPen(), QBrush(Qt::white, Qt::SolidPattern));
     backPolyHash[node] = scene->addPolygon ( backPoly , getPen(Qt::white)/*, Qt::SolidPattern*/);
@@ -129,12 +131,12 @@ void WSNsim::setupSWebLines() {
   
   qreal currentAngle = 0.0;
   while (currentAngle < 360.0) {
-    items.append((QGraphicsItem*)scene->addLine ( QLineF::fromPolar ( numberOfClustersOut*sensorNetwork->threshDegree, currentAngle ), getPen(Qt::green, 0) ));
-    currentAngle += sensorNetwork->scanAngle;
+    items.append((QGraphicsItem*)scene->addLine ( QLineF::fromPolar ( numberOfClustersOut*sensorNetwork->threshDegree(), currentAngle ), getPen(Qt::green, 0) ));
+    currentAngle += sensorNetwork->scanAngle();
   }
 
   for (qint32 i = 0 ; i < numberOfClustersOut ; i++) {
-    qreal thresh = sensorNetwork->threshDegree * i;
+    qreal thresh = sensorNetwork->threshDegree() * i;
 
     items.append((QGraphicsItem*)scene->addPolygon ( makeCircle( 64, thresh ), getPen(Qt::green, 0)));
   }
@@ -170,31 +172,27 @@ QPolygonF WSNsim::makeCircle(qint32 segments, qreal radius) {
 void WSNsim::updateScene() {
 
 
-  Q_FOREACH(const Simulator::Node * node, sensorNetworkNodes) {
+  Q_FOREACH(const Simulator::Nodes::DiscreteSim * node, sensorNetworkNodes) {
   
     QGraphicsPolygonItem * polyItem = polyHash[node];
     QGraphicsPolygonItem * backPolyItem = backPolyHash[node];
     
+    if (typeid(node) == typeid(Simulator::Nodes::DiscreteSims::Sensor*))
+      backPolyItem->setVisible(((Simulator::Nodes::DiscreteSims::Sensor*)node)->isHead());
+    else if (typeid(node) == typeid(Simulator::Nodes::DiscreteSims::BaseStation*))
+      backPolyItem->setVisible(true);
+  
     
-    backPolyItem->setVisible(node->isHead());
-    /*if (node->isHead()) {
-      backPolyItem->setPen(getPen(Qt::green));
-    }
-    else {
-      backPolyItem->setPen(getPen(Qt::white));
-    }*/
-    
-    
-    if (node->state != Simulator::Node::IDLE) {
+    if (node->state() != Simulator::Node::Idle) {
       polyItem->setPen(getPen(Qt::red));
     }
     else {
       polyItem->setPen(getPen(Qt::white));
     }
     
-    if (node->state == Simulator::Node::SENDING) {
+    if (node->state() == Simulator::Node::Sending) {
       /*TODO this adding is slowing down the simulation big time, rather use a 10 last lines or something*/
-      sendingLines->addToGroup((QGraphicsItem*)scene->addLine ( node->x, node->y, node->otherNode->x, node->otherNode->y, getPen(Qt::gray, 0) ) );
+      sendingLines->addToGroup((QGraphicsItem*)scene->addLine ( node->x(), node->y(), node->otherNode()->x(), node->otherNode()->y(), getPen(Qt::gray, 0) ) );
     }
 
   }
