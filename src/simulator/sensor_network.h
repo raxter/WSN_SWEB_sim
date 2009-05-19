@@ -47,7 +47,6 @@ public:
     void    init();
     void    createNodes(int x,int y);
     
-    std::vector <SensorNode *> getCluster(int clustNo);
     int     getClusterNo (int sector, int slice);
     int *   getClusterCoor(int cluNo);
     int     getSlice(double x , double y) const;
@@ -63,7 +62,6 @@ public:
   
   private: /* variables */
   
-    std::vector < std::vector <SensorNode*> > clusters; /*TODO shouldn't be here - rax*/
     std::vector <SensorNode*> clusterHeads; /*TODO shouldn't be here - rax*/
     std::vector <SensorNode*> sensors; /*NOTE sensors are now stored dynamically so that the vtable look up will work*/
     Nodes::DiscreteSims::BaseStation * baseStation;
@@ -72,7 +70,7 @@ public:
     double threshDegree;
 
     int numberOfNodes;
-    int clusterMax; /*TODO what's this do? - rax*/
+    int numberOfClusters; /*TODO what's this do? - rax*/
 };
 
 } /* end of namespace Simulator */

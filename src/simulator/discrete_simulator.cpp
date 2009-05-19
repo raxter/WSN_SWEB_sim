@@ -51,7 +51,7 @@ unsigned long DiscreteSimulator::currentTime() {
 
 void DiscreteSimulator::incrementTimeStep() {
 
-   emit logEvent(QString("incrementTimeStep()"));
+  emit logEvent(QString("incrementTimeStep()"));
   _currentTime++;
 
   // assuming that the next state will remain unchanged

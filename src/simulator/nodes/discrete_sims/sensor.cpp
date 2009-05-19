@@ -29,7 +29,7 @@ using namespace std;
 ****************************************************************************/
 
 
-Sensor::Sensor(int id, double x, double y) : DiscreteSim(Nodes::DiscreteSim::Sensor, id, x, y, Node::Idle), _cluster(-1)
+Sensor::Sensor(int id, double x, double y) : DiscreteSim(Nodes::DiscreteSim::Sensor, id, x, y, Node::Idle), cluster(-1)
 {
   energyRemaining=100;
   for (int i = 0 ; i < 3 ; i++)
@@ -88,8 +88,8 @@ void Sensor::setHead(DiscreteSim * nodeId)
 **
 ****************************************************************************/
 
-int Sensor::cluster() const {
-  return _cluster;
+int Sensor::getCluster() const {
+  return cluster;
 }
 
 /****************************************************************************
@@ -100,7 +100,7 @@ int Sensor::cluster() const {
 
 void Sensor::setCluster(int cluster)
 {
-  _cluster = cluster;
+  this->cluster = cluster;
 }
 
 /****************************************************************************
@@ -195,7 +195,7 @@ void Sensor::printTable() const
       }
       if (routeTable[a][b] != NULL) {
         if (typeid(routeTable[a][b]) == typeid(Sensor*))
-          cout << ((Sensor*)routeTable[a][b])->cluster() <<"  ";
+          cout << ((Sensor*)routeTable[a][b])->getCluster() <<"  ";
         else
           cout << "X";
       }

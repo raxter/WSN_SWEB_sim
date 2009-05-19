@@ -31,7 +31,7 @@ class Sensor : public DiscreteSim {
   
     void printTable() const;
   
-    int cluster() const;
+    int getCluster() const;
     void setCluster(int cluster);
 
     bool isHead() const;
@@ -47,7 +47,7 @@ class Sensor : public DiscreteSim {
     
   private: /* variables */  
   
-    int _cluster;
+    int cluster;
     DiscreteSim * routeTable [3][3];
 
 };

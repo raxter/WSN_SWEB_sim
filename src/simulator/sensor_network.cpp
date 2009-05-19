@@ -44,6 +44,7 @@ SensorNetwork::~SensorNetwork()
   for (int c = 0 ; c < sensors.size(); c++)
     delete sensors[c];
   delete baseStation;
+  
 }
 
 
@@ -262,32 +263,36 @@ void SensorNetwork::init() {
   scanAngle = 360.0/numberOfSectors;
   threshDegree = 25;
 
-  clusterMax = 0;
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
   ///determine number of clusters
+    
+  // determining the nodes' cluster numbers and finding out the number of total clusters
+  numberOfClusters = 0;
   for (int a = 0 ; a < numberOfNodes ; a++) {
       int cluster = determineCluster(sensors[a]);
+      sensors[a]->setCluster(cluster);
       
-      if (clusterMax < cluster)
-        clusterMax = cluster;
+      if (numberOfClusters < cluster+1)
+        numberOfClusters = cluster+1;
   }
-  for (int a = 0 ; a < clusterMax ; a++)
-    clusters.push_back(std::vector <SensorNode*>());
+  
+  typedef std::vector <SensorNode*> ClusterVec;
+  
+  std::vector <ClusterVec> clusters(numberOfClusters);
     
   ///determine all nodes clusters
-  for (int a = 0 ; a < numberOfNodes ; a++)
-  {
-      int cluster = determineCluster(sensors[a]);
-      sensors[a]->setCluster(cluster);
+  for (int a = 0 ; a < numberOfNodes ; a++) {
+      int cluster = sensors[a]->getCluster();
       clusters[cluster].push_back(sensors[a]);
-      //cout<<"node: "<<a<<" x: "<<sensors[a].x<<" y: "<<sensors[a].y<<" cluster "<<sensors[a].cluster<<endl;
-
   }
-  //exit(-1);
-
+  
   ///set initial cluster heads
-  for (int b = 0 ; b <= clusterMax ; b++)
+  for (int b = 0 ; b < numberOfClusters ; b++)
   {
-    vector <SensorNode*> cluster = getCluster(b);
+    ClusterVec &cluster = clusters[b];
     //cout <<"size: "<< cluster.size()<< endl;
 
     int highestRemEnergy = 0;
@@ -295,7 +300,6 @@ void SensorNetwork::init() {
     for (int c = 0 ; c < cluster.size(); c++)
     {
         //cout << "there are actual nodes in this cluster: "<< " current node in cluster: "<<cluster[c]->cluster<<endl;
-        //cout << c << " " << cluster[c]->energyRemaining << " < " << highestRemEnergy << endl;
         if (cluster[c]->energyRemaining > highestRemEnergy)
         {
             highestRemEnergy = cluster[c]->energyRemaining;
@@ -311,6 +315,11 @@ void SensorNetwork::init() {
     //cout<<"cluster "<<b<<" headnode "<<newHead<<endl;
 
   }
+  
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  
   //for (int hnC = 0 ; hnC < clusterHeads.size() ; hnC++)
   //    cout<<"clust no: "<<hnC<<" CH: "<<getCluster(hnC).size()<<" - "<<clusterHeads[hnC]<<endl;
 
@@ -321,12 +330,12 @@ void SensorNetwork::init() {
       double dist = getDistFromBS(sensors[c]);
       int degreesOutward = (int)dist/(int)threshDegree;
 
-      int relCluster = sensors[c]->cluster();
+      int relCluster = sensors[c]->getCluster();
       ///---------------------------------------------------------------------
       ///[2][2]:
       int c22 = (relCluster+1)%numberOfSectors + (degreesOutward+1)*numberOfSectors;
       Nodes::DiscreteSim * c22Head ;
-      if (c22 > clusterMax)
+      if (c22 > numberOfClusters)
         c22Head = NULL;
       else
         c22Head = clusterHeads[c22];
@@ -342,7 +351,7 @@ void SensorNetwork::init() {
         c21 = relCluster+numberOfSectors;
 
 
-      if (c21 > clusterMax)
+      if (c21 > numberOfClusters)
         c21Head = NULL;
       else
         c21Head = clusterHeads[c21];
@@ -351,7 +360,7 @@ void SensorNetwork::init() {
       ///[2][0]:
       int c20 = (relCluster-1)%numberOfSectors + (degreesOutward+1)*numberOfSectors;
       Nodes::DiscreteSim * c20Head;
-       if (c20 > clusterMax)
+       if (c20 > numberOfClusters)
         c20Head = NULL;
       else
         c20Head = clusterHeads[c20];
@@ -360,7 +369,7 @@ void SensorNetwork::init() {
       ///[1][2]:
       int c12 = (relCluster +1)%numberOfSectors + degreesOutward*numberOfSectors;
       Nodes::DiscreteSim * c12Head;
-       if (c12 > clusterMax)
+       if (c12 > numberOfClusters)
         c12Head = NULL;
       else
         c12Head = clusterHeads[c12];
@@ -374,7 +383,7 @@ void SensorNetwork::init() {
       else
         c10 = (relCluster -1)%numberOfSectors + degreesOutward*numberOfSectors;
 
-      if (c10 > clusterMax)
+      if (c10 > numberOfClusters)
           c10Head = NULL;
         else
           c10Head = clusterHeads[c10];
@@ -433,28 +442,13 @@ void SensorNetwork::init() {
 ****************************************************************************/
 /*void SensorNetwork::assignNodeToRouteTable(SensorNode * nodeIn, int clusterNo)
 {
-  if (clusterNo > clusterMax)
+  if (clusterNo > numberOfClusters)
         nodeIn = NULL;
         else
         nodeIn = clusterHeads[clusterNo];
 }*/
 
-/****************************************************************************
-**
-** Author: Julian Hulme
-**
-****************************************************************************/
-vector <SensorNode *> SensorNetwork::getCluster(int clusterNumber)
-{
-  return clusters[clusterNumber];
-  /*vector <SensorNode *> out;
-  for (int a = 0 ; a < numberOfNodes ; a++)
-  {
-     if (sensors[a]->cluster() == clusterNumber)
-       out.push_back(sensors[a]);
-  }
-  return out;*/
-}
+
 /****************************************************************************
 **
 ** Author: Julian Hulme

@@ -68,7 +68,7 @@ WSNsim::~WSNsim ()
 
 void WSNsim::incrementTimeStep() {
   
-  simulator->incrementTimeStep();
+    simulator->incrementTimeStep();
 }
 
 
