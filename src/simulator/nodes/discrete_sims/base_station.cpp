@@ -22,7 +22,7 @@ namespace DiscreteSims
 **
 ****************************************************************************/
 
-BaseStation::BaseStation(double x , double y) : DiscreteSim(-1, x, y, Node::ReadyToSend)
+BaseStation::BaseStation(double x , double y) : DiscreteSim(Nodes::DiscreteSim::BaseStation, -1, x, y, Node::ReadyToSend)
 {
 }
 
@@ -48,7 +48,7 @@ Node * BaseStation::getNextHop() const /*overloaded*/
 {
   /* TODO implement routing for the base station*/
   
-  return 0;
+  return sectionHeadNodes[0];
 }
 
 

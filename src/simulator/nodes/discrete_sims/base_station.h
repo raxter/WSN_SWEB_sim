@@ -3,6 +3,7 @@
 
 #include "../discrete_sim.h"
 
+#include <vector>
 
 namespace WSN
 {
@@ -29,6 +30,8 @@ class BaseStation : public DiscreteSim {
   
   Node * getNextHop() const ;
   
+  
+  std::vector<Nodes::DiscreteSim * > sectionHeadNodes;
 
 };
 

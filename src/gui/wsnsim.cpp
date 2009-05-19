@@ -1,6 +1,5 @@
 #include "wsnsim.h"
 
-#include <typeinfo>
 
 #include <QDebug>
 
@@ -34,6 +33,7 @@ WSNsim::WSNsim () : swebLines(0)
   sensorNetwork = new Simulator::SensorNetwork(100,100,100); /* FIXME paramaterise these 100's*/
   
   sensorNetworkNodes = QVector<const Simulator::Nodes::DiscreteSim *>::fromStdVector (sensorNetwork->getConstSimNodePointers());
+  
 
   simulator = new Simulator::DiscreteSimulator(sensorNetwork);
 
@@ -177,9 +177,11 @@ void WSNsim::updateScene() {
     QGraphicsPolygonItem * polyItem = polyHash[node];
     QGraphicsPolygonItem * backPolyItem = backPolyHash[node];
     
-    if (typeid(node) == typeid(Simulator::Nodes::DiscreteSims::Sensor*))
+    //qDebug() << typeid(node).name();
+    
+    if (node->type == Simulator::Nodes::DiscreteSim::Sensor)
       backPolyItem->setVisible(((Simulator::Nodes::DiscreteSims::Sensor*)node)->isHead());
-    else if (typeid(node) == typeid(Simulator::Nodes::DiscreteSims::BaseStation*))
+    else if (node->type == Simulator::Nodes::DiscreteSim::BaseStation)
       backPolyItem->setVisible(true);
   
     
@@ -202,10 +204,7 @@ void WSNsim::updateScene() {
 
 void WSNsim::incrementTimeStep() {
   
-  
-  //timerItem->setText ( "Timer: " + QString().setNum(simulator->currentTime()) );
-  for (int i = 0 ; i < 50 ; i++)
-    simulator->incrementTimeStep();
+  simulator->incrementTimeStep();
 }
 
 

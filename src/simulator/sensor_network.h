@@ -50,18 +50,19 @@ public:
     std::vector <SensorNode *> getCluster(int clustNo);
     int     getClusterNo (int sector, int slice);
     int *   getClusterCoor(int cluNo);
-    int     getSlice(double x , double y);
+    int     getSlice(double x , double y) const;
     
-    double  dist(int x1, int y1, int x2, int y2);
-    double  getDistFromBS(SensorNode * which);
-    int     determineCluster(SensorNode * in);
-    void    assignNodeToRouteTable(SensorNode * nodeIn, int clusterNo);
+    double  dist(int x1, int y1, int x2, int y2) const; /* make a static function ?*/
+    double  getDistFromBS(const SensorNode * which) const;
+    int     determineCluster(const SensorNode * in) const;
+    //void    assignNodeToRouteTable(SensorNode * nodeIn, int clusterNo);
 
   private: /* variables*/
   
+    std::vector < std::vector <SensorNode*> > clusters; /*TODO shouldn't be here - rax*/
     std::vector <SensorNode*> clusterHeads; /*TODO shouldn't be here - rax*/
-    std::vector <SensorNode> sensors;
-    Nodes::DiscreteSims::BaseStation baseStation;
+    std::vector <SensorNode*> sensors; /*NOTE sensors are now stored dynamically so that the vtable look up will work*/
+    Nodes::DiscreteSims::BaseStation * baseStation;
     
     double _scanAngle;
     double _threshDegree;

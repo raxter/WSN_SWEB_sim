@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
+#include <typeinfo>
 
 namespace WSN
 {
@@ -40,7 +41,32 @@ SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int numberOfNodes, int 
 ****************************************************************************/
 SensorNetwork::~SensorNetwork()
 {
+  for (int c = 0 ; c < sensors.size(); c++)
+    delete sensors[c];
+  delete baseStation;
+}
 
+
+/****************************************************************************
+**
+** Author: Julian Hulme
+**
+****************************************************************************/
+
+
+void SensorNetwork::createNodes(int x , int y)
+{
+  baseStation = new Nodes::DiscreteSims::BaseStation();
+  srand(0);
+  //cout<<"start of createNodes "<<numNodes<<endl;
+  for (int a = 0 ; a < numberOfNodes ; a++)
+  {
+      int randx = x/2 - rand()%(x+1);
+      int randy = y/2 - rand()%(y+1);
+      sensors.push_back( new SensorNode(a, randx, randy));
+
+  }
+  //cout<<"end of createNodes "<<numNodes<<endl;
 }
 
 
@@ -52,7 +78,7 @@ SensorNetwork::~SensorNetwork()
 **
 ****************************************************************************/
 
-int SensorNetwork::determineCluster(SensorNode * in)
+int SensorNetwork::determineCluster(const SensorNode * in) const
 {
   double x = in->x();
   double y = in->y();
@@ -64,10 +90,6 @@ int SensorNetwork::determineCluster(SensorNode * in)
 
   int output = degreesOutward*numberOfSectors + relSlice;
 
-  ///global degreesOutputMax used as a reference later as to how far the web goes
-  if (clusterMax < output)
-      clusterMax = output;
-  ///
   return degreesOutward*numberOfSectors + relSlice;
 }
 
@@ -79,7 +101,7 @@ int SensorNetwork::determineCluster(SensorNode * in)
 ****************************************************************************/
 
 const SensorNode* SensorNetwork::getSensor(int id) const {
-  return &sensors[id];
+  return sensors[id];
 }
 
 /****************************************************************************
@@ -88,7 +110,7 @@ const SensorNode* SensorNetwork::getSensor(int id) const {
 **
 ****************************************************************************/
 
-int SensorNetwork::getSlice(double x , double y)
+int SensorNetwork::getSlice(double x , double y) const
 {
 
   double angle=0 ;
@@ -181,9 +203,11 @@ int SensorNetwork::getSlice(double x , double y)
 std::vector <Nodes::DiscreteSim *> SensorNetwork::getSimNodePointers()
 {
   std::vector <Nodes::DiscreteSim *> out;
-  out.push_back(&baseStation);
-  for (int a = 0 ; a < numberOfNodes ; a++)
-    out.push_back(&sensors[a]);
+  out.push_back(baseStation);
+  for (int a = 0 ; a < numberOfNodes ; a++) {
+    out.push_back(sensors[a]);
+  }
+  cout << endl;
   return out;
 }
 
@@ -199,9 +223,11 @@ std::vector <const Nodes::DiscreteSim *> SensorNetwork::getConstSimNodePointers(
 {
   std::vector <const Nodes::DiscreteSim *> out;
 
-  out.push_back(&baseStation);
-  for (int a = 0 ; a < numberOfNodes ; a++)
-    out.push_back(&sensors[a]);
+  out.push_back(baseStation);
+  for (int a = 0 ; a < numberOfNodes ; a++) {
+    out.push_back(sensors[a]);
+    
+  }
   return out;
 }
 
@@ -237,10 +263,22 @@ void SensorNetwork::init() {
   _threshDegree=25;
   clusterMax=0;
 
+  ///determine number of clusters
+  for (int a = 0 ; a < numberOfNodes ; a++) {
+      int cluster = determineCluster(sensors[a]);
+      
+      if (clusterMax < cluster)
+        clusterMax = cluster;
+  }
+  for (int a = 0 ; a < clusterMax ; a++)
+    clusters.push_back(std::vector <SensorNode*>());
+    
   ///determine all nodes clusters
   for (int a = 0 ; a < numberOfNodes ; a++)
   {
-      sensors[a].setCluster(determineCluster(&sensors[a]));
+      int cluster = determineCluster(sensors[a]);
+      sensors[a]->setCluster(cluster);
+      clusters[cluster].push_back(sensors[a]);
       //cout<<"node: "<<a<<" x: "<<sensors[a].x<<" y: "<<sensors[a].y<<" cluster "<<sensors[a].cluster<<endl;
 
   }
@@ -260,9 +298,9 @@ void SensorNetwork::init() {
         //cout << c << " " << cluster[c]->energyRemaining << " < " << highestRemEnergy << endl;
         if (cluster[c]->energyRemaining > highestRemEnergy)
         {
-                highestRemEnergy = cluster[c]->energyRemaining;
-                newHead = cluster[c];
-                //cluster[c]->setHead(&newHead);
+            highestRemEnergy = cluster[c]->energyRemaining;
+            newHead = cluster[c];
+            //cluster[c]->setHead(&newHead);
         }
     }
     for (int d = 0 ; d < cluster.size() ; d++)
@@ -280,10 +318,10 @@ void SensorNetwork::init() {
   ///create routing tables
   for (int c = 0 ; c < numberOfNodes ; c++)
   {
-      double dist = getDistFromBS(&sensors[c]);
+      double dist = getDistFromBS(sensors[c]);
       int degreesOutward = (int)dist/(int)_threshDegree;
 
-      int relCluster = sensors[c].cluster();
+      int relCluster = sensors[c]->cluster();
       ///---------------------------------------------------------------------
       ///[2][2]:
       int c22 = (relCluster+1)%numberOfSectors + (degreesOutward+1)*numberOfSectors;
@@ -349,13 +387,13 @@ void SensorNetwork::init() {
       {
           ///[0][2]:
           //c02 = -1;///-1 = base station
-          c02Head = &baseStation;
+          c02Head = baseStation;
           ///[0][1]:
           //c01 = -1;///-1 = base station
-          c01Head = &baseStation;
+          c01Head = baseStation;
           ///[0][0]:
           //c00 = -1;///-1 = base station
-          c00Head = &baseStation;
+          c00Head = baseStation;
       }
       else
       {
@@ -372,12 +410,15 @@ void SensorNetwork::init() {
 
       //sensors[c].setRouteTable(c22Head,c21Head,c20Head,c12Head,c10Head,c02Head,c01Head,c00Head) ;
       //cout <<"clust of "<< c01Head->cluster<<endl;
-      sensors[c].setRouteTable(c22Head,c21Head,c20Head,c12Head,c10Head,c02Head,c01Head,c00Head) ;
+      sensors[c]->setRouteTable(c22Head,c21Head,c20Head,c12Head,c10Head,c02Head,c01Head,c00Head) ;
       //cout<<"nodes ["<<c<<"] cl: "<<sensors[c].cluster<<endl;
       //sensors[c].printTable();
 
 
   }
+  
+  for (int i = 0 ; i < numberOfSectors; i++)
+    baseStation->sectionHeadNodes.push_back(clusterHeads[i]);
 
 }
 
@@ -387,13 +428,13 @@ void SensorNetwork::init() {
 ** Author: Julian Hulme
 **
 ****************************************************************************/
-void SensorNetwork::assignNodeToRouteTable(SensorNode * nodeIn, int clusterNo)
+/*void SensorNetwork::assignNodeToRouteTable(SensorNode * nodeIn, int clusterNo)
 {
   if (clusterNo > clusterMax)
         nodeIn = NULL;
         else
         nodeIn = clusterHeads[clusterNo];
-}
+}*/
 
 /****************************************************************************
 **
@@ -402,15 +443,15 @@ void SensorNetwork::assignNodeToRouteTable(SensorNode * nodeIn, int clusterNo)
 ****************************************************************************/
 vector <SensorNode *> SensorNetwork::getCluster(int clusterNumber)
 {
-  vector <SensorNode *> out;
+  return clusters[clusterNumber];
+  /*vector <SensorNode *> out;
   for (int a = 0 ; a < numberOfNodes ; a++)
   {
-     if (sensors[a].cluster() == clusterNumber)
-       out.push_back(&sensors[a]);
+     if (sensors[a]->cluster() == clusterNumber)
+       out.push_back(sensors[a]);
   }
-  return out;
+  return out;*/
 }
-
 /****************************************************************************
 **
 ** Author: Julian Hulme
@@ -418,29 +459,7 @@ vector <SensorNode *> SensorNetwork::getCluster(int clusterNumber)
 ****************************************************************************/
 
 
-void SensorNetwork::createNodes(int x , int y)
-{
-  srand(0);
-  //cout<<"start of createNodes "<<numNodes<<endl;
-  for (int a = 0 ; a < numberOfNodes ; a++)
-  {
-
-      int randx = x/2 - rand()%(x+1);
-      int randy = y/2 - rand()%(y+1);
-      sensors.push_back( SensorNode(a, randx, randy));
-
-  }
-  //cout<<"end of createNodes "<<numNodes<<endl;
-}
-
-/****************************************************************************
-**
-** Author: Julian Hulme
-**
-****************************************************************************/
-
-
-double SensorNetwork::dist(int x1, int y1, int x2, int y2)
+double SensorNetwork::dist(int x1, int y1, int x2, int y2) const
 {
 
   return sqrt(pow(x2-x1,2) + pow(y2-y1,2) );
@@ -453,10 +472,10 @@ double SensorNetwork::dist(int x1, int y1, int x2, int y2)
 ****************************************************************************/
 
 
-double SensorNetwork::getDistFromBS(SensorNode * node)
+double SensorNetwork::getDistFromBS(const SensorNode * node) const
 {
 
-  return dist(node->x(),node->y(),baseStation.x(),baseStation.y());
+  return dist(node->x(),node->y(),baseStation->x(),baseStation->y());
 }
 
 /****************************************************************************

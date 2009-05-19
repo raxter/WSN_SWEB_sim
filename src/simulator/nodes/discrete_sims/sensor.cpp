@@ -29,7 +29,7 @@ using namespace std;
 ****************************************************************************/
 
 
-Sensor::Sensor(int id, double x, double y) : DiscreteSim(id, x, y, Node::Idle), _cluster(-1)
+Sensor::Sensor(int id, double x, double y) : DiscreteSim(Nodes::DiscreteSim::Sensor, id, x, y, Node::Idle), _cluster(-1)
 {
   energyRemaining=100;
   for (int i = 0 ; i < 3 ; i++)

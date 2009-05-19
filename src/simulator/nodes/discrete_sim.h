@@ -18,9 +18,11 @@ class DiscreteSim : public Node {
   public: /* class specific*/
   
   static const int numberOfPhases = 3;
+  enum Type {Sensor, BaseStation};
   
-  DiscreteSim(int id = 0, double x = 0, double y = 0, Node::State state = Idle);
+  DiscreteSim(Type type, int id = 0, double x = 0, double y = 0, Node::State state = Idle);
   ~DiscreteSim();
+  
   
   private: /* overridden methods (public -> private) */
   void setState(State state);
@@ -35,8 +37,10 @@ class DiscreteSim : public Node {
   void hardwareSimPhase();
   void stateUpdatePhase();
   
-  public:
+  public: /* variables */
   int energyRemaining;
+  Type type;
+  
   protected: /* variables */
   Node::State nextState;
   

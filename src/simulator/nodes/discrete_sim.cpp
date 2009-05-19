@@ -17,7 +17,7 @@ namespace Nodes
 **
 ****************************************************************************/
 
-DiscreteSim::DiscreteSim(int id, double x, double y, Node::State state) : Node(id,x,y,state) {
+DiscreteSim::DiscreteSim(Type type, int id, double x, double y, Node::State state) : Node(id,x,y,state), type(type) {
 }
   
 /****************************************************************************
