@@ -46,6 +46,8 @@ class DiscreteSim : public Node {
   
   int sendReceiveTimer;
   int headAllocTimer;
+  
+  DiscreteSim* otherNode; /* depending on state, could represent the node that this node is sending to or receiving from*/
 
 };
 

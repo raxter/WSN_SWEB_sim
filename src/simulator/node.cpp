@@ -14,7 +14,7 @@ namespace Simulator
 **
 ****************************************************************************/
 
-Node::Node(int id, double x, double y, State state) : id (id), _x(x), _y(y), _state(state), _otherNode(0) {
+Node::Node(int id, double x, double y, State state) : id (id), _x(x), _y(y), _state(state) {
 }
 
 
@@ -60,15 +60,18 @@ double Node::y() const {
   return _y;
 }
 
+
 /****************************************************************************
 **
 ** Author: Richard Baxter
 **
 ****************************************************************************/
 
-const Node* Node::otherNode() const {
-  return _otherNode;
+int Node::getId() const {
+  return id;
 }
+
+
 
 /****************************************************************************
 **

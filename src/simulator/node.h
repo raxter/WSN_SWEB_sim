@@ -32,10 +32,10 @@ class Node {
   
     double x() const;
     double y() const;
-    virtual State state() const;
+    State state() const;
     virtual void setState(State state);
     
-    const Node* otherNode() const;
+    int getId() const;
     
     virtual Node * getNextHop() const = 0;
   
@@ -46,7 +46,6 @@ class Node {
 
     State _state;
     
-    Node* _otherNode; /* depending on state, could represent the node that this node is sending to or receiving from*/
   
 
 

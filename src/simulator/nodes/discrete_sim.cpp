@@ -1,6 +1,8 @@
 
 #include "discrete_sim.h"
 
+#include <iostream>
+
 namespace WSN
 {
 
@@ -17,7 +19,7 @@ namespace Nodes
 **
 ****************************************************************************/
 
-DiscreteSim::DiscreteSim(Type type, int id, double x, double y, Node::State state) : Node(id,x,y,state), type(type) {
+DiscreteSim::DiscreteSim(Type type, int id, double x, double y, Node::State state) : Node(id,x,y,state), type(type), otherNode(0) {
 }
   
 /****************************************************************************
@@ -85,7 +87,13 @@ void DiscreteSim::hardwareSimPhase() {
   
   case Node::ReadyToSend :
     nextState = Node::Sending;
-    _otherNode = getNextHop();
+    
+    otherNode = (DiscreteSim*)getNextHop();
+    otherNode->nextState = Node::Receiving;
+    otherNode->otherNode = this;
+    
+    
+    std::cout << id <<" State == ReadyToSend, sending to " << otherNode->getId() << std::endl;
     //qDebug() << node;
     //qDebug() << node->id;
     //qDebug() << node->otherNode;
@@ -107,13 +115,14 @@ void DiscreteSim::hardwareSimPhase() {
       nextState = Node::Idle;
       
       
-      ((Nodes::DiscreteSim*)_otherNode)->nextState = Node::ReadyToSend; /* the other node is now ready to send */
+      otherNode->nextState = Node::ReadyToSend; /* the other node is now ready to send */
     }
   
     break;
   //-------------------------------------------------------------------------------
   case Node::Receiving :
   
+    std::cout << id <<" State == Receiving, recieving from " << otherNode->getId() << std::endl;
   
     break;
   //-------------------------------------------------------------------------------

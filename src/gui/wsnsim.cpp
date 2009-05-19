@@ -101,7 +101,7 @@ void WSNsim::setupScene() {
 
   }
 
-  sendingLines = scene->createItemGroup (QList<QGraphicsItem *> ());
+  //sendingLines = scene->createItemGroup (QList<QGraphicsItem *> ());
     
   setupSWebLines();
    
@@ -185,7 +185,10 @@ void WSNsim::updateScene() {
       backPolyItem->setVisible(true);
   
     
-    if (node->state() != Simulator::Node::Idle) {
+    if (node->state() == Simulator::Node::Receiving) {
+      polyItem->setPen(getPen(Qt::blue));
+    }
+    else if (node->state() != Simulator::Node::Idle) {
       polyItem->setPen(getPen(Qt::red));
     }
     else {
@@ -194,7 +197,7 @@ void WSNsim::updateScene() {
     
     if (node->state() == Simulator::Node::Sending) {
       /*TODO this adding is slowing down the simulation big time, rather use a 10 last lines or something*/
-      sendingLines->addToGroup((QGraphicsItem*)scene->addLine ( node->x(), node->y(), node->otherNode()->x(), node->otherNode()->y(), getPen(Qt::gray, 0) ) );
+      //sendingLines->addToGroup((QGraphicsItem*)scene->addLine ( node->x(), node->y(), node->otherNode()->x(), node->otherNode()->y(), getPen(Qt::gray, 0) ) );
     }
 
   }

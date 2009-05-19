@@ -21,7 +21,7 @@ class SensorNetwork {
 
 public:
     ///Constructors & Destructors
-    SensorNetwork(int xRangeIn = 100, int yRangeIn = 100, int noNodesIn = 100, int noSectors = 16);
+    SensorNetwork(int xRangeIn = 100, int yRangeIn = 100, int noNodesIn = 100, int numberOfSectors = 16);
 
     ~SensorNetwork();
 
@@ -40,6 +40,7 @@ public:
     double scanAngle() const;
 
     double threshDegree() const;
+    
 
   private: /* methods */
 
@@ -57,7 +58,11 @@ public:
     int     determineCluster(const SensorNode * in) const;
     //void    assignNodeToRouteTable(SensorNode * nodeIn, int clusterNo);
 
-  private: /* variables*/
+  public: /* variables */
+    int numberOfSectors;
+  
+  
+  private: /* variables */
   
     std::vector < std::vector <SensorNode*> > clusters; /*TODO shouldn't be here - rax*/
     std::vector <SensorNode*> clusterHeads; /*TODO shouldn't be here - rax*/
@@ -66,7 +71,6 @@ public:
     
     double _scanAngle;
     double _threshDegree;
-    int numberOfSectors;
 
     int numberOfNodes;
     int clusterMax; /*TODO what's this do? - rax*/

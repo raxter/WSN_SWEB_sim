@@ -55,7 +55,8 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
   QHash<const Simulator::Nodes::DiscreteSim *, QGraphicsPolygonItem *> backPolyHash;
   //QHash<QGraphicsPolygonItem *, const Simulator::Node*> nodeHash; /*FIXME do we really need two hashs? - rax*/
   QGraphicsItemGroup * swebLines;
-  QGraphicsItemGroup * sendingLines;
+  //QGraphicsItemGroup * sendingLines;
+  QGraphicsItemGroup * sendingLine;
   
   /* simulator */
   Simulator::SensorNetwork * sensorNetwork; /*FIXME - this should be in the Discrete Simulator*/

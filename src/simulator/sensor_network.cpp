@@ -21,11 +21,11 @@ using namespace std;
 ****************************************************************************/
 
 
-SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int numberOfNodes, int noSectors) : 
+SensorNetwork::SensorNetwork(int xRangeIn, int yRangeIn, int numberOfNodes, int numberOfSectors) : 
       baseStation(), 
       numberOfSectors(numberOfSectors), 
       numberOfNodes(numberOfNodes), 
-      _scanAngle(360.0/noSectors)
+      _scanAngle(360.0/numberOfSectors)
 {
   createNodes(xRangeIn,yRangeIn);
 
@@ -259,10 +259,10 @@ double SensorNetwork::threshDegree() const {
 
 
 void SensorNetwork::init() {
-  _scanAngle = 45;//*M_PI/180; /*FIXME, should be based on numberOfSectors, doesn't have to be radians though :) */
-  _threshDegree=25;
-  clusterMax=0;
+  _scanAngle = 360.0/numberOfSectors;
+  _threshDegree = 25;
 
+  clusterMax = 0;
   ///determine number of clusters
   for (int a = 0 ; a < numberOfNodes ; a++) {
       int cluster = determineCluster(sensors[a]);
@@ -417,8 +417,11 @@ void SensorNetwork::init() {
 
   }
   
-  for (int i = 0 ; i < numberOfSectors; i++)
+  cout <<  numberOfSectors << endl << endl;
+  for (int i = 0 ; i < numberOfSectors; i++) {
     baseStation->sectionHeadNodes.push_back(clusterHeads[i]);
+    cout <<  (clusterHeads[i]?clusterHeads[i]->getId():-1) << endl;
+  }
 
 }
 
