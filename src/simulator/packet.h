@@ -1,7 +1,7 @@
 #ifndef __WSN_SIMULATOR_PACKET_H__
 #define __WSN_SIMULATOR_PACKET_H__
 
-#include "node.h"
+#include "nodes/base_node.h"
 
 namespace WSN
 {
@@ -9,6 +9,7 @@ namespace WSN
 namespace Simulator
 {
 
+/* TODO make const */
 class Packet    {
 
   public:
@@ -17,9 +18,9 @@ class Packet    {
     ~Packet ();
 
 
-    Node * source;
-    Node * dest;
-    double data;
+    const int srcId;
+    const int dstId;
+    
     int size; // in bytes
 };
 

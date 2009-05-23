@@ -1,6 +1,6 @@
 #include "discrete_simulator.h"
 
-
+ 
 #include <QDebug>
 
 namespace WSN
@@ -16,9 +16,9 @@ namespace Simulator
 **
 ****************************************************************************/
 
-DiscreteSimulator::DiscreteSimulator(SensorNetwork * sensorNetwork) : sensorNetwork(sensorNetwork), _currentTime(0) {
+DiscreteSimulator::DiscreteSimulator(SensorNetwork * sensorNetwork) : sensorNetwork(sensorNetwork), _currentTime(0),running(false) {
 
-  nodes = QVector<Nodes::DiscreteSim *>::fromStdVector (sensorNetwork->getSimNodePointers()); /* FIXME, still deciding whether this should be a class variable or not*/ 
+  nodes = QVector<Node::DiscreteSim *>::fromStdVector (sensorNetwork->getSimNodePointers()); /* FIXME, still deciding whether this should be a class variable or not*/ 
 }
 
 /****************************************************************************
@@ -60,13 +60,51 @@ void DiscreteSimulator::incrementTimeStep() {
     
   // simulating node hardware
   
-  for (int phase = 0 ; phase < Nodes::DiscreteSim::numberOfPhases ; phase++)
+  for (int phase = 0 ; phase < Node::DiscreteSim::numberOfPhases ; phase++)
     for (int n = 0 ; n < nodes.size() ; n++)
       nodes[n]->doNextPhaseOfTimeStep();
     
   emit finishedTimeStep ();
 }
 
+
+
+/****************************************************************************
+**
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+void DiscreteSimulator::requestStopRunning() {
+  running = false;
+}
+
+/****************************************************************************
+**
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+void DiscreteSimulator::run() {
+
+  speed = 10; /* ms/s */
+  stepsToRun = 10; /* ms */
+  running = true;
+  while(running) {
+  
+    control.lock();
+  
+    
+    if (stepsToRun > 0) {
+      sleep(1);
+      incrementTimeStep();
+      stepsToRun--;
+    }
+    
+    control.unlock();
+  }
+
+}
 
 
 } /* end of namespace Simulator */

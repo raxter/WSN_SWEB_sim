@@ -10,7 +10,7 @@ namespace Simulator
 {
 
 
-Packet::Packet () : source(0), dest(0) {
+Packet::Packet () : srcId(-1), dstId(-1) {
 
 }
 

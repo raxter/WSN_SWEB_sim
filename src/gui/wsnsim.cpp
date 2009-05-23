@@ -38,11 +38,16 @@ WSNsim::WSNsim ()
   simulator = new Simulator::DiscreteSimulator(sensorNetwork);
 
   
-  connect (stepButton, SIGNAL(released ()), this, SLOT(incrementTimeStep()));
+  //animator = new Animator();
+  //connect (animator, SIGNAL(tick ()), graphicsScene, SLOT(updateScene()));
+  //animator->start();
+  
+  //connect (stepButton, SIGNAL(released ()), this, SLOT(incrementTimeStep()));
   connect (simulator, SIGNAL(finishedTimeStep ()), graphicsScene, SLOT(updateScene()));
   
   connect (simulator, SIGNAL(logEvent ( const QString & )) , logTextEdit, SLOT (append ( const QString & )));
   
+  simulator->start();
 }
 
 
@@ -62,13 +67,18 @@ WSNsim::~WSNsim ()
   delete sensorNetwork;
   delete graphicsView;
   delete graphicsScene;
+  
+  simulator->requestStopRunning();
+  qDebug() << "waiting for animation thread to die";
+  while (simulator->isRunning ()); /*FIXME, there are better ways to wait for a thread to die ;) */
+  delete simulator;
 }
 
 
 
 void WSNsim::incrementTimeStep() {
   
-    simulator->incrementTimeStep();
+    //simulator->incrementTimeStep();
 }
 
 

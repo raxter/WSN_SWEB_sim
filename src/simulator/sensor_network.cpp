@@ -57,14 +57,14 @@ SensorNetwork::~SensorNetwork()
 
 void SensorNetwork::createNodes(int x , int y)
 {
-  baseStation = new Nodes::DiscreteSims::BaseStation();
+  baseStation = new Node::BaseStation();
   srand(0);
   //cout<<"start of createNodes "<<numNodes<<endl;
   for (int a = 0 ; a < numberOfNodes ; a++)
   {
       int randx = x/2 - rand()%(x+1);
       int randy = y/2 - rand()%(y+1);
-      sensors.push_back( new SensorNode(a, randx, randy));
+      sensors.push_back( new Node::Sensor(a, randx, randy));
 
   }
   //cout<<"end of createNodes "<<numNodes<<endl;
@@ -79,7 +79,7 @@ void SensorNetwork::createNodes(int x , int y)
 **
 ****************************************************************************/
 
-int SensorNetwork::determineCluster(const SensorNode * in) const
+int SensorNetwork::determineCluster(const Node::Sensor * in) const
 {
   double x = in->x();
   double y = in->y();
@@ -101,7 +101,7 @@ int SensorNetwork::determineCluster(const SensorNode * in) const
 **
 ****************************************************************************/
 
-const SensorNode* SensorNetwork::getSensor(int id) const {
+const Node::Sensor* SensorNetwork::getSensor(int id) const {
   return sensors[id];
 }
 
@@ -201,9 +201,9 @@ int SensorNetwork::getSlice(double x , double y) const
 **
 ****************************************************************************/
 
-std::vector <Nodes::DiscreteSim *> SensorNetwork::getSimNodePointers()
+std::vector <Node::DiscreteSim *> SensorNetwork::getSimNodePointers()
 {
-  std::vector <Nodes::DiscreteSim *> out;
+  std::vector <Node::DiscreteSim *> out;
   out.push_back(baseStation);
   for (int a = 0 ; a < numberOfNodes ; a++) {
     out.push_back(sensors[a]);
@@ -220,9 +220,9 @@ std::vector <Nodes::DiscreteSim *> SensorNetwork::getSimNodePointers()
 **
 ****************************************************************************/
 
-std::vector <const Nodes::DiscreteSim *> SensorNetwork::getConstSimNodePointers() const
+std::vector <const Node::DiscreteSim *> SensorNetwork::getConstSimNodePointers() const
 {
-  std::vector <const Nodes::DiscreteSim *> out;
+  std::vector <const Node::DiscreteSim *> out;
 
   out.push_back(baseStation);
   for (int a = 0 ; a < numberOfNodes ; a++) {
@@ -270,7 +270,7 @@ void SensorNetwork::init() {
   ///determine number of clusters
 
   // determining the nodes' cluster numbers and finding out the number of total clusters
-  numberOfClusters = 0;
+  /*numberOfClusters = 0;
   for (int a = 0 ; a < numberOfNodes ; a++) {
       int cluster = determineCluster(sensors[a]);
       sensors[a]->setCluster(cluster);
@@ -279,7 +279,7 @@ void SensorNetwork::init() {
         numberOfClusters = cluster+1;
   }
 
-  typedef std::vector <SensorNode*> ClusterVec;
+  typedef std::vector <Node::Sensor*> ClusterVec;
 
   std::vector <ClusterVec> clusters(numberOfClusters);
 
@@ -428,6 +428,8 @@ void SensorNetwork::init() {
   
   baseStation->targetNode = sensors[10];
   baseStation->initiate();
+  */
+  
   /*cout <<  numberOfSectors << endl << endl;
   for (int i = 0 ; i < numberOfSectors; i++) {
     baseStation->sectionHeadNodes.push_back(clusterHeads[i]);
@@ -471,7 +473,7 @@ double SensorNetwork::dist(int x1, int y1, int x2, int y2) const
 ****************************************************************************/
 
 
-double SensorNetwork::getDistFromBS(const SensorNode * node) const
+double SensorNetwork::getDistFromBS(const Node::Sensor * node) const
 {
 
   return dist(node->x(),node->y(),baseStation->x(),baseStation->y());
@@ -493,7 +495,6 @@ int SensorNetwork::getCluster(int sector, int slice)
 } /* end of namespace Simulator */
 
 } /* end of WSN namespace */
-
 
 
 

@@ -11,17 +11,24 @@ INCLUDE(${QT_USE_FILE})
 SET(WSN_SIMULATOR_SRCS_CXX
 
   gui/wsnsim.cpp
-  gui/graphics_scene.cpp
   gui/graphics_view.cpp
+  gui/graphics_scene.cpp
   
   simulator/sensor_network.cpp
   simulator/discrete_simulator.cpp
   
   simulator/packet.cpp
-  simulator/node.cpp
+  
+  simulator/nodes/sensor.cpp
+  simulator/nodes/base_station.cpp
+  
+  simulator/nodes/base_node.cpp
   simulator/nodes/discrete_sim.cpp
-  simulator/nodes/discrete_sims/sensor.cpp
-  simulator/nodes/discrete_sims/base_station.cpp
+  simulator/nodes/physical_layer.cpp
+  simulator/nodes/sensor_layers/link.cpp
+  simulator/nodes/sensor_layers/network.cpp
+  simulator/nodes/base_station_layers/link.cpp
+  simulator/nodes/base_station_layers/network.cpp
   
   main.cpp
 )
@@ -30,8 +37,8 @@ SET(WSN_SIMULATOR_SRCS_CXX
 SET(WSN_SIMULATOR_MOC_SRCS
 
   gui/wsnsim.h
-  gui/graphics_scene.h
   gui/graphics_view.h
+  gui/graphics_scene.h
   simulator/discrete_simulator.h
   
 )

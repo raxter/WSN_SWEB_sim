@@ -1,5 +1,5 @@
 
-#include "node.h"
+#include "base_node.h"
 #include <cmath>
 
 namespace WSN
@@ -8,6 +8,11 @@ namespace WSN
 namespace Simulator
 {
 
+namespace Node
+{
+
+
+
 
 /****************************************************************************
 **
@@ -15,7 +20,7 @@ namespace Simulator
 **
 ****************************************************************************/
 
-Node::Node(int id, double x, double y, State state) : id (id), _x(x), _y(y), _state(state) {
+BaseNode::BaseNode(int id, double x, double y, long long energyRemaining) : id (id), _x(x), _y(y), energyRemaining(energyRemaining) {
 }
 
 
@@ -25,9 +30,10 @@ Node::Node(int id, double x, double y, State state) : id (id), _x(x), _y(y), _st
 **
 ****************************************************************************/
 
-Node::~Node(){
+BaseNode::~BaseNode(){
 
 }
+
 
 
 /****************************************************************************
@@ -36,18 +42,7 @@ Node::~Node(){
 **
 ****************************************************************************/
 
-Node::State Node::state() const {
-  return _state;
-}
-
-
-/****************************************************************************
-**
-** Author: Richard Baxter
-**
-****************************************************************************/
-
-double Node::x() const {
+double BaseNode::x() const {
   return _x;
 }
 
@@ -57,7 +52,7 @@ double Node::x() const {
 **
 ****************************************************************************/
 
-double Node::y() const {
+double BaseNode::y() const {
   return _y;
 }
 
@@ -68,7 +63,7 @@ double Node::y() const {
 **
 ****************************************************************************/
 
-int Node::getId() const {
+int BaseNode::getId() const {
   return id;
 }
 
@@ -76,24 +71,21 @@ int Node::getId() const {
 
 /****************************************************************************
 **
-** Author: Richard Baxter
-**
-****************************************************************************/
-
-void Node::setState(State state) {
-  _state = state;
-}
-
-/****************************************************************************
-**
 ** Author: Julian Hulme
 **
 ****************************************************************************/
-double  Node::distTo(Node * otherSensor) const {
+double BaseNode::distTo(BaseNode * otherSensor) const {
 
   return sqrt(pow(otherSensor->_x-this->_x,2) + pow(otherSensor->_y-this->_y,2) );
 }
 
+
+
+
+
+
+
+} /* end of namespace Node */
 
 } /* end of namespace Simulator */
 

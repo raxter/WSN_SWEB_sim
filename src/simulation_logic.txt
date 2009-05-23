@@ -1,0 +1,232 @@
+================================================================================
+Packet Definitions
+
+  Packet section types
+  Name          size(bits)      Description
+  ID            8               an ID number of a node (destination or source)
+  GRP           8               group ID
+  TYPE          4               packet type
+  SECTOR        6               sector ID
+  SEND_STRENGTH 16              sending node signal strength value
+  THREASH       8               threshold value
+  ENERGY        8               energy value
+  DATA          *               Node data
+  
+  NOTE: size of the packet section are just estimates
+  * node data will be such that it fills a full packet
+
+
+  Packet Types
+  dst = destination
+  src = source
+  <thing>(id)  means it is the specific id of the <thing>
+  <thing>(max) means the maximum value for all <thing>s
+
+  General
+    all packets start with this header
+    HEADER    = ID(dst)|GRP(dst)|ID(src)|TYPE
+
+  Link Layer
+    INIT      = HEADER|SECTOR(id)|SECTOR(max)|THRESH|SEND_STRENGTH|ID(max)
+    GRP_INIT  = HEADER|STRENGTH
+    
+  Network Layer
+    ENERGY_REQ    = HEADER
+    ENERGY_SEND   = HEADER|ENERGY
+    DATA_REQ      = HEADER
+    DATA_SEND     = HEADER|DATA
+    HEAD_REALLOC  = HEADER|ID(head)
+      ID(head) is the new head node
+    
+  
+================================================================================
+Node Logic
+
+  Node Structure (software)
+    queue<Packet*> outgoingPacketQueue // the list of packets to send (NOTE infinite buffer assumed)
+    Packet * receivedPacket // the packet received, only 1 since packets are discarded if the link layer doesn't deal with them immediatly/*TODO FIXME ?*/
+    int receivedPacketStrength // strength of the received signal
+    
+    int dataSent; // a record of how much of the current (packetQueue.front) packet has been sent
+    int id /* not a MAC address since we use this number to do TDMA*/
+    int maxNumberOfIds
+    int sectorId
+    int threshId
+    int maxNumberOfSectors
+    int grpId // calculated via combination of sectorId & threshId and with maxNumberOfSectors
+    int maxNumberOfGroups // calculated from the INIT packet from signal strength, threshold (can work out max theshID) and maxNumberOfSectors
+    HardwareState = {HARDWARE_REC, HARDWARE_SEND, HARDWARE_IDLE}
+    Hardware hardware
+  
+    BaseStation Specific
+      //queue<Packet*> dataRequests //hold the data that will be requested by the basestation
+      int maxStrength;// maximum strength the basestation can send out to
+      LinkState = {UNINITIALISED, WAITING_FOR_GROUP_INITS_TO_FINISH, RUNNING}
+      NetworkState = {UNINITIALISED, INITIALISED}
+      int WAITING_FOR_GROUP_INITS_TO_FINISH_timer;
+      int WAITING_FOR_GROUP_INITS_TO_FINISH_timeout; // user set
+    
+    Sensor Specific
+      LinkState = {UNINITIALISED, INITILISING_GROUP, INITIALISED}
+      NetworkState = {UNINITIALISED, HEAD_REALLOC, HEAD_REALLOC_WAIT, RUNNING}
+      int INITILISING_GROUP_timer;
+      int INITILISING_GROUP_timeout; // user set
+      int head_node_timer;
+      int head_node_timeout; // user set
+  
+  Node Structure (Hardware) - this will be in the form of a Hardware class that the node will have (and share) a constant pointer to
+    int bandwidth
+    int currentTime
+  
+  Hardware Layer Logic
+    enum {NOT_RECEIVING, RECEIVING, REJECT_RECEIVE} receivingState = set RECEIVING from simulator, otherwise NOT_RECEIVING
+    
+    Packet * receivedPacket = set from simulator if packet was received, otherwise NULL (note receivingState *will* = RECEIVING if receivedPacket != NULL)
+    receivedPacketStrength = set from simulator if packet was received, otherwise 0 (note receivedPacketStrength *will* > 0 if receivedPacket != NULL)
+    
+    if receivedPacket
+      this->receivedPacket = receivedPacket
+      this->receivedPacketStrength = receivedPacketStrength
+    if receivingState = RECEIVING
+      set HardwareState = HARDWARE_REC
+      /* TODO energy calcs*/
+    else if receivingState = REJECT_RECEIVE
+      set HardwareState = HARDWARE_REC /*FIXME, should this be HARDWARE_REC or HARDWARE_IDLE*/
+      /* TODO energy calcs*/
+    else if receivingState = NOT_RECEIVING
+      if packetQueue.front // packet to send
+        if in correct time slot && has enough time to send without going into next timeslot
+          send data out (this info goes to the simulator)
+          increment dataSent
+          if dataSend > packetQueue.front.length // packet sending finished
+            tell simulator that the packet has finished sending (simulator should tell the receivers that they now have the packet)
+        
+        set HardwareState = HARDWARE_SEND
+        /* TODO energy calcs*/
+      else
+        set HardwareState = HARDWARE_IDLE
+        /* TODO energy calcs*/
+        
+  
+  Link Layer Logic
+    BaseStation
+      if LinkState = UNINITIALISED
+        for each direction d
+          outgoingPacketQueue.append(Packet(GPR_INIT to d with strength this->maxStrength))
+        LinkState = WAITING_FOR_GROUP_INITS_TO_FINISH
+        WAITING_FOR_GROUP_INITS_TO_FINISH_timer = hardware.currentTime + WAITING_FOR_GROUP_INITS_TO_FINISH_timeout
+      elif LinkState = WAITING_FOR_GROUP_INITS_TO_FINISH
+        if (HARDWARE_SEND)
+          WAITING_FOR_GROUP_INITS_TO_FINISH_timer++ // must wait for hardware to finish sending before we can start counting down timer
+        if (hardware.currentTime > WAITING_FOR_GROUP_INITS_TO_FINISH_timer) // means time is up
+          LinkState = INITIALISED
+      // ======= packet handler section =======
+      /* TODO */
+    
+    Sensor
+      if LinkState = UNINITIALISED
+        if receivedPacket.TYPE = INIT
+          int maxNumberOfIds = receivedPacket.ID(max)
+          int sectorId = receivedPacket.SECTOR(id)
+          int maxNumberOfSectors = receivedPacket.SECTOR(max)
+          int threshId = calcThresh(receivedPacket.THRESH, receivedPacketStrength)
+          int grpId = calcGroupId(threshId, sectorId, maxNumberOfSectors)
+          int maxNumberOfGroups = calcMaxNumberOfGroups(threshId, receivedPacket.SEND_STRENGTH, numberOfSectors)
+          LinkState = INITILISING_GROUP
+          INITILISING_GROUP_timer = hardware.currentTime + INITILISING_GROUP_timeout
+          outgoingPacketQueue.append(Packet(GRP_INIT to grpId with sufficient strength to reach all nodes in cluster))
+      elif LinkState = INITILISING_GROUP
+        if (HARDWARE_SEND)
+          WAITING_FOR_GROUP_INITS_TO_FINISH_timer++ // must wait for hardware to finish sending before we can start counting down timer
+        if (hardware.currentTime > INITILISING_GROUP_timer) // means time is up
+          LinkState = INITIALISED
+          find min ID number m of all nodes in cluster
+          routeTable [1][1] = m
+      // ======= packet handler section =======
+      /* TODO */
+  
+  Network Layer Logic
+    BaseStation
+      if LinkState = INITIALISED
+        if NetworkState = UNINITIALISED
+          NetworkState = RUNNING
+        if NetworkState = RUNNING
+          while dataRequests.front
+            outgoingPacketQueue.append(Packet(DATA_REQ to dataRequests.front.dst))
+        // ======= packet handler section =======
+        /* TODO */
+    Node
+      if LinkState = INITIALISED
+        // ======= init handler section =======
+        if NetworkState = UNINITIALISED
+          NetworkState = routeTable[1][1] = this.id?HEAD_REALLOC:RUNNING /*need to do a realloc immeditaly if it's the headnode*/
+      
+        // ======= packet handler section =======
+        if *not* UNINITIALISED
+          if receivedPacket.TYPE = DATA_REQ
+            get node id n which is next in route
+            outgoingPacketQueue.append(Packet(DATA_SEND to n with data = this.data))
+          if receivedPacket.TYPE = DATA_SEND
+            get node id n which is next in route
+            outgoingPacketQueue.append(Packet(DATA_SEND to n with data = receivedPacket.DATA))
+          if receivedPacket.TYPE = ENERGY_REQ
+            outgoingPacketQueue.append(Packet(ENERGY_SEND to receivedPacket.ID(src) with data = this.energyLevel))
+          if receivedPacket.TYPE = HEAD_REALLOC
+            routeTable[1][1] = receivedPacket.ID(head)
+            if routeTable[1][1] = this.id
+              head_node_timer = hardware.currentTime + head_node_timeout
+          if routeTable[1][1] = this.id // this node is the head node
+            if (hardware.currentTime > head_node_timer) // means time is up
+              NetworkState = HEAD_REALLOC
+              
+        // ======= state handler section =======
+        if HEAD_REALLOC /* can only be true if this is the headnode*/
+          outgoingPacketQueue.append(Packet(ENERGY_REQ to this.grpId))
+          networkState = HEAD_REALLOC_WAIT
+          groupEnergies.clear
+        if HEAD_REALLOC_WAIT
+          if receivedPacket.TYPE = ENERGY_SEND
+            HEAD_REALLOC_WAIT_node_count--
+            groupEnergies.append(make_pair(receivedPacket.id(src), receivedPacket.ENERGY))
+          if HEAD_REALLOC_WAIT_node_count == 0 // then done with energy requests
+            find node id m with most energy
+            if m != this.id
+              outgoingPacketQueue.append(Packet(HEAD_REALLOC to this.grpId setting m to HEAD))
+              foreach node id neighbour 
+                outgoingPacketQueue.append(Packet(HEAD_REALLOC to neighbour setting m to HEAD))
+              // should maybe send one huge blast to all neighbours and group members ? - for now no, each neighbor gets it's own signal
+              routeTable[1][1] = m
+            networkState = RUNNING
+            
+          
+    
+  Overall Logic (each step is executed for all nodes before continuing to next step)
+    Simulator passes relevant info to physical layer (what signals were being received during the previous timestep)
+    Phase execution
+      Set up phase
+      Physical Layer Logic
+      Link Layer Logic
+      Network Layer Logic
+      Wrap Up Phase
+    Simulator fetches relevant info from physical layer (what signals are being sent during this timestep)
+    
+    
+        
+        
+
+
+================================================================================
+
+
+
+================================================================================
+
+
+
+
+================================================================================
+
+
+
+================================================================================
+

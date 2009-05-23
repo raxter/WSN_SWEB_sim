@@ -24,7 +24,7 @@ GraphicsScene::GraphicsScene(const Simulator::SensorNetwork * sensorNetwork) : Q
   
   this->setItemIndexMethod(QGraphicsScene::NoIndex);
   
-  sensorNetworkNodes = QVector<const Simulator::Nodes::DiscreteSim *>::fromStdVector (sensorNetwork->getConstSimNodePointers());
+  sensorNetworkNodes = QVector<const Simulator::Node::DiscreteSim *>::fromStdVector (sensorNetwork->getConstSimNodePointers());
   setupScene();
 }
 
@@ -53,7 +53,7 @@ void GraphicsScene::setupScene() {
   this->setBackgroundBrush(QBrush(Qt::black));
   this->setForegroundBrush(QBrush(Qt::white,0));
 
-  Q_FOREACH (const Simulator::Nodes::DiscreteSim * node, sensorNetworkNodes) {
+  Q_FOREACH (const Simulator::Node::DiscreteSim * node, sensorNetworkNodes) {
 
  // QHash<const Simulator::Node*, QPolygon polygon> polyHash;
 
@@ -164,16 +164,16 @@ QPolygonF GraphicsScene::makeCircle(qint32 segments, qreal radius) {
 void GraphicsScene::updateScene() {
 
 
-  Q_FOREACH(const Simulator::Nodes::DiscreteSim * node, sensorNetworkNodes) {
+  Q_FOREACH(const Simulator::Node::DiscreteSim * node, sensorNetworkNodes) {
   
     QGraphicsPolygonItem * polyItem = polyHash[node];
     QGraphicsPolygonItem * backPolyItem = backPolyHash[node];
     
     //qDebug() << typeid(node).name();
     
-    if (node->type == Simulator::Nodes::DiscreteSim::Sensor)
-      backPolyItem->setVisible(((Simulator::Nodes::DiscreteSims::Sensor*)node)->isHead());
-    else if (node->type == Simulator::Nodes::DiscreteSim::BaseStation)
+    if (node->type == Simulator::Node::DiscreteSim::Sensor)
+      backPolyItem->setVisible(dynamic_cast<const Simulator::Node::SensorLayers::Network*>(node)->isHead());
+    else if (node->type == Simulator::Node::DiscreteSim::BaseStation)
       backPolyItem->setVisible(true);
   
   
@@ -181,7 +181,8 @@ void GraphicsScene::updateScene() {
     sendingLine->setVisible(false);
     QGraphicsPolygonItem * sendingBlob = sendingBlobs[node];
     sendingBlob->setVisible(false);
-    switch(node->state()) {
+    /* TODO */
+    /*switch(node->state()) {
     
       case Simulator::Node::Receiving:
         polyItem->setBrush(QBrush(Qt::red));
@@ -210,7 +211,7 @@ void GraphicsScene::updateScene() {
       
     
     
-    }
+    }*/
     
   }
   

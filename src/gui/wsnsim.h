@@ -10,11 +10,11 @@
 #include "graphics_view.h"
 
 
-#include "simulator/nodes/discrete_sim.h"
-
 #include "simulator/sensor_network.h"
 #include "simulator/discrete_simulator.h"
-#include "simulator/node.h"
+
+#include "simulator/nodes/base_node.h"
+#include "simulator/nodes/discrete_sim.h"
 
 #include "ui_wsnsim.h"
 

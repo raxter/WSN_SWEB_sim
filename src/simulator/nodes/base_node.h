@@ -1,0 +1,69 @@
+#ifndef __WSN_SIMULATOR_NODE_BASE_NODE_H__
+#define __WSN_SIMULATOR_NODE_BASE_NODE_H__
+
+
+namespace WSN
+{
+
+namespace Simulator
+{
+
+namespace Node
+{
+
+
+/* holds all specs of the node, signal send strength, bandwidth, location in space, energy levels etc*/
+class BaseNode {
+
+  public: /* class specific*/
+
+    static const double bandwidth = 54; // kb/s
+
+    /*enum State {
+      Running, 
+      OutOfEnergy
+    };*/
+
+
+    BaseNode(int id = -1, double x = 0.0, double y = 0.0, long long energyRemaining = 1000000000/*nano joules*/);
+    virtual ~BaseNode();
+
+
+  public: /* methods */
+
+    double x() const;
+    double y() const;
+    int getId() const;
+    double  distTo(BaseNode * otherNode) const;
+
+  protected: /* methods */
+    
+   
+    virtual int getNextHop() const = 0; // returns id
+
+  public: /* variables */
+
+  long long energyRemaining;
+  
+  
+  protected: /* variables */
+
+    int id; // this node's id, if id == -1 it means undefined
+  private: /* variables */
+    double _x,_y;
+
+    //State reallocState; /* to be used to store the reallocation channel state (if we use the dual channel method for reallocation)*/
+
+
+
+};
+
+
+} /* end of namespace Node */
+
+} /* end of namespace Simulator */
+
+} /* end of namespace WSN */
+
+
+#endif

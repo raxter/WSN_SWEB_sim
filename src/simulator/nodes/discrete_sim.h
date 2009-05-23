@@ -1,7 +1,10 @@
 #ifndef __WSN_SIMULATOR_NODE_DISCRETELY_SIMULATED_H__
 #define __WSN_SIMULATOR_NODE_DISCRETELY_SIMULATED_H__
 
-#include "../node.h"
+#include <list>
+#include <vector>
+
+#include "base_node.h"
 
 #include "simulator/packet.h"
 
@@ -11,78 +14,56 @@ namespace WSN
 namespace Simulator
 {
 
-namespace Nodes
+namespace Node
 {
 
+/* holds all general information needed to discretely simulate the node*/
+class DiscreteSim : public BaseNode {
 
-class DiscreteSim : public Node {
 
   public: /* class specific*/
 
-  static const int numberOfPhases = 3;
+  static const int numberOfPhases = 5;
   enum Type {Sensor, BaseStation};
 
-  DiscreteSim(Type type, int id = 0, double x = 0, double y = 0, Node::State state = Idle);
+  DiscreteSim(Type type, int id, double x, double y);
   ~DiscreteSim();
 
+  protected: /* class specific*/
+  DiscreteSim();
 
   protected: /* overridden methods */
-  void setState(State state);
 
   public: /* methods */
 
-  const DiscreteSim * getOtherNode() const;
   void doNextPhaseOfTimeStep();
-  const Packet * getPacket() const;
 
-  double getPercentageDone() const;
 
   private: /* methods */
 
-  void stateSetupPhase();
-  void hardwareSimPhase();
-  void stateUpdatePhase();
+  virtual void setUpPhase ();
+  virtual void physicalLayerLogic ();
+  virtual void linkLayerLogic ();
+  virtual void networkLayerLogic ();
+  virtual void wrapUpPhase ();
 
   protected: /* methods */
 
-  virtual void stateIdle();
-  virtual void stateSending();
-  virtual void stateReceiving();
-  virtual void stateReadyToSend();
-  virtual void stateOutOfEnergy();
-
-  void packetReceiveStart();
-  virtual void packetReceiveFinished(Packet * packet);
-  virtual void packetSendStart();
-  void packetSendFinish();
-
-
   public: /* variables */
-
-  double energyRemaining;
-  Type type;
+  const Type type; // basestation or sensor
 
   protected: /* variables */
-  Packet * packet;
-  DiscreteSim* otherNode; /* depending on state, could represent the node that this node is sending to or receiving from*/
+  
   private: /* variables */
 
-  int phase;
-
-  Node::State nextState;
-
-
-
-  /* state == Node::Sending specific */
-  int sendTimer;
-  int sendTimerTotal;
-
-  //int headAllocTimer; /* for head cluster reorganisation */
+  int phaseOfSimulation;
+  
+  
 
 };
 
 
-} /* end of namespace Nodes */
+} /* end of namespace Node */
 
 } /* end of namespace Simulator */
 

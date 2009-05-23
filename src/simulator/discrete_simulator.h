@@ -4,6 +4,8 @@
 #include "sensor_network.h"
 #include <QObject>
 #include <QVector>
+#include <QThread>
+#include <QMutex>
 
 namespace WSN
 {
@@ -11,7 +13,7 @@ namespace WSN
 namespace Simulator
 {
 
-class DiscreteSimulator : public QObject  {
+class DiscreteSimulator : public QThread  {
 
   Q_OBJECT
 
@@ -24,23 +26,33 @@ class DiscreteSimulator : public QObject  {
 
   void logEvent( const QString & event );
   void finishedTimeStep ();
-
-  public slots:
-
-  void incrementTimeStep();
+  
 
   public: /* methods */
+  void requestStopRunning();
 
   unsigned long currentTime();
 
   private: /* methods */
+  
+  void run();
+
+  void incrementTimeStep();
 
   void timeStepCompleted(); // notification that a time step has been completed TODO should this be in SensorNetwork?
-  void incrementTimeStep(Node * node);
+  void incrementTimeStep(Node::DiscreteSim * node);
 
   private: /* variables */
+  
+  /* Thread */
+  bool running;
+  QMutex control;
+  
+  qreal speed; /* ms/s */
+  qreal stepsToRun; /* ms */
+  
   SensorNetwork * sensorNetwork;
-  QVector<Nodes::DiscreteSim *> nodes;
+  QVector<Node::DiscreteSim *> nodes;
 
   unsigned long _currentTime;// in milliseconds
 

@@ -45,12 +45,12 @@ class GraphicsScene : public QGraphicsScene {
   const Simulator::SensorNetwork * sensorNetwork;
 
   /* TODO generalise all these to a class and just have one nodeToGraphicsObjects hash*/
-  QVector<const Simulator::Nodes::DiscreteSim *> sensorNetworkNodes;
+  QVector<const Simulator::Node::DiscreteSim *> sensorNetworkNodes;
 
-  QHash<const Simulator::Nodes::DiscreteSim *, QGraphicsPolygonItem *>  polyHash;
-  QHash<const Simulator::Nodes::DiscreteSim *, QGraphicsPolygonItem *>  backPolyHash;
-  QHash<const Simulator::Nodes::DiscreteSim *, QGraphicsLineItem *>     sendingLines;
-  QHash<const Simulator::Nodes::DiscreteSim *, QGraphicsPolygonItem *>  sendingBlobs;
+  QHash<const Simulator::Node::DiscreteSim *, QGraphicsPolygonItem *>  polyHash;
+  QHash<const Simulator::Node::DiscreteSim *, QGraphicsPolygonItem *>  backPolyHash;
+  QHash<const Simulator::Node::DiscreteSim *, QGraphicsLineItem *>     sendingLines;
+  QHash<const Simulator::Node::DiscreteSim *, QGraphicsPolygonItem *>  sendingBlobs;
   //QHash<QGraphicsPolygonItem *, const Simulator::Node*> nodeHash; /*FIXME do we really need two hashes? - rax*/
 
   QGraphicsItemGroup * swebLines;
