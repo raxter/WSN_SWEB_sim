@@ -57,7 +57,7 @@ SensorNetwork::~SensorNetwork()
 
 void SensorNetwork::createNodes(int x , int y)
 {
-  baseStation = new Node::BaseStation();
+  baseStation = new Node::BaseStation(0);
   baseStation->setSensorNetwork(this);
   srand(0);
   //cout<<"start of createNodes "<<numNodes<<endl;
@@ -286,7 +286,7 @@ void SensorNetwork::init() {
   baseStation->numberOfNodes = numberOfNodes;
   baseStation->numberOfSectors = numberOfSectors;
   //baseStation->sendEnergy = ;
-  
+
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -449,7 +449,7 @@ void SensorNetwork::init() {
 
 
   }
-  
+
   baseStation->targetNode = sensors[10];
   baseStation->initiate();
   */

@@ -16,7 +16,7 @@ namespace Node
 BaseStation::BaseStation(int id, double x, double y) : DiscreteSim(DiscreteSim::BaseStation, id,x,y) {
 
 
-  std::cout << "BaseStation::BaseStation(id = " << id << ", x = " << x << ", y = " << y << ")" << std::endl;
+  //std::cout << "BaseStation::BaseStation(id = " << id << ", x = " << x << ", y = " << y << ")" << std::endl;
 }
 
 

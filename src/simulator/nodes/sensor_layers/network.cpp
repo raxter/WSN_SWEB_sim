@@ -42,8 +42,8 @@ void Network::proxied_setUpPhase () {
 
 void Network::networkLayerLogic (){
   //std::cout << "in SensorLayers::Network::networkLayerLogic ()" << std::endl;
-  
-  std::cout << currentLinkState << ":" << LinkUninitialised << std:: endl;
+
+  //std::cout << currentLinkState << ":" << LinkUninitialised << std:: endl;
   if (currentNetworkState == NetworkUninitialised && currentLinkState == Initialised) {
     std::cout << "initialising Network layer" << std:: endl;
     nextNetworkState = InitialisingGroup;
@@ -54,7 +54,7 @@ void Network::networkLayerLogic (){
       InitialisingGroup_timer++;
     }
     if (currentTime > InitialisingGroup_timer) {
-      
+
       int minId = id;
       for (int i = 0 ; i < groupNodeIds.size() ; i++) {
         if (groupNodeIds[i] < minId)
@@ -65,12 +65,12 @@ void Network::networkLayerLogic (){
     }
   }
   if (currentNetworkState != NetworkUninitialised && nextNetworkState != NetworkUninitialised) {
-    
-    
-    
+
+
+
   }
   if (currentNetworkState == HeadReAlloc) {
-    
+
       int maxDist = 0;
       for (int i = 0 ; i < groupNodeIds.size() ; i++) {
         int signalDist = dist(id, groupNodeIds[i]);
@@ -78,13 +78,13 @@ void Network::networkLayerLogic (){
           maxDist = signalDist;
       }
       BasePacket* toSend = new Packet::EnergyReq(maxDist, *this, grpId);
-      std::cout << "creating " << toSend << std::endl;
+      //std::cout << "creating " << toSend << std::endl;
       outgoingPacketQueue.push_back(toSend);
-  
+
   }
   if (currentNetworkState == HeadReAllocWait) {
-  
-  
+
+
   }
 }
 

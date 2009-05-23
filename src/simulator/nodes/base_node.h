@@ -23,7 +23,7 @@ class BaseNode {
     static const double bandwidth = 54; // kb/s
 
     /*enum State {
-      Running, 
+      Running,
       OutOfEnergy
     };*/
 
@@ -40,20 +40,21 @@ class BaseNode {
     int getId() const; /* TODO remove this*/
     double  distTo(BaseNode * otherNode) const;
 
+
   protected: /* methods */
-  
+
+
     int dist(int id1, int id2);
-    
     const Simulator::SensorNetwork * sensorNetwork;
-   
+
     virtual int getNextHop() const = 0; // returns id
 
   public: /* variables */
 
   long long energyRemaining;
     int id; // this node's id, if id == -1 it means undefined
-  
-  
+
+
   protected: /* variables */
 
   private: /* variables */

@@ -14,8 +14,8 @@ namespace Node
 
 
 Sensor::Sensor(int id, double x, double y) : DiscreteSim(DiscreteSim::Sensor, id,x,y) {
-  
-  std::cout << "Sensor::Sensor(id = " << id << ", x = " << x << ", y = " << y << ")" << std::endl;
+
+ // std::cout << "Sensor::Sensor(id = " << id << ", x = " << x << ", y = " << y << ")" << std::endl;
 }
 
 
@@ -32,7 +32,7 @@ int Sensor::getNextHop() const {
 }
 
 void Sensor::setUpPhase () {
-  
+
   //std::cout << "in Sensor::setUpPhase ()" << std::endl;
   PhysicalLayer::proxied_setUpPhase ();
   SensorLayers::Link::proxied_setUpPhase ();
