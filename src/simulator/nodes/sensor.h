@@ -23,6 +23,10 @@ class Sensor : public PhysicalLayer, public SensorLayers::Link, public SensorLay
     Sensor(int id = -1, double x = 0, double y = 0);
     virtual ~Sensor();
     
+  protected: /* overridden methods */
+
+    void setUpPhase ();
+    void wrapUpPhase ();
     
   public: /* overridden methods */
   

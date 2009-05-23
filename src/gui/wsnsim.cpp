@@ -3,6 +3,9 @@
 
 #include <QDebug>
 
+
+
+
 namespace WSN
 {
 
@@ -23,26 +26,27 @@ WSNsim::WSNsim ()
 {
   setupUi(this);      /* from ui_wsnsim.h: generated from wsnsim.ui */
   
+  
   graphicsView = new GraphicsView();
   this->setCentralWidget(graphicsView);
   graphicsView->setDragMode ( QGraphicsView::ScrollHandDrag );
   
   
   sensorNetwork = new Simulator::SensorNetwork(100,100,100); /* FIXME paramaterise these 100's*/
-  graphicsScene = new GraphicsScene(sensorNetwork );
+  simulator = new Simulator::DiscreteSimulator(sensorNetwork);
+  graphicsScene = new GraphicsScene(sensorNetwork, simulator);
   
   
   graphicsView->setScene ( graphicsScene );
-  
-
-  simulator = new Simulator::DiscreteSimulator(sensorNetwork);
-
   
   //animator = new Animator();
   //connect (animator, SIGNAL(tick ()), graphicsScene, SLOT(updateScene()));
   //animator->start();
   
-  //connect (stepButton, SIGNAL(released ()), this, SLOT(incrementTimeStep()));
+  connect (stepButton, SIGNAL(released ()), this, SLOT(incrementTimeStep()));
+  connect (graphicsScene, SIGNAL(aquireNetworkNodesLock()), simulator, SLOT(lock()));
+  connect (graphicsScene, SIGNAL(releaseNetworkNodesLock()), simulator, SLOT(unlock()));
+  
   connect (simulator, SIGNAL(finishedTimeStep ()), graphicsScene, SLOT(updateScene()));
   
   connect (simulator, SIGNAL(logEvent ( const QString & )) , logTextEdit, SLOT (append ( const QString & )));
@@ -69,7 +73,7 @@ WSNsim::~WSNsim ()
   delete graphicsScene;
   
   simulator->requestStopRunning();
-  qDebug() << "waiting for animation thread to die";
+  qDebug() << "waiting for simulator thread to die";
   while (simulator->isRunning ()); /*FIXME, there are better ways to wait for a thread to die ;) */
   delete simulator;
 }
@@ -78,7 +82,7 @@ WSNsim::~WSNsim ()
 
 void WSNsim::incrementTimeStep() {
   
-    //simulator->incrementTimeStep();
+    simulator->incrementTimeStep();
 }
 
 

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../discrete_sim.h"
+#include "layers.h"
 
 namespace WSN
 {
@@ -19,7 +20,7 @@ namespace SensorLayers
 {
 
 /* deals with routing*/
-class Network : virtual public DiscreteSim {
+class Network : virtual public DiscreteSim, virtual public Layers {
 
 
   public: /* class specific*/
@@ -29,12 +30,13 @@ class Network : virtual public DiscreteSim {
 
 
   protected: /* overridden methods */
-    virtual void networkLayerLogic ();
+    void networkLayerLogic ();
+    void proxied_setUpPhase ();
+    void proxied_wrapUpPhase ();
 
   public: /* methods */
   
   bool isHead() const;
-
 
   private: /* methods */
   
@@ -45,11 +47,14 @@ class Network : virtual public DiscreteSim {
   public: /* variables */
 
 
+  int InitialisingGroup_timeout;
+  int InitialisingGroup_timer;
+
   protected: /* variables */
-  enum State {Uninitialised, HeadReAlloc, HeadReAllocWait, Running};
-  State state;
   
   int routeTable [3][3];
+  
+  std::vector<const BaseNode*> groupNodes;
   
   private: /* variables */
 

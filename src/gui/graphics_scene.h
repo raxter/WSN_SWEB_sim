@@ -7,6 +7,7 @@
 #include <QGraphicsPolygonItem>
 
 #include "simulator/sensor_network.h"
+#include "simulator/discrete_simulator.h" /*just to get Signal struct, FIXME*/
 
 namespace WSN
 {
@@ -20,9 +21,17 @@ class GraphicsScene : public QGraphicsScene {
 
   public: /* class specifc*/
 
-  GraphicsScene(const Simulator::SensorNetwork * sensorNetwork);
+  GraphicsScene(const Simulator::SensorNetwork * sensorNetwork, const Simulator::DiscreteSimulator * simulator);
+  
+
+
   ~GraphicsScene();
 
+  signals:
+
+  void aquireNetworkNodesLock();
+  void releaseNetworkNodesLock();
+  
   public slots:
   void updateScene();
 
@@ -35,22 +44,28 @@ class GraphicsScene : public QGraphicsScene {
   QGraphicsSimpleTextItem * timerItem;
   qreal penWidth;
   QPen getPen(const QColor& c, qreal width = -1);
+  
 
   protected: /* event handlers */
 
   void wheelEvent ( QGraphicsSceneWheelEvent * wheelEvent );
 
+  public:
+  const QVector<Simulator::Signal>& signalList;
 
   private:
   const Simulator::SensorNetwork * sensorNetwork;
 
   /* TODO generalise all these to a class and just have one nodeToGraphicsObjects hash*/
   QVector<const Simulator::Node::DiscreteSim *> sensorNetworkNodes;
+  
 
   QHash<const Simulator::Node::DiscreteSim *, QGraphicsPolygonItem *>  polyHash;
   QHash<const Simulator::Node::DiscreteSim *, QGraphicsPolygonItem *>  backPolyHash;
-  QHash<const Simulator::Node::DiscreteSim *, QGraphicsLineItem *>     sendingLines;
-  QHash<const Simulator::Node::DiscreteSim *, QGraphicsPolygonItem *>  sendingBlobs;
+  QVector<QGraphicsLineItem *>      signalLines;
+  QVector<QGraphicsPolygonItem *>   signalBlobs;
+  //QHash<const Simulator::Node::DiscreteSim *, QGraphicsLineItem *>     sendingLines;
+  //QHash<const Simulator::Node::DiscreteSim *, QGraphicsPolygonItem *>  sendingBlobs;
   //QHash<QGraphicsPolygonItem *, const Simulator::Node*> nodeHash; /*FIXME do we really need two hashes? - rax*/
 
   QGraphicsItemGroup * swebLines;

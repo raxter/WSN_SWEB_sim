@@ -19,7 +19,7 @@ namespace GUI
 **
 ****************************************************************************/
 
-GraphicsScene::GraphicsScene(const Simulator::SensorNetwork * sensorNetwork) : QGraphicsScene(), swebLines(0) , sensorNetwork(sensorNetwork) {
+GraphicsScene::GraphicsScene(const Simulator::SensorNetwork * sensorNetwork, const Simulator::DiscreteSimulator * simulator) : QGraphicsScene(), swebLines(0) , sensorNetwork(sensorNetwork), signalList(simulator->getSignalList()) {
   
   
   this->setItemIndexMethod(QGraphicsScene::NoIndex);
@@ -78,19 +78,20 @@ void GraphicsScene::setupScene() {
     
     //nodeHash[polyHash[node]] = node;
     
-    sendingLines[node] = addLine ( 0,0,0,0 , getPen(Qt::yellow) );
-    sendingLines[node]->setVisible(false);
-    sendingLines[node]->setZValue ( 1.5 );
+    //sendingLines[node] = addLine ( 0,0,0,0 , getPen(Qt::yellow) );
+    //sendingLines[node]->setVisible(false);
+    //sendingLines[node]->setZValue ( 1.5 );
     
-    sendingBlobs[node] = addPolygon(makeCircle(32, 0.5), QPen(Qt::black, 0), QBrush(Qt::darkYellow));
-    sendingBlobs[node]->setVisible(false);
-    sendingBlobs[node]->setZValue ( 1.6 );
+    //sendingBlobs[node] = addPolygon(makeCircle(32, 0.5), QPen(Qt::black, 0), QBrush(Qt::darkYellow));
+    //sendingBlobs[node]->setVisible(false);
+    //sendingBlobs[node]->setZValue ( 1.6 );
   }
 
   //sendingLines = scene->createItemGroup (QList<QGraphicsItem *> ());
     
   setupSWebLines();
    
+  
   updateScene();
 }
 
@@ -163,7 +164,9 @@ QPolygonF GraphicsScene::makeCircle(qint32 segments, qreal radius) {
 
 void GraphicsScene::updateScene() {
 
+  emit aquireNetworkNodesLock();
 
+  
   Q_FOREACH(const Simulator::Node::DiscreteSim * node, sensorNetworkNodes) {
   
     QGraphicsPolygonItem * polyItem = polyHash[node];
@@ -176,11 +179,38 @@ void GraphicsScene::updateScene() {
     else if (node->type == Simulator::Node::DiscreteSim::BaseStation)
       backPolyItem->setVisible(true);
   
+    
+    for (int index = 0 ;; index++) {
+      
+      
+      if (index < signalList.size()) { /* index is in range of signals*/
+        if (index >= signalLines.size()) { /* index is out of range of lines*/
+          /* create more lines */
+          //qDebug() << "creating line";
+          signalLines.append(addLine ( 0,0,0,0 , getPen(Qt::yellow) ));
+        }
+        
+        QGraphicsLineItem * lineItem = signalLines[index];
+      
+        const Simulator::Signal& signal = signalList[index];
+        lineItem->setLine (signal.src->x(), signal.src->y(), signal.dst->x(), signal.dst->y());
+        lineItem->setVisible(true);
+      }
+      else /* index is out of range of signals*/
+        if (index < signalLines.size())/* index is out of range of lines*/
+          signalLines[index]->setVisible(false);
+        else
+          break;
+        
+      
+      //qDebug() << "drew line " << index;
+      
+    }
   
-    QGraphicsLineItem * sendingLine = sendingLines[node];
+    /*QGraphicsLineItem * sendingLine = sendingLines[node];
     sendingLine->setVisible(false);
     QGraphicsPolygonItem * sendingBlob = sendingBlobs[node];
-    sendingBlob->setVisible(false);
+    sendingBlob->setVisible(false);*/
     /* TODO */
     /*switch(node->state()) {
     
@@ -215,6 +245,7 @@ void GraphicsScene::updateScene() {
     
   }
   
+  emit releaseNetworkNodesLock();
 }
 
 

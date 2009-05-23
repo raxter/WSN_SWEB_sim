@@ -17,16 +17,23 @@ SET(WSN_SIMULATOR_SRCS_CXX
   simulator/sensor_network.cpp
   simulator/discrete_simulator.cpp
   
-  simulator/packet.cpp
+  simulator/base_packet.cpp
+  simulator/packets/init.cpp
+  simulator/packets/energy_req.cpp
+  simulator/packets/data_req.cpp
+
+  
+  simulator/nodes/base_node.cpp
   
   simulator/nodes/sensor.cpp
   simulator/nodes/base_station.cpp
   
-  simulator/nodes/base_node.cpp
   simulator/nodes/discrete_sim.cpp
   simulator/nodes/physical_layer.cpp
+  simulator/nodes/sensor_layers/layers.cpp
   simulator/nodes/sensor_layers/link.cpp
   simulator/nodes/sensor_layers/network.cpp
+  simulator/nodes/base_station_layers/layers.cpp
   simulator/nodes/base_station_layers/link.cpp
   simulator/nodes/base_station_layers/network.cpp
   

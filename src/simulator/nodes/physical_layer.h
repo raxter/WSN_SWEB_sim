@@ -6,7 +6,7 @@
 
 #include "discrete_sim.h"
 
-#include "simulator/packet.h"
+#include "../base_packet.h"
 
 namespace WSN
 {
@@ -28,23 +28,36 @@ class PhysicalLayer : virtual public DiscreteSim {
 
 
   protected: /* overridden methods */
-    virtual void physicalLayerLogic ();
 
+    void proxied_setUpPhase ();
+    void physicalLayerSendLogic ();
+    void physicalLayerReceiveLogic ();
+    void proxied_wrapUpPhase ();
+
+    bool inTimeSlot();
   public: /* methods */
+  
+  const BasePacket * getCurrentSendingPacket();
 
+  protected: /* methods */
 
   private: /* methods */
   
-  
-  protected: /* methods */
-
-
   public: /* variables */
 
+    enum ReceivingState {NotReceiving, Receiving, RejectReceive};
+    ReceivingState receivingState;
+    //int receivedPacketStrength;
+    //const BasePacket * receivedPacket;
+    
+    bool packetSendingFinished;
+    int bitsOfPacketSent;
 
   protected: /* variables */
-    enum State {Idle, Receiving, Sending};
-    State state;
+    enum State {Phy_Idle, Phy_Receiving, Phy_Sending};
+    State currentState, nextState;
+    
+    BasePacket * currentSendingPacket;
   
   
   private: /* variables */

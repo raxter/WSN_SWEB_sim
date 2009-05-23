@@ -64,7 +64,7 @@ void SensorNetwork::createNodes(int x , int y)
   {
       int randx = x/2 - rand()%(x+1);
       int randy = y/2 - rand()%(y+1);
-      sensors.push_back( new Node::Sensor(a, randx, randy));
+      sensors.push_back( new Node::Sensor(a+1, randx, randy));
 
   }
   //cout<<"end of createNodes "<<numNodes<<endl;
@@ -429,6 +429,7 @@ void SensorNetwork::init() {
   baseStation->targetNode = sensors[10];
   baseStation->initiate();
   */
+  baseStation->numberOfSectors = numberOfSectors;
   
   /*cout <<  numberOfSectors << endl << endl;
   for (int i = 0 ; i < numberOfSectors; i++) {
@@ -460,7 +461,7 @@ void SensorNetwork::init() {
 ****************************************************************************/
 
 
-double SensorNetwork::dist(int x1, int y1, int x2, int y2) const
+double SensorNetwork::dist(int x1, int y1, int x2, int y2)
 {
 
   return sqrt(pow(x2-x1,2) + pow(y2-y1,2) );

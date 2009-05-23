@@ -3,10 +3,14 @@
 
 #include <list>
 #include <vector>
+#include <queue>
 
 #include "base_node.h"
 
-#include "simulator/packet.h"
+#include "../base_packet.h"
+#include "../packets/init.h"
+#include "../packets/energy_req.h"
+#include "../packets/data_req.h"
 
 namespace WSN
 {
@@ -23,7 +27,7 @@ class DiscreteSim : public BaseNode {
 
   public: /* class specific*/
 
-  static const int numberOfPhases = 5;
+  static const int numberOfPhases = 6;
   enum Type {Sensor, BaseStation};
 
   DiscreteSim(Type type, int id, double x, double y);
@@ -38,21 +42,44 @@ class DiscreteSim : public BaseNode {
 
   void doNextPhaseOfTimeStep();
 
-
-  private: /* methods */
+  protected: /* methods */
 
   virtual void setUpPhase ();
-  virtual void physicalLayerLogic ();
+  virtual void physicalLayerSendLogic ();
+  virtual void physicalLayerReceiveLogic ();
   virtual void linkLayerLogic ();
   virtual void networkLayerLogic ();
   virtual void wrapUpPhase ();
+  
+  bool inTimeSlot();
+  
+  private: /* methods */
 
-  protected: /* methods */
 
   public: /* variables */
   const Type type; // basestation or sensor
+  
+  /* TODO move to BaseStation class*/
+  int numberOfSectors;
+  //NetworkSensorInfo& networkSensorInfo;
+  
+  int receivedPacketStrength;
+  const BasePacket * receivedPacket;
 
   protected: /* variables */
+  unsigned long long currentTime;
+  int timeSlotId;
+  
+  /* physical layer -> link layer info*/
+  /* physical layer -> network layer info*/
+  bool hardwareIsSending;
+  
+  /* link layer -> physical layer info*/
+  std::deque<BasePacket *> outgoingPacketQueue;
+  
+  /* link layer -> network layer info*/
+  bool linkLayerInitialised;
+  
   
   private: /* variables */
 

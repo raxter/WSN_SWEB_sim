@@ -33,7 +33,7 @@ class BaseNode {
 
     double x() const;
     double y() const;
-    int getId() const;
+    int getId() const; /* TODO remove this*/
     double  distTo(BaseNode * otherNode) const;
 
   protected: /* methods */
@@ -44,11 +44,11 @@ class BaseNode {
   public: /* variables */
 
   long long energyRemaining;
+    int id; // this node's id, if id == -1 it means undefined
   
   
   protected: /* variables */
 
-    int id; // this node's id, if id == -1 it means undefined
   private: /* variables */
     double _x,_y;
 

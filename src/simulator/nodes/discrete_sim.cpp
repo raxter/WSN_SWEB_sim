@@ -19,7 +19,7 @@ namespace Node
 **
 ****************************************************************************/
 
-DiscreteSim::DiscreteSim(Type type, int id, double x, double y) : BaseNode(id,x,y), type(type), phaseOfSimulation(-1) {
+DiscreteSim::DiscreteSim(Type type, int id, double x, double y) : BaseNode(id,x,y), type(type), phaseOfSimulation(-1), currentTime(0), linkLayerInitialised(false) {
 }
 
 /****************************************************************************
@@ -37,9 +37,11 @@ DiscreteSim::~DiscreteSim() {
 **
 ****************************************************************************/
 
-DiscreteSim::DiscreteSim(): type(this->type) {
+DiscreteSim::DiscreteSim() : type(this->type) {
 
 }
+
+
 /****************************************************************************
 **
 ** Author: Richard Baxter
@@ -68,11 +70,12 @@ void DiscreteSim::doNextPhaseOfTimeStep() {
   phaseOfSimulation++;
 
   switch (phaseOfSimulation) {
-    case 0: setUpPhase();          break;
-    case 1: physicalLayerLogic();  break;
-    case 2: linkLayerLogic();      break;
-    case 3: networkLayerLogic();   break;
-    case 4: wrapUpPhase();         break;
+    case 0: setUpPhase();                 break;
+    case 1: physicalLayerSendLogic();     break;
+    case 2: physicalLayerReceiveLogic();  break;
+    case 3: linkLayerLogic();             break;
+    case 4: networkLayerLogic();          break;
+    case 5: wrapUpPhase();                break;
 
   }
   
@@ -83,22 +86,32 @@ void DiscreteSim::doNextPhaseOfTimeStep() {
 
 
 void DiscreteSim::setUpPhase () {
+  //std::cout << "in DiscreteSim::setUpPhase ()" << std::endl;
 }
 
 
-void DiscreteSim::physicalLayerLogic () {
+void DiscreteSim::physicalLayerSendLogic () {
+  //std::cout << "in DiscreteSim::physicalLayerSendLogic ()" << std::endl;
+}
+
+void DiscreteSim::physicalLayerReceiveLogic () {
+  //std::cout << "in DiscreteSim::physicalLayerReceiveLogic ()" << std::endl;
 }
 
 
 void DiscreteSim::linkLayerLogic () {
+  //std::cout << "in DiscreteSim::linkLayerLogic ()" << std::endl;
 }
 
 
 void DiscreteSim::networkLayerLogic () {
+  //std::cout << "in DiscreteSim::networkLayerLogic ()" << std::endl;
 }
 
 
 void DiscreteSim::wrapUpPhase () {
+  //std::cout << "in DiscreteSim::wrapUpPhase ()" << std::endl;
+  currentTime++;
 }
 
 

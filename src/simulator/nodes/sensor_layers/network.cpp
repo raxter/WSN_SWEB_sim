@@ -1,6 +1,7 @@
 #include "network.h"
 
 
+#include <iostream>
 
 namespace WSN
 {
@@ -15,17 +16,15 @@ namespace SensorLayers
 {
 
 
-Network::Network(){
+Network::Network() {
 
+  InitialisingGroup_timeout = 30;
   for (int i = 0 ; i < 3 ; i++)
     for (int j = 0 ; j < 3 ; j++)
-      routeTable[i][j] = 0;
+      routeTable[i][j] = -1;
 }
 
 Network::~Network(){}
-
-
-void Network::networkLayerLogic (){}
 
 
 bool Network::isHead() const {
@@ -34,6 +33,60 @@ bool Network::isHead() const {
 }
 
 
+
+void Network::proxied_setUpPhase () {
+  //std::cout << "in SensorLayers::Network::proxied_setUpPhase ()" << std::endl;
+  nextNetworkState = currentNetworkState;
+}
+
+
+void Network::networkLayerLogic (){
+  //std::cout << "in SensorLayers::Network::networkLayerLogic ()" << std::endl;
+  
+  std::cout << currentLinkState << ":" << LinkUninitialised << std:: endl;
+  if (currentNetworkState == NetworkUninitialised && currentLinkState == Initialised) {
+    std::cout << "initialising Network layer" << std:: endl;
+    nextNetworkState = InitialisingGroup;
+    InitialisingGroup_timer = currentTime + InitialisingGroup_timeout;
+  }
+  if (currentNetworkState == InitialisingGroup && routeTable[1][1] != id) {
+    if (hardwareIsSending) { /*FIXME - should put this in a BaseStationLayers base class*/
+      InitialisingGroup_timer++;
+    }
+    if (currentTime > InitialisingGroup_timer) {
+      
+      int minId = id;
+      for (int i = 0 ; i < groupNodes.size() ; i++) {
+        if (groupNodes[i]->id < minId)
+          minId = groupNodes[i]->id;
+      }
+      routeTable[1][1] = minId;
+      nextNetworkState = (routeTable[1][1] == id?HeadReAlloc:Running);
+    }
+  }
+  if (currentNetworkState != NetworkUninitialised && nextNetworkState != NetworkUninitialised) {
+    
+    
+    
+  }
+  if (currentNetworkState == HeadReAlloc) {
+    
+      BasePacket* toSend = new Packet::EnergyReq(100, *this, grpId);
+      std::cout << "creating " << toSend << std::endl;
+      outgoingPacketQueue.push_back(toSend);
+  
+  }
+  if (currentNetworkState == HeadReAllocWait) {
+  
+  
+  }
+}
+
+
+void Network::proxied_wrapUpPhase () {
+  //std::cout << "in SensorLayers::Network::proxied_wrapUpPhase ()" << std::endl;
+  currentNetworkState = nextNetworkState;
+}
 
 
 

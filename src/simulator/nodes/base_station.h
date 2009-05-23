@@ -22,6 +22,10 @@ class BaseStation : public PhysicalLayer, public BaseStationLayers::Link, public
     BaseStation(int id = -1, double x = 0, double y = 0);
     virtual ~BaseStation();
     
+  protected: /* overridden methods */
+
+    void setUpPhase ();
+    void wrapUpPhase ();
     
   public: /* overridden methods */
   

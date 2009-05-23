@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../discrete_sim.h"
+#include "layers.h"
 
 namespace WSN
 {
@@ -19,7 +20,7 @@ namespace BaseStationLayers
 {
 
 
-class Link : virtual public DiscreteSim {
+class Link : virtual public DiscreteSim, virtual public Layers {
 
 
   public: /* class specific*/
@@ -29,7 +30,9 @@ class Link : virtual public DiscreteSim {
 
 
   protected: /* overridden methods */
-    virtual void linkLayerLogic ();
+    void proxied_setUpPhase ();
+    void linkLayerLogic ();
+    void proxied_wrapUpPhase ();
 
   public: /* methods */
 
@@ -39,10 +42,10 @@ class Link : virtual public DiscreteSim {
 
   public: /* variables */
 
+  int WaitingForGroupInitsToFinish_timeout;
+  int WaitingForGroupInitsToFinish_timer;
 
   protected: /* variables */
-  enum State {Uninitialised, WaitingForGroupInitsToFinish, Initialised};
-  State state;
   
   
   private: /* variables */
