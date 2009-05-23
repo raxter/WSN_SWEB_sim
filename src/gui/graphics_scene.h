@@ -51,7 +51,8 @@ class GraphicsScene : public QGraphicsScene {
   void wheelEvent ( QGraphicsSceneWheelEvent * wheelEvent );
 
   public:
-  const QVector<Simulator::Signal>& signalList;
+  QVector<Simulator::Signal> signalList;
+  const QVector<Simulator::Signal>& incomingSignalList;
 
   private:
   const Simulator::SensorNetwork * sensorNetwork;

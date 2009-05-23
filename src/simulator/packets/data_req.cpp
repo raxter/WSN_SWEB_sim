@@ -14,7 +14,7 @@ namespace Packet
 DataReq::DataReq (int signalStrength, const Node::BaseNode& node, int dstId) : 
         BasePacket (signalStrength, PacketTypes::DataReq, node, dstId, -1) {
         
-  size = 40; /*TODO calculate*/
+  size = 100; /*TODO calculate*/
 
 }
 

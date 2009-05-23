@@ -31,6 +31,9 @@ class Layers : virtual public DiscreteSim {
   protected: /* overridden methods */
 
   public: /* methods */
+  static int calcThresh(int thresh, int receivedStrength);
+  static int calcGroupId(int threshId, int sectorId,int maxNumberOfSectors);
+  static int calcMaxNumberOfGroup(int thresh, int sendStrength, int numberOfSectors);
 
   private: /* methods */
   
@@ -40,17 +43,16 @@ class Layers : virtual public DiscreteSim {
   int grpId;
   int sectorId;
   int threshId;
+  int threshDegree;
+  int numberOfSectors;
 
-  protected: /* variables */
   enum NetworkState {NetworkUninitialised, InitialisingGroup, HeadReAlloc, HeadReAllocWait, Running};
   NetworkState currentNetworkState, nextNetworkState;
   enum LinkState {LinkUninitialised, Initialised};
   LinkState currentLinkState, nextLinkState;
+  protected: /* variables */
   
   
-  static int calcThresh(int thresh, int receivedStrength);
-  static int calcGroupId(int threshId, int sectorId,int maxNumberOfSectors);
-  static int calcMaxNumberOfGroup(int thresh, int sendStrength, int numberOfSectors);
   
   
   private: /* variables */

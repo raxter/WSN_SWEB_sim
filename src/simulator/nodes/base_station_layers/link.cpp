@@ -19,7 +19,7 @@ namespace BaseStationLayers
 
 Link::Link() {
 
-  WaitingForGroupInitsToFinish_timeout = 30;
+  WaitingForGroupInitsToFinish_timeout = 100;
 }
 
 
@@ -34,7 +34,7 @@ void Link::proxied_setUpPhase () {
 
 
 void Link::linkLayerLogic (){
-  std::cout << "in BaseStationLayers::Link::linkLayerLogic ()" << std::endl;
+  //std::cout << "in BaseStationLayers::Link::linkLayerLogic ()" << std::endl;
   //std::cout << currentLinkState << std::endl;
   //std::cout << Uninitialised << std::endl;
   if (currentLinkState == LinkUninitialised) {
@@ -43,7 +43,7 @@ void Link::linkLayerLogic (){
       /* TODO calc energy*/
       int signalDist  = 500; /* TODO move this somewhere */
       BasePacket* toSend = new Packet::Init(signalDist, *this, i, numberOfSectors-1, threshDegree, numberOfNodes);
-      std::cout << "creating " << toSend << std::endl;
+      //std::cout << "creating " << toSend << std::endl;
       outgoingPacketQueue.push_back(toSend);
     }
     nextLinkState = WaitingForGroupInitsToFinish;
@@ -51,7 +51,7 @@ void Link::linkLayerLogic (){
   }
     
   if (currentLinkState == WaitingForGroupInitsToFinish) {
-    if (hardwareIsSending) { /*FIXME - should put this in a BaseStationLayers base class*/
+    if (hardwareIsSending || !inTimeSlot()) {
       WaitingForGroupInitsToFinish_timer++;
     }
     if (currentTime > WaitingForGroupInitsToFinish_timer) {

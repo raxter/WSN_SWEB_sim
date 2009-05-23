@@ -29,12 +29,14 @@ Layers::~Layers() {
 }
 
 
-int Layers::calcThresh(int thresh, int receivedStrength) {
-  return receivedStrength/thresh;
+int Layers::calcThresh(int thresh, int receivedDistance) {
+  //std::cout << "thresh = " << thresh << "  receivedDistance = " << receivedDistance << "  receivedDistance/thresh = " << receivedDistance/thresh << std::endl;
+  return receivedDistance/thresh;
 }
 
-int Layers::calcGroupId(int threshId, int sectorId, int maxNumberOfSectors) {
-  return threshId + (sectorId*maxNumberOfSectors);
+int Layers::calcGroupId(int threshId, int sectorId, int numberOfSectors) {
+  //std::cout << "threshId = " << threshId << "  sectorId = " << sectorId << "  maxNumberOfSectors = " << numberOfSectors << " threshId + (sectorId*maxNumberOfSectors) = " << (threshId + (sectorId*numberOfSectors)) << std::endl;
+  return sectorId + (threshId*numberOfSectors);
 }
 
 int Layers::calcMaxNumberOfGroup(int thresh, int sendStrength, int numberOfSectors) {

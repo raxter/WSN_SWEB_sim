@@ -33,10 +33,6 @@ const BasePacket * PhysicalLayer::getCurrentSendingPacket() {
 }
 
 
-bool PhysicalLayer::inTimeSlot() {
-  return true; /*FIXME*/
-}
-
 
 void PhysicalLayer::proxied_setUpPhase () {
   //std::cout << "in PhysicalLayer::proxied_setUpPhase ()" << std::endl;
@@ -51,27 +47,39 @@ void PhysicalLayer::proxied_setUpPhase () {
 
 
 void PhysicalLayer::physicalLayerSendLogic () {
+  
   //std::cout << "in PhysicalLayer::physicalLayerSendLogic ()" << std::endl;
+  //if (inTimeSlot()) {
+    //std::cout << "in timeslot " << id << " (" << currentTime << ")" << std::endl;
+  //}
   if (receivingState == NotReceiving) {
-    if (inTimeSlot() && !outgoingPacketQueue.empty()) {
+    if (!outgoingPacketQueue.empty()) {
+    
+      if (inTimeSlot(outgoingPacketQueue.front()->getSizeInBytes()/bandwidth)) {
+        //std::cout << "in timeslot " << id << std::endl;
+        //std::cout << "curent time " << currentTime << std::endl;
+        if (!currentSendingPacket) {
+          bitsOfPacketSent = 0;
+          packetSendingFinished = false;
+        }
         
-      if (!currentSendingPacket) {
-        bitsOfPacketSent = 0;
-        packetSendingFinished = false;
-      }
-      
-      currentSendingPacket = outgoingPacketQueue.front();
+        currentSendingPacket = outgoingPacketQueue.front();
 
-      bitsOfPacketSent += bandwidth/**1000/1000*/; // kb/s -> b/ms
-      
-      if (bitsOfPacketSent > currentSendingPacket->getSizeInBytes()) {
-        // then the packet has finished sending
-        packetSendingFinished = true;
-        outgoingPacketQueue.pop_front();
+
+        bitsOfPacketSent += bandwidth/**1000/1000*/; // kb/s -> b/ms
+        
+        if (bitsOfPacketSent > currentSendingPacket->getSizeInBytes()) {
+          // then the packet has finished sending
+          packetSendingFinished = true;
+          outgoingPacketQueue.pop_front();
+        }
+        /*TODO energy calcs*/
+        nextState = Phy_Sending;
+        hardwareIsSending = true;
       }
-      /*TODO energy calcs*/
-      nextState = Phy_Sending;
-      hardwareIsSending = true;
+      else { // not in time slot
+        nextState = Phy_Idle;
+      }
     }
     else {
       nextState = Phy_Idle;
