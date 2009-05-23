@@ -68,6 +68,10 @@ class DiscreteSim : public BaseNode {
   unsigned long long currentTime;
   int timeSlotId;
   
+  int maxNumberOfIds;
+  int maxNumberOfSectors;
+  int maxNumberOfGroups;
+  
   /* physical layer -> link layer info*/
   /* physical layer -> network layer info*/
   bool hardwareIsSending;

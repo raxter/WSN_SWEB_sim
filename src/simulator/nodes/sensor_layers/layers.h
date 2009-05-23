@@ -44,12 +44,9 @@ class Layers : virtual public DiscreteSim {
   enum LinkState {LinkUninitialised, Initialised};
   LinkState currentLinkState, nextLinkState;
   
-  int maxNumberOfIds;
   int sectorId;
-  int maxNumberOfSectors;
   int threshId;
   int grpId;
-  int maxNumberOfGroups;
   
   static int calcThresh(int thresh, int receivedStrength);
   static int calcGroupId(int threshId, int sectorId,int maxNumberOfSectors);
