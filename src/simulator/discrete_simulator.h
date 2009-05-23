@@ -28,7 +28,7 @@ struct Signal {
       src(src), 
       dst(dst), 
       amountSent (amountSent), 
-      finishedPacket(finishedPacket) 
+      finishedPacket(finishedPacket)
   {
     //std::cout << "finishedPacket " << finishedPacket << std::endl;
   }

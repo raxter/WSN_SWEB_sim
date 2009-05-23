@@ -71,7 +71,13 @@ void Network::networkLayerLogic (){
   }
   if (currentNetworkState == HeadReAlloc) {
     
-      BasePacket* toSend = new Packet::EnergyReq(100, *this, grpId);
+      int maxDist = 0;
+      for (int i = 0 ; i < groupNodeIds.size() ; i++) {
+        int signalDist = dist(id, groupNodeIds[i]);
+        if (maxDist < signalDist)
+          maxDist = signalDist;
+      }
+      BasePacket* toSend = new Packet::EnergyReq(maxDist, *this, grpId);
       std::cout << "creating " << toSend << std::endl;
       outgoingPacketQueue.push_back(toSend);
   

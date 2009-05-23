@@ -1,6 +1,7 @@
 
 #include "base_node.h"
 #include <cmath>
+#include "../sensor_network.h"
 
 namespace WSN
 {
@@ -20,7 +21,7 @@ namespace Node
 **
 ****************************************************************************/
 
-BaseNode::BaseNode(int id, double x, double y, long long energyRemaining) : id (id), _x(x), _y(y), energyRemaining(energyRemaining) {
+BaseNode::BaseNode(int id, double x, double y, long long energyRemaining) : id (id), _x(x), _y(y), energyRemaining(energyRemaining)  {
 }
 
 
@@ -34,6 +35,17 @@ BaseNode::~BaseNode(){
 
 }
 
+
+int BaseNode::dist(int id1, int id2) {
+  const BaseNode * n1 = sensorNetwork->getNodeWithId(id1);
+  const BaseNode * n2 = sensorNetwork->getNodeWithId(id2);
+  
+  return SensorNetwork::dist(n1->x(), n1->y(), n2->x(), n2->y());
+}
+
+void BaseNode::setSensorNetwork(const Simulator::SensorNetwork * sensorNetwork) {
+  this->sensorNetwork = sensorNetwork;
+}
 
 
 /****************************************************************************

@@ -8,6 +8,9 @@ namespace WSN
 namespace Simulator
 {
 
+class SensorNetwork;
+//#include "../sensor_network.h"
+
 namespace Node
 {
 
@@ -30,6 +33,7 @@ class BaseNode {
 
 
   public: /* methods */
+    void setSensorNetwork(const Simulator::SensorNetwork * sensorNetwork);
 
     double x() const;
     double y() const;
@@ -37,7 +41,10 @@ class BaseNode {
     double  distTo(BaseNode * otherNode) const;
 
   protected: /* methods */
+  
+    int dist(int id1, int id2);
     
+    const Simulator::SensorNetwork * sensorNetwork;
    
     virtual int getNextHop() const = 0; // returns id
 

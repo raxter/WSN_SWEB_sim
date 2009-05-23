@@ -103,7 +103,8 @@ void DiscreteSimulator::incrementTimeStep() {
     Node::PhysicalLayer * physicsLayer = dynamic_cast<Node::PhysicalLayer*>(idToNode[signal.dst->id]);
     Node::DiscreteSim * discreteSim = dynamic_cast<Node::DiscreteSim*>(idToNode[signal.dst->id]);
     physicsLayer->receivingState = Node::PhysicalLayer::Receiving;
-    discreteSim->receivedPacketStrength = SensorNetwork::dist(signal.dst->x(), signal.dst->y(), signal.src->x(), signal.src->y());
+   
+    discreteSim->receivedPacketDistance = SensorNetwork::dist(signal.dst->x(), signal.dst->y(), signal.src->x(), signal.src->y());
     if (signal.finishedPacket) {
       discreteSim->receivedPacket = signal.finishedPacket;
     }

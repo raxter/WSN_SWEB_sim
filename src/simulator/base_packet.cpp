@@ -9,7 +9,7 @@ namespace WSN
 namespace Simulator
 {
 
-BasePacket::BasePacket (int signalStrength, PacketTypes::Type type, const Node::BaseNode& node, int dstId, int dstGrpId) : signalStrength(signalStrength), type(type), srcId(node.id), dstId(dstId), dstGrpId(dstGrpId) {
+BasePacket::BasePacket (int signalDistance, PacketTypes::Type type, const Node::BaseNode& node, int dstId, int dstGrpId) : signalDistance(signalDistance), type(type), srcId(node.id), dstId(dstId), dstGrpId(dstGrpId) {
   size = 0;
 }
 

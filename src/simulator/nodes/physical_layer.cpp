@@ -44,7 +44,7 @@ void PhysicalLayer::proxied_setUpPhase () {
   
   
   receivingState = NotReceiving;
-  receivedPacketStrength = 0;
+  receivedPacketDistance = 0;
   receivedPacket = 0;
   hardwareIsSending = false;
 }
@@ -88,6 +88,7 @@ void PhysicalLayer::physicalLayerReceiveLogic () {
     //DiscreteSim::receivedPacket = receivedPacket;
     //DiscreteSim::receivedPacketStrength = receivedPacketStrength;
   //}
+  
   
   if (receivingState == Receiving) {
     nextState = Phy_Receiving;

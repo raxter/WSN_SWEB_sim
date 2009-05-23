@@ -9,6 +9,7 @@
 #include <vector>
 
 
+
 namespace WSN
 {
 
@@ -31,6 +32,7 @@ public:
     ///functions
 
     const Node::Sensor* getSensor(int id) const;
+    const Node::BaseNode *getNodeWithId(int id) const;
 
     std::vector <Node::DiscreteSim *> getSimNodePointers();
     std::vector <const Node::DiscreteSim *> getConstSimNodePointers() const;

@@ -172,6 +172,15 @@ void GraphicsScene::updateScene() {
     QGraphicsPolygonItem * polyItem = polyHash[node];
     QGraphicsPolygonItem * backPolyItem = backPolyHash[node];
     
+    if (node->type == Simulator::Node::DiscreteSim::Sensor) {
+      const Simulator::Node::SensorLayers::Layers* sensor = dynamic_cast<const Simulator::Node::SensorLayers::Layers*>(node);
+      if (sensor->grpId % 2 == 0)
+        backPolyItem->setBrush(QBrush(Qt::red));
+      else
+        backPolyItem->setBrush(QBrush(Qt::white));
+        
+    }
+      
     //qDebug() << typeid(node).name();
     
     if (node->type == Simulator::Node::DiscreteSim::Sensor)
@@ -180,32 +189,7 @@ void GraphicsScene::updateScene() {
       backPolyItem->setVisible(true);
   
     
-    for (int index = 0 ;; index++) {
-      
-      
-      if (index < signalList.size()) { /* index is in range of signals*/
-        if (index >= signalLines.size()) { /* index is out of range of lines*/
-          /* create more lines */
-          //qDebug() << "creating line";
-          signalLines.append(addLine ( 0,0,0,0 , getPen(Qt::yellow) ));
-        }
-        
-        QGraphicsLineItem * lineItem = signalLines[index];
-      
-        const Simulator::Signal& signal = signalList[index];
-        lineItem->setLine (signal.src->x(), signal.src->y(), signal.dst->x(), signal.dst->y());
-        lineItem->setVisible(true);
-      }
-      else /* index is out of range of signals*/
-        if (index < signalLines.size())/* index is out of range of lines*/
-          signalLines[index]->setVisible(false);
-        else
-          break;
-        
-      
-      //qDebug() << "drew line " << index;
-      
-    }
+    
   
     /*QGraphicsLineItem * sendingLine = sendingLines[node];
     sendingLine->setVisible(false);
@@ -242,6 +226,31 @@ void GraphicsScene::updateScene() {
     
     
     }*/
+    
+  }
+  for (int index = 0 ;; index++) {
+      
+    if (index < signalList.size()) { /* index is in range of signals*/
+      if (index >= signalLines.size()) { /* index is out of range of lines*/
+        /* create more lines */
+        //qDebug() << "creating line";
+        signalLines.append(addLine ( 0,0,0,0 , getPen(Qt::yellow) ));
+      }
+      
+      QGraphicsLineItem * lineItem = signalLines[index];
+    
+      const Simulator::Signal& signal = signalList[index];
+      lineItem->setLine (signal.src->x(), signal.src->y(), signal.dst->x(), signal.dst->y());
+      lineItem->setVisible(true);
+    }
+    else /* index is out of range of signals*/
+      if (index < signalLines.size())/* index is out of range of lines*/
+        signalLines[index]->setVisible(false);
+      else
+        break;
+      
+    
+    //qDebug() << "drew line " << index;
     
   }
   

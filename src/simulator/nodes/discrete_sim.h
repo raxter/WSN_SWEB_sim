@@ -61,7 +61,7 @@ class DiscreteSim : public BaseNode {
   
   //NetworkSensorInfo& networkSensorInfo;
   
-  int receivedPacketStrength;
+  int receivedPacketDistance;
   const BasePacket * receivedPacket;
 
   protected: /* variables */

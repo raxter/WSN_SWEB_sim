@@ -37,6 +37,9 @@ class Layers : virtual public DiscreteSim {
   protected: /* methods */
 
   public: /* variables */
+  int grpId;
+  int sectorId;
+  int threshId;
 
   protected: /* variables */
   enum NetworkState {NetworkUninitialised, InitialisingGroup, HeadReAlloc, HeadReAllocWait, Running};
@@ -44,9 +47,6 @@ class Layers : virtual public DiscreteSim {
   enum LinkState {LinkUninitialised, Initialised};
   LinkState currentLinkState, nextLinkState;
   
-  int sectorId;
-  int threshId;
-  int grpId;
   
   static int calcThresh(int thresh, int receivedStrength);
   static int calcGroupId(int threshId, int sectorId,int maxNumberOfSectors);

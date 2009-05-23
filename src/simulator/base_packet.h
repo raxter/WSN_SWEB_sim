@@ -22,11 +22,11 @@ class BasePacket  {
 
 
   protected:
-    BasePacket (int signalStrength, PacketTypes::Type type, const Node::BaseNode& node, int dstId = -1, int dstGrpId = -1);
+    BasePacket (int signalDistance, PacketTypes::Type type, const Node::BaseNode& node, int dstId = -1, int dstGrpId = -1);
     virtual ~BasePacket ();
 
   public:
-    const int signalStrength;
+    const int signalDistance;
 
     /* packet data */
     const int srcId;

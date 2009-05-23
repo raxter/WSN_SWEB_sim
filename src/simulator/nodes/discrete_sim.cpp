@@ -48,6 +48,7 @@ DiscreteSim::DiscreteSim() : type(this->type) {
 **
 ****************************************************************************/
 
+
 //void DiscreteSim::setState(Node::State state) {
 //  /* if during the setup of execute phase, use the nextState*/
 //  if (phase < 4 && phase >= 0) {

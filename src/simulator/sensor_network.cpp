@@ -58,6 +58,7 @@ SensorNetwork::~SensorNetwork()
 void SensorNetwork::createNodes(int x , int y)
 {
   baseStation = new Node::BaseStation();
+  baseStation->setSensorNetwork(this);
   srand(0);
   //cout<<"start of createNodes "<<numNodes<<endl;
   for (int a = 0 ; a < numberOfNodes ; a++)
@@ -65,6 +66,7 @@ void SensorNetwork::createNodes(int x , int y)
       int randx = x/2 - rand()%(x+1);
       int randy = y/2 - rand()%(y+1);
       sensors.push_back( new Node::Sensor(a+1, randx, randy));
+      sensors.back()->setSensorNetwork(this);
 
   }
   //cout<<"end of createNodes "<<numNodes<<endl;
@@ -250,6 +252,22 @@ double SensorNetwork::getScanAngle() const {
 
 double SensorNetwork::getThreshDegree() const {
   return threshDegree;
+}
+
+
+/****************************************************************************
+**
+** Author: Richard Baxter
+**
+****************************************************************************/
+
+const Node::BaseNode * SensorNetwork::getNodeWithId(int id) const {
+  if (id == -1)
+    return 0;
+  if (id == 0)
+    return dynamic_cast<const Node::BaseNode *>(baseStation);
+  else
+    return sensors[id-1];
 }
 
 /****************************************************************************

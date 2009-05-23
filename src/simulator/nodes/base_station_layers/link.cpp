@@ -41,8 +41,8 @@ void Link::linkLayerLogic (){
     for (int i = 0 ; i < numberOfSectors ; i++) {
       
       /* TODO calc energy*/
-      int sendStrength  = 500; /* TODO move this somewhere */
-      BasePacket* toSend = new Packet::Init(sendStrength, *this, i, numberOfSectors-1, threshDegree, numberOfNodes);
+      int signalDist  = 500; /* TODO move this somewhere */
+      BasePacket* toSend = new Packet::Init(signalDist, *this, i, numberOfSectors-1, threshDegree, numberOfNodes);
       std::cout << "creating " << toSend << std::endl;
       outgoingPacketQueue.push_back(toSend);
     }
