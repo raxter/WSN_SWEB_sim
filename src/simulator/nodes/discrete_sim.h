@@ -59,8 +59,6 @@ class DiscreteSim : public BaseNode {
   public: /* variables */
   const Type type; // basestation or sensor
   
-  /* TODO move to BaseStation class*/
-  int numberOfSectors;
   //NetworkSensorInfo& networkSensorInfo;
   
   int receivedPacketStrength;

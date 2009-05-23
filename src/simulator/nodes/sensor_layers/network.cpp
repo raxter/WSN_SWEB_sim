@@ -56,9 +56,9 @@ void Network::networkLayerLogic (){
     if (currentTime > InitialisingGroup_timer) {
       
       int minId = id;
-      for (int i = 0 ; i < groupNodes.size() ; i++) {
-        if (groupNodes[i]->id < minId)
-          minId = groupNodes[i]->id;
+      for (int i = 0 ; i < groupNodeIds.size() ; i++) {
+        if (groupNodeIds[i] < minId)
+          minId = groupNodeIds[i];
       }
       routeTable[1][1] = minId;
       nextNetworkState = (routeTable[1][1] == id?HeadReAlloc:Running);

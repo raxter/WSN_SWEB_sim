@@ -41,6 +41,9 @@ class Link : virtual public DiscreteSim, virtual public Layers {
   protected: /* methods */
 
   public: /* variables */
+  int numberOfSectors;
+  int threshDegree;
+  int numberOfNodes;
 
   int WaitingForGroupInitsToFinish_timeout;
   int WaitingForGroupInitsToFinish_timer;

@@ -263,6 +263,12 @@ void SensorNetwork::init() {
   scanAngle = 360.0/numberOfSectors;
   threshDegree = 25;
 
+  baseStation->numberOfSectors = numberOfSectors;
+  baseStation->threshDegree = threshDegree;
+  baseStation->numberOfNodes = numberOfNodes;
+  baseStation->numberOfSectors = numberOfSectors;
+  //baseStation->sendEnergy = ;
+  
 
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -429,8 +435,6 @@ void SensorNetwork::init() {
   baseStation->targetNode = sensors[10];
   baseStation->initiate();
   */
-  baseStation->numberOfSectors = numberOfSectors;
-  
   /*cout <<  numberOfSectors << endl << endl;
   for (int i = 0 ; i < numberOfSectors; i++) {
     baseStation->sectionHeadNodes.push_back(clusterHeads[i]);

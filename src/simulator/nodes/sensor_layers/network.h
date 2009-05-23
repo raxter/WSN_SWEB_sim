@@ -54,7 +54,8 @@ class Network : virtual public DiscreteSim, virtual public Layers {
   
   int routeTable [3][3];
   
-  std::vector<const BaseNode*> groupNodes;
+  std::vector<int> groupNodeIds;
+  std::vector<int> groupNodeDist;
   
   private: /* variables */
 

@@ -38,9 +38,11 @@ void Link::linkLayerLogic (){
   //std::cout << currentLinkState << std::endl;
   //std::cout << Uninitialised << std::endl;
   if (currentLinkState == LinkUninitialised) {
-    for (int i = 0 ; i < DiscreteSim::numberOfSectors ; i++) {
-    
-      BasePacket* toSend = new Packet::Init(500, *this, i, numberOfSectors-1, 50, 255);
+    for (int i = 0 ; i < numberOfSectors ; i++) {
+      
+      /* TODO calc energy*/
+      int sendStrength  = 500; /* TODO move this somewhere */
+      BasePacket* toSend = new Packet::Init(sendStrength, *this, i, numberOfSectors-1, threshDegree, numberOfNodes);
       std::cout << "creating " << toSend << std::endl;
       outgoingPacketQueue.push_back(toSend);
     }

@@ -62,13 +62,14 @@ void PhysicalLayer::physicalLayerSendLogic () {
       
       currentSendingPacket = outgoingPacketQueue.front();
 
-      bitsOfPacketSent += bandwidth*1000/1000; // kb/s -> b/ms
+      bitsOfPacketSent += bandwidth/**1000/1000*/; // kb/s -> b/ms
       
       if (bitsOfPacketSent > currentSendingPacket->getSizeInBytes()) {
         // then the packet has finished sending
         packetSendingFinished = true;
         outgoingPacketQueue.pop_front();
       }
+      /*TODO energy calcs*/
       nextState = Phy_Sending;
       hardwareIsSending = true;
     }
@@ -95,7 +96,7 @@ void PhysicalLayer::physicalLayerReceiveLogic () {
   }
   if (receivingState == RejectReceive) {
     nextState = Phy_Receiving;
-    /*TODO energy calcs*/
+    /*TODO energy calcs*//*IGNORE*/
   }
 }
     
