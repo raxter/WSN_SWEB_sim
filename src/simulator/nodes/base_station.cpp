@@ -34,7 +34,7 @@ int BaseStation::getNextHop() const {
 
 
 void BaseStation::setUpPhase () {
-  std::cout << "in BaseStation::setUpPhase ()" << std::endl;
+  //std::cout << "in BaseStation::setUpPhase ()" << std::endl;
   PhysicalLayer::proxied_setUpPhase ();
   BaseStationLayers::Link::proxied_setUpPhase ();
   BaseStationLayers::Network::proxied_setUpPhase ();
@@ -42,7 +42,7 @@ void BaseStation::setUpPhase () {
 }
 
 void BaseStation::wrapUpPhase () {
-  std::cout << "in BaseStation::wrapUpPhase ()" << std::endl;
+  //sstd::cout << "in BaseStation::wrapUpPhase ()" << std::endl;
   PhysicalLayer::proxied_setUpPhase ();
   BaseStationLayers::Link::proxied_wrapUpPhase ();
   BaseStationLayers::Network::proxied_wrapUpPhase ();

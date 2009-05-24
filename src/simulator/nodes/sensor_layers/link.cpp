@@ -44,15 +44,18 @@ void Link::linkLayerLogic (){
       
       //std::cout << "Init::Init| dstSectorId = " << packet->dstSectorId << "| maxSector = " << packet->maxSector << "| threshValue = " << packet->threshValue << "| sendStrength = " << packet->sendStrength << "| maxId = " << packet->maxId << std::endl;
       
+      //std::cout << "this->id = " << id << std::endl;
+      
       maxNumberOfIds = packet->maxId;
       sectorId = packet->dstSectorId;
 
 
       /* TODO Jules do these methods */
       //distToBase = 
+      threshDegree = packet->threshValue;
       maxNumberOfSectors = packet->maxSector;
       threshId = calcThresh(packet->threshValue, receivedPacketDistance);
-      grpId = calcGroupId(threshId, sectorId, maxNumberOfSectors);
+      grpId = calcGroupId(threshId, sectorId, maxNumberOfSectors+1);
       maxNumberOfGroups = calcMaxNumberOfGroup(packet->threshValue, packet->sendStrength, maxNumberOfSectors);
       
       nextLinkState = Initialised;

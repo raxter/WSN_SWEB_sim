@@ -14,7 +14,7 @@ namespace Packet
 EnergyReq::EnergyReq (int signalStrength, const Node::BaseNode& node, int dstGrpId) : 
         BasePacket (signalStrength, PacketTypes::EnergyReq, node, -1, dstGrpId) {
         
-  size = 40; /*TODO calculate*/
+  size = 100; /*TODO calculate*/
 
 }
 

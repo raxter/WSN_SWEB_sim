@@ -82,7 +82,10 @@ WSNsim::~WSNsim ()
 
 void WSNsim::incrementTimeStep() {
   
+  graphicsScene->signalList.clear();
+  for (int i = 0 ; i < 40 ; i++)
     simulator->incrementTimeStep();
+    
 }
 
 

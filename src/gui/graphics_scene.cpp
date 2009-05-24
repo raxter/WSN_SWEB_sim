@@ -19,7 +19,7 @@ namespace GUI
 **
 ****************************************************************************/
 
-GraphicsScene::GraphicsScene(const Simulator::SensorNetwork * sensorNetwork, const Simulator::DiscreteSimulator * simulator) : QGraphicsScene(), swebLines(0) , sensorNetwork(sensorNetwork), signalList(simulator->getSignalList()) {
+GraphicsScene::GraphicsScene(const Simulator::SensorNetwork * sensorNetwork, const Simulator::DiscreteSimulator * simulator) : QGraphicsScene(), swebLines(0) , sensorNetwork(sensorNetwork), incomingSignalList(simulator->getSignalList()) {
   
   
   this->setItemIndexMethod(QGraphicsScene::NoIndex);
@@ -174,10 +174,17 @@ void GraphicsScene::updateScene() {
     
     if (node->type == Simulator::Node::DiscreteSim::Sensor) {
       const Simulator::Node::SensorLayers::Layers* sensor = dynamic_cast<const Simulator::Node::SensorLayers::Layers*>(node);
-      if (sensor->grpId % 2 == 0)
+      //NetworkUninitialised, InitialisingGroup, HeadReAlloc, HeadReAllocWait, Running
+      if (sensor->currentNetworkState == Simulator::Node::SensorLayers::Layers::NetworkUninitialised)
         backPolyItem->setBrush(QBrush(Qt::red));
-      else
-        backPolyItem->setBrush(QBrush(Qt::white));
+      if (sensor->currentNetworkState == Simulator::Node::SensorLayers::Layers::InitialisingGroup)
+        backPolyItem->setBrush(QBrush(Qt::yellow));
+      if (sensor->currentNetworkState == Simulator::Node::SensorLayers::Layers::HeadReAlloc)
+        backPolyItem->setBrush(QBrush(Qt::blue));
+      if (sensor->currentNetworkState == Simulator::Node::SensorLayers::Layers::HeadReAllocWait)
+        backPolyItem->setBrush(QBrush(Qt::gray));
+      if (sensor->currentNetworkState == Simulator::Node::SensorLayers::Layers::Running)
+        backPolyItem->setBrush(QBrush(Qt::green));
         
     }
       
@@ -228,6 +235,9 @@ void GraphicsScene::updateScene() {
     }*/
     
   }
+  
+  signalList += incomingSignalList;
+  
   for (int index = 0 ;; index++) {
       
     if (index < signalList.size()) { /* index is in range of signals*/

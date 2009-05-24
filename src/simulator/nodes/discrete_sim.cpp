@@ -42,6 +42,36 @@ DiscreteSim::DiscreteSim() : type(this->type) {
 }
 
 
+bool DiscreteSim::inTimeSlot(int estimatedMs) {
+  int numberOfIds = maxNumberOfIds+1;
+  
+  int period = 40;//ms
+  
+  int oneWindow = numberOfIds*period;
+  
+  int positionInWindow = currentTime%oneWindow;
+  
+  int currentSlot = positionInWindow/period;
+  
+  
+  
+  //long long time = currentTime;
+  //time /= period;
+  
+  //int slotUnMod = time/numberOfIds;
+  
+  //long long endOfSlot = (currentTime+1)/oneWindow*oneWindow;
+  
+  
+  
+  //if (currentTime + estimatedMs > endOfSlot)
+   //  return false; // data will not be transmitted in time
+  
+  //else
+  
+  return currentSlot == id;
+}
+
 /****************************************************************************
 **
 ** Author: Richard Baxter

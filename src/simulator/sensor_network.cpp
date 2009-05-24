@@ -57,7 +57,11 @@ SensorNetwork::~SensorNetwork()
 
 void SensorNetwork::createNodes(int x , int y)
 {
+<<<<<<< HEAD:src/simulator/sensor_network.cpp
   baseStation = new Node::BaseStation(0);
+=======
+  baseStation = new Node::BaseStation(0,0,0);
+>>>>>>> 4d6c8db6ca3489d8dc0ca06751de06dba5d5b5ec:src/simulator/sensor_network.cpp
   baseStation->setSensorNetwork(this);
   srand(0);
   //cout<<"start of createNodes "<<numNodes<<endl;

@@ -9,6 +9,7 @@
 
 #include "../base_packet.h"
 #include "../packets/init.h"
+#include "../packets/grp_init.h"
 #include "../packets/energy_req.h"
 #include "../packets/data_req.h"
 
@@ -51,7 +52,7 @@ class DiscreteSim : public BaseNode {
   virtual void networkLayerLogic ();
   virtual void wrapUpPhase ();
   
-  bool inTimeSlot();
+  bool inTimeSlot(int estimatedMs = 0);
   
   private: /* methods */
 

@@ -44,14 +44,14 @@ class BaseNode {
   protected: /* methods */
 
 
-    int dist(int id1, int id2);
+    double dist(int id1, int id2);
     const Simulator::SensorNetwork * sensorNetwork;
 
     virtual int getNextHop() const = 0; // returns id
 
   public: /* variables */
 
-  long long energyRemaining;
+    long long energyRemaining;
     int id; // this node's id, if id == -1 it means undefined
 
 

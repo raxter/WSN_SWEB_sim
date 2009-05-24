@@ -62,7 +62,7 @@ public:
 
   private: /* variables */
 
-    std::vector <Node::Sensor*> sensors; /*NOTE sensors are now stored dynamically so that the vtable look up will work*/
+    std::vector <Node::Sensor*> sensors;
     Node::BaseStation * baseStation;
 
     double scanAngle;

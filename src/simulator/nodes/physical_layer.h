@@ -34,7 +34,6 @@ class PhysicalLayer : virtual public DiscreteSim {
     void physicalLayerReceiveLogic ();
     void proxied_wrapUpPhase ();
 
-    bool inTimeSlot();
   public: /* methods */
   
   const BasePacket * getCurrentSendingPacket();

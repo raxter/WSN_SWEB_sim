@@ -49,13 +49,14 @@ class Network : virtual public DiscreteSim, virtual public Layers {
 
   int InitialisingGroup_timeout;
   int InitialisingGroup_timer;
+  
+  std::vector<int> groupNodeIds;
+  //std::vector<int> groupNodeDist;
 
   protected: /* variables */
   
   int routeTable [3][3];
   
-  std::vector<int> groupNodeIds;
-  std::vector<int> groupNodeDist;
   
   private: /* variables */
 

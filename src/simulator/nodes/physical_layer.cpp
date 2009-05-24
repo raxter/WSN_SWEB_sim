@@ -34,10 +34,6 @@ const BasePacket * PhysicalLayer::getCurrentSendingPacket() {
 }
 
 
-bool PhysicalLayer::inTimeSlot() {
-  return true; /*FIXME*/
-}
-
 
 void PhysicalLayer::proxied_setUpPhase () {
   //std::cout << "in PhysicalLayer::proxied_setUpPhase ()" << std::endl;
@@ -52,6 +48,7 @@ void PhysicalLayer::proxied_setUpPhase () {
 
 
 void PhysicalLayer::physicalLayerSendLogic () {
+<<<<<<< HEAD:src/simulator/nodes/physical_layer.cpp
   std::cout << "in PhysicalLayer::physicalLayerSendLogic ()" << std::endl;
   if (receivingState == NotReceiving) {
     if (inTimeSlot() && !outgoingPacketQueue.empty()) {
@@ -96,6 +93,41 @@ void PhysicalLayer::physicalLayerSendLogic () {
       }
       nextState = Phy_Sending;
       hardwareIsSending = true;
+=======
+  
+  //std::cout << "in PhysicalLayer::physicalLayerSendLogic ()" << std::endl;
+  //if (inTimeSlot()) {
+    //std::cout << "in timeslot " << id << " (" << currentTime << ")" << std::endl;
+  //}
+  if (receivingState == NotReceiving) {
+    if (!outgoingPacketQueue.empty()) {
+    
+      if (inTimeSlot(outgoingPacketQueue.front()->getSizeInBytes()/bandwidth)) {
+        //std::cout << "in timeslot " << id << std::endl;
+        //std::cout << "curent time " << currentTime << std::endl;
+        if (!currentSendingPacket) {
+          bitsOfPacketSent = 0;
+          packetSendingFinished = false;
+        }
+        
+        currentSendingPacket = outgoingPacketQueue.front();
+
+
+        bitsOfPacketSent += bandwidth/**1000/1000*/; // kb/s -> b/ms
+        
+        if (bitsOfPacketSent > currentSendingPacket->getSizeInBytes()) {
+          // then the packet has finished sending
+          packetSendingFinished = true;
+          outgoingPacketQueue.pop_front();
+        }
+        /*TODO energy calcs*/
+        nextState = Phy_Sending;
+        hardwareIsSending = true;
+      }
+      else { // not in time slot
+        nextState = Phy_Idle;
+      }
+>>>>>>> 4d6c8db6ca3489d8dc0ca06751de06dba5d5b5ec:src/simulator/nodes/physical_layer.cpp
     }
     else {
       nextState = Phy_Idle;

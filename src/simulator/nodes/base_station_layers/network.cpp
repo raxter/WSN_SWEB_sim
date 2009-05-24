@@ -32,7 +32,7 @@ void Network::proxied_setUpPhase () {
 
 
 void Network::networkLayerLogic (){
-  std::cout << "in BaseStationLayers::Network::networkLayerLogic ()" << std::endl;
+  //std::cout << "in BaseStationLayers::Network::networkLayerLogic ()" << std::endl;
   if (linkLayerInitialised) {
     if (currentNetworkState == WaitingForReply) {
       if (receivedPacket && receivedPacket->type == PacketTypes::DataSend)

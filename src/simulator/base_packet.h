@@ -26,7 +26,7 @@ class BasePacket  {
     virtual ~BasePacket ();
 
   public:
-    const int signalDistance;
+    const double signalDistance;
 
     /* packet data */
     const int srcId;
