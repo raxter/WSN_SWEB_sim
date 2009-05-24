@@ -23,6 +23,8 @@ class BasePacket  {
 
   protected:
     BasePacket (int signalDistance, PacketTypes::Type type, const Node::BaseNode& node, int dstId = -1, int dstGrpId = -1);
+    
+  public:
     virtual ~BasePacket ();
 
   public:

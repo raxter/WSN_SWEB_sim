@@ -21,7 +21,10 @@ SET(WSN_SIMULATOR_SRCS_CXX
   simulator/packets/init.cpp
   simulator/packets/grp_init.cpp
   simulator/packets/energy_req.cpp
+  simulator/packets/energy_send.cpp
   simulator/packets/data_req.cpp
+  simulator/packets/data_send.cpp
+  simulator/packets/head_realloc.cpp
 
   
   simulator/nodes/base_node.cpp

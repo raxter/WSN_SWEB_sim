@@ -39,6 +39,8 @@ class Layers : virtual public DiscreteSim {
   
   protected: /* methods */
 
+  virtual int getNextHop() const = 0; // returns id
+
   public: /* variables */
   int grpId;
   int sectorId;

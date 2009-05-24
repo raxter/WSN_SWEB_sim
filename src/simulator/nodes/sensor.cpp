@@ -27,7 +27,47 @@ Sensor::~Sensor() {
 
 int Sensor::getNextHop() const {
 
-  return 0; /*FIXME*/
+  //for (int i = 0 ; i < 3 ; i++)
+  //  std::cout << routeTable[i][0] << " \t " << routeTable[i][1] << " \t " << routeTable[i][2] << std::endl;
+
+  if (isHead()) ///route to next cluster head
+  {
+    ///Get the next nearest head node: contenders are [0][0], [0][1] and [0][2] if they exist
+
+    int rightBelow = routeTable[0][0];
+    int leftBelow = routeTable[0][2];
+    bool rightBelowIsNull;
+    bool leftBelowIsNull;
+
+
+    if (rightBelow == -1)
+      rightBelowIsNull = true;
+    if (leftBelow == -1)
+      leftBelowIsNull = true;
+
+
+    ///the simple SWEB routing algorithm
+    if (routeTable[0][1] != -1)
+      return routeTable[0][1];
+    else if ((!rightBelowIsNull) && (!leftBelowIsNull)) {
+      if (dist(rightBelow, id) < dist(leftBelow, id))
+        return rightBelow;
+      else 
+        return leftBelow;
+    }
+    else if (!rightBelowIsNull)
+      return rightBelow;
+    else if (!leftBelowIsNull)
+      return leftBelow;
+    else 
+      return 0;
+
+
+  }
+  else ///route to head node of cluster
+  {
+      return routeTable[1][1];
+  }
 
 }
 

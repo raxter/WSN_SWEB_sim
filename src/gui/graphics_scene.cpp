@@ -21,6 +21,21 @@ namespace GUI
 
 GraphicsScene::GraphicsScene(const Simulator::SensorNetwork * sensorNetwork, const Simulator::DiscreteSimulator * simulator) : QGraphicsScene(), swebLines(0) , sensorNetwork(sensorNetwork), incomingSignalList(simulator->getSignalList()) {
   
+   packetTypeColours[Simulator::PacketTypes::NoType]        = Qt::gray;
+   packetTypeColours[Simulator::PacketTypes::Init]          = Qt::red;
+   packetTypeColours[Simulator::PacketTypes::GrpInit]       = Qt::darkRed;
+   packetTypeColours[Simulator::PacketTypes::EnergyReq]     = Qt::cyan;
+   packetTypeColours[Simulator::PacketTypes::EnergySend]    = Qt::blue;
+   packetTypeColours[Simulator::PacketTypes::DataReq]       = Qt::darkGreen;
+   packetTypeColours[Simulator::PacketTypes::DataSend]      = Qt::white;
+   packetTypeColours[Simulator::PacketTypes::HeadReAlloc]   = Qt::yellow;
+   
+   sensorNodeNetworkStateColours[Simulator::Node::SensorLayers::Layers::NetworkUninitialised] = Qt::red;
+   sensorNodeNetworkStateColours[Simulator::Node::SensorLayers::Layers::InitialisingGroup]    = Qt::yellow;
+   sensorNodeNetworkStateColours[Simulator::Node::SensorLayers::Layers::HeadReAlloc]          = Qt::blue;
+   sensorNodeNetworkStateColours[Simulator::Node::SensorLayers::Layers::HeadReAllocWait]      = Qt::cyan;
+   sensorNodeNetworkStateColours[Simulator::Node::SensorLayers::Layers::Running]              = Qt::green;
+   
   
   this->setItemIndexMethod(QGraphicsScene::NoIndex);
   
@@ -175,16 +190,7 @@ void GraphicsScene::updateScene() {
     if (node->type == Simulator::Node::DiscreteSim::Sensor) {
       const Simulator::Node::SensorLayers::Layers* sensor = dynamic_cast<const Simulator::Node::SensorLayers::Layers*>(node);
       //NetworkUninitialised, InitialisingGroup, HeadReAlloc, HeadReAllocWait, Running
-      if (sensor->currentNetworkState == Simulator::Node::SensorLayers::Layers::NetworkUninitialised)
-        backPolyItem->setBrush(QBrush(Qt::red));
-      if (sensor->currentNetworkState == Simulator::Node::SensorLayers::Layers::InitialisingGroup)
-        backPolyItem->setBrush(QBrush(Qt::yellow));
-      if (sensor->currentNetworkState == Simulator::Node::SensorLayers::Layers::HeadReAlloc)
-        backPolyItem->setBrush(QBrush(Qt::blue));
-      if (sensor->currentNetworkState == Simulator::Node::SensorLayers::Layers::HeadReAllocWait)
-        backPolyItem->setBrush(QBrush(Qt::gray));
-      if (sensor->currentNetworkState == Simulator::Node::SensorLayers::Layers::Running)
-        backPolyItem->setBrush(QBrush(Qt::green));
+      backPolyItem->setBrush(QBrush(sensorNodeNetworkStateColours[sensor->currentNetworkState]));
         
     }
       
@@ -244,13 +250,15 @@ void GraphicsScene::updateScene() {
       if (index >= signalLines.size()) { /* index is out of range of lines*/
         /* create more lines */
         //qDebug() << "creating line";
-        signalLines.append(addLine ( 0,0,0,0 , getPen(Qt::yellow) ));
+        signalLines.append(addLine ( 0,0,0,0 , getPen(Qt::white) ));
       }
       
       QGraphicsLineItem * lineItem = signalLines[index];
     
       const Simulator::Signal& signal = signalList[index];
       lineItem->setLine (signal.src->x(), signal.src->y(), signal.dst->x(), signal.dst->y());
+      
+      lineItem->setPen(getPen(packetTypeColours[signal.type]));
       lineItem->setVisible(true);
     }
     else /* index is out of range of signals*/

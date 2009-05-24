@@ -17,7 +17,8 @@ namespace BaseStationLayers
 
 
 Network::Network(){
-
+  toSendTo = 1;
+  networkInitialisation_timeout = 40;
 }
 
 Network::~Network(){
@@ -36,10 +37,43 @@ void Network::networkLayerLogic (){
   if (linkLayerInitialised) {
     if (currentNetworkState == WaitingForReply) {
       if (receivedPacket && receivedPacket->type == PacketTypes::DataSend)
+        networkInitialisation_timer = currentTime + networkInitialisation_timeout;
         nextNetworkState = Running;
     }
-    if (currentNetworkState == NetworkUninitialised)
+    if (currentNetworkState == NetworkUninitialised) {
+      networkInitialisation_timer = currentTime + networkInitialisation_timeout;
       nextNetworkState = Running;
+    }
+    if (currentNetworkState == Running) {
+    
+      //std::cout << "current time slot " << getCurrentTimeSlot() << std::endl;
+      if (!inTimeSlot()) {
+        networkInitialisation_timer++;
+        
+        //std::cout << "not in timeslot" << std::endl;
+      }
+      else {
+      
+        //std::cout << "in timeslot" << std::endl;
+      }
+      
+      //std::cout << currentTime << " > " << networkInitialisation_timer << std::endl;
+      if (currentTime > networkInitialisation_timer) {
+      
+        Packet::DataReq* dataReq = new Packet::DataReq(500, *this, toSendTo);
+        //std::cout << "creating " << toSend << std::endl;
+        outgoingPacketQueue.push_back(dataReq);
+        
+        toSendTo++;
+        
+        if (toSendTo > maxNumberOfIds)
+          toSendTo = 1;
+          
+          
+        nextNetworkState = WaitingForReply;
+      }
+    }
+      
     //if (currentNetworkState == Running && nextNetworkState == Initialised) {
       // FIXME outgoingPackets.push_back(new Packet::DataReq(this, 10/*dstId*/));
     //  nextNetworkState = WaitingForReply;

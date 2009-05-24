@@ -54,6 +54,7 @@ void Link::linkLayerLogic (){
       //distToBase = 
       threshDegree = packet->threshValue;
       maxNumberOfSectors = packet->maxSector;
+      numberOfSectors = packet->maxSector+1;
       threshId = calcThresh(packet->threshValue, receivedPacketDistance);
       grpId = calcGroupId(threshId, sectorId, maxNumberOfSectors+1);
       maxNumberOfGroups = calcMaxNumberOfGroup(packet->threshValue, packet->sendStrength, maxNumberOfSectors);

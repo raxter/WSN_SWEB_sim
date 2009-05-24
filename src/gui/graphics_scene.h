@@ -59,7 +59,9 @@ class GraphicsScene : public QGraphicsScene {
 
   /* TODO generalise all these to a class and just have one nodeToGraphicsObjects hash*/
   QVector<const Simulator::Node::DiscreteSim *> sensorNetworkNodes;
-  
+
+  QHash<Simulator::PacketTypes::Type, QColor> packetTypeColours;
+  QHash<Simulator::Node::SensorLayers::Layers::NetworkState, QColor> sensorNodeNetworkStateColours;
 
   QHash<const Simulator::Node::DiscreteSim *, QGraphicsPolygonItem *>  polyHash;
   QHash<const Simulator::Node::DiscreteSim *, QGraphicsPolygonItem *>  backPolyHash;

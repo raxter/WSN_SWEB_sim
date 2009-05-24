@@ -11,7 +11,10 @@
 #include "../packets/init.h"
 #include "../packets/grp_init.h"
 #include "../packets/energy_req.h"
+#include "../packets/energy_send.h"
 #include "../packets/data_req.h"
+#include "../packets/data_send.h"
+#include "../packets/head_realloc.h"
 
 namespace WSN
 {
@@ -53,6 +56,7 @@ class DiscreteSim : public BaseNode {
   virtual void wrapUpPhase ();
   
   bool inTimeSlot(int estimatedMs = 0);
+  int getCurrentTimeSlot(int estimatedMs = 0);
   
   private: /* methods */
 
@@ -65,13 +69,14 @@ class DiscreteSim : public BaseNode {
   int receivedPacketDistance;
   const BasePacket * receivedPacket;
 
-  protected: /* variables */
-  unsigned long long currentTime;
-  int timeSlotId;
   
   int maxNumberOfIds;
   int maxNumberOfSectors;
   int maxNumberOfGroups;
+  
+  protected: /* variables */
+  unsigned long long currentTime;
+  int timeSlotId;
   
   /* physical layer -> link layer info*/
   /* physical layer -> network layer info*/

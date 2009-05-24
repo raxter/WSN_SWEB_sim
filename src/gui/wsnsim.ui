@@ -166,7 +166,7 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
-            <widget class="QSpinBox" name="spinBox">
+            <widget class="QSpinBox" name="msSpinBox">
              <property name="minimum">
               <number>1</number>
              </property>

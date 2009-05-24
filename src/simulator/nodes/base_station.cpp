@@ -26,12 +26,6 @@ BaseStation::~BaseStation() {
 }
 
 
-int BaseStation::getNextHop() const {
-
-  return 10; /*FIXME*/
-
-}
-
 
 void BaseStation::setUpPhase () {
   //std::cout << "in BaseStation::setUpPhase ()" << std::endl;

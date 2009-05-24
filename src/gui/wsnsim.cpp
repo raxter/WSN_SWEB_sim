@@ -82,9 +82,12 @@ WSNsim::~WSNsim ()
 
 void WSNsim::incrementTimeStep() {
   
-  graphicsScene->signalList.clear();
-  for (int i = 0 ; i < 40 ; i++)
+    graphicsScene->signalList.clear();
+  for (int i = 0 ; i < msSpinBox->value() ; i++) /*FIXME, muxt rather pass the number to the simulator so that it'l do the loop in it's thread, not this one (which locks up the gui)*/ {
+    
     simulator->incrementTimeStep();
+    
+  }
     
 }
 

@@ -24,11 +24,12 @@ namespace Simulator
 
 struct Signal {
   
-  Signal(Node::BaseNode * src = 0, Node::BaseNode * dst = 0, int amountSent = -1, const BasePacket * finishedPacket = 0) : 
+  Signal(Node::BaseNode * src = 0, Node::BaseNode * dst = 0, int amountSent = -1, const BasePacket * finishedPacket = 0, PacketTypes::Type type = PacketTypes::NoType) : 
       src(src), 
       dst(dst), 
       amountSent (amountSent), 
-      finishedPacket(finishedPacket)
+      finishedPacket(finishedPacket),
+      type(type)
   {
     //std::cout << "finishedPacket " << finishedPacket << std::endl;
   }
@@ -37,6 +38,7 @@ struct Signal {
   Node::BaseNode * dst;
   int amountSent;
   const BasePacket * finishedPacket;
+  PacketTypes::Type type;
   
 };
 

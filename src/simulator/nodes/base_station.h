@@ -28,8 +28,6 @@ class BaseStation : public PhysicalLayer, public BaseStationLayers::Link, public
     void wrapUpPhase ();
     
   public: /* overridden methods */
-  
-    int getNextHop() const; /* FIXME should this even be in the base class? */
 
 };
 

@@ -36,7 +36,7 @@ BaseNode::~BaseNode(){
 }
 
 
-double BaseNode::dist(int id1, int id2) {
+double BaseNode::dist(int id1, int id2) const {
   const BaseNode * n1 = sensorNetwork->getNodeWithId(id1);
   const BaseNode * n2 = sensorNetwork->getNodeWithId(id2);
 

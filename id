@@ -1,0 +1,16 @@
+src/gui/graphics_scene.cpp:  this->setItemIndexMethod(QGraphicsScene::NoIndex);
+src/gui/graphics_scene.cpp:  this->setBackgroundBrush(QBrush(Qt::black));
+src/gui/graphics_scene.cpp:  this->setForegroundBrush(QBrush(Qt::white,0));
+src/gui/graphics_scene.cpp:    this->destroyItemGroup ( swebLines );
+src/gui/graphics_scene.cpp:  swebLines = this->createItemGroup (items);
+src/gui/graphics_view.cpp:  this->scale ( 1.0/zoom, 1.0/zoom );
+src/gui/graphics_view.cpp:  this->scale ( zoom, zoom );
+src/gui/wsnsim.cpp:  this->setCentralWidget(graphicsView);
+src/simulation_logic.txt:      this->receivedPacket = receivedPacket
+src/simulation_logic.txt:      this->receivedPacketStrength = receivedPacketStrength
+src/simulation_logic.txt:          outgoingPacketQueue.append(Packet(GPR_INIT to d with strength this->maxStrength))
+src/simulator/nodes/base_node.cpp:  this->sensorNetwork = sensorNetwork;
+src/simulator/nodes/base_node.cpp:  return sqrt(pow(otherSensor->_x-this->_x,2) + pow(otherSensor->_y-this->_y,2) );
+src/simulator/nodes/discrete_sim.cpp:DiscreteSim::DiscreteSim() : type(this->type) {
+src/simulator/nodes/sensor_layers/link.cpp:      std::cout << "this->id = " << id << std::endl;
+src/simulator/nodes/sensor_layers/network.cpp:  return this->id == routeTable[1][1];

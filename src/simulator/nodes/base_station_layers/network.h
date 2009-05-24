@@ -47,7 +47,9 @@ class Network : virtual public DiscreteSim, virtual public Layers {
 
 
   protected: /* variables */
-  
+  int toSendTo;
+  long long networkInitialisation_timer;
+  int networkInitialisation_timeout;
   
   private: /* variables */
 

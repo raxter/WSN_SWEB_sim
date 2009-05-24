@@ -41,17 +41,27 @@ DiscreteSim::DiscreteSim() : type(this->type) {
 
 }
 
+int DiscreteSim::getCurrentTimeSlot(int estimatedMs) {
 
-bool DiscreteSim::inTimeSlot(int estimatedMs) {
+  //if (id == 0 ) std::cout << "=========" << std::endl;
   int numberOfIds = maxNumberOfIds+1;
   
+  //if (id == 0 ) std::cout << numberOfIds << std::endl;
   int period = 40;//ms
   
   int oneWindow = numberOfIds*period;
+  //if (id == 0 ) std::cout << oneWindow << std::endl;
   
   int positionInWindow = currentTime%oneWindow;
+  //if (id == 0 ) std::cout << positionInWindow << std::endl;
   
   int currentSlot = positionInWindow/period;
+  //if (id == 0 ) std::cout << currentSlot << std::endl;
+
+  return currentSlot;
+}
+
+bool DiscreteSim::inTimeSlot(int estimatedMs) { /*TODO work in estimated time thing*/
   
   
   
@@ -69,7 +79,7 @@ bool DiscreteSim::inTimeSlot(int estimatedMs) {
   
   //else
   
-  return currentSlot == id;
+  return getCurrentTimeSlot() == id;
 }
 
 /****************************************************************************

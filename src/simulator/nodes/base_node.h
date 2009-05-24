@@ -44,10 +44,8 @@ class BaseNode {
   protected: /* methods */
 
 
-    double dist(int id1, int id2);
+    double dist(int id1, int id2) const;
     const Simulator::SensorNetwork * sensorNetwork;
-
-    virtual int getNextHop() const = 0; // returns id
 
   public: /* variables */
 

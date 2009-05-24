@@ -22,6 +22,8 @@ DiscreteSimulator::DiscreteSimulator(SensorNetwork * sensorNetwork) : sensorNetw
   
   Q_FOREACH (Node::BaseNode * node, nodes) {
   
+    //if (dynamic_cast<Node::DiscreteSim*>(node)->type == Node::DiscreteSim::BaseStation)
+      //continue;
     idToNode[node->id] = node;
     
     int sectorId = sensorNetwork->getSlice(node->x(), node->y());
@@ -86,32 +88,57 @@ void DiscreteSimulator::incrementTimeStep() {
     Node::PhysicalLayer * physicsLayer = dynamic_cast<Node::PhysicalLayer*>(nodes[n]);
     const BasePacket* bp = physicsLayer->getCurrentSendingPacket();
     if (bp) {
-      if (bp->type == PacketTypes::Init) {
-        const Packet::Init * initPacket = dynamic_cast<const Packet::Init*>(bp);
-        emit logEvent(QString("InitPacket send from from node %1 to sector %2").arg(bp->srcId).arg(initPacket->dstSectorId));
-        //qDebug() << QString("InitPacket send from from node %1 to sector %2").arg(bp->srcId).arg(initPacket->dstSectorId);
+      //const Packet::EnergyReq * energyReqPacket = dynamic_cast<const Packet::EnergyReq*>(bp);
+      
+      if (bp->dstId != -1) { // single send
+      
+        emit logEvent(QString("Single send type %1 from node %2 to node %3").arg(bp->type).arg(bp->srcId).arg(bp->dstId));
+        //if (bp->srcId != bp->dstId)
+          signalList.append(Signal(idToNode[bp->srcId], idToNode[bp->dstId], physicsLayer->bitsOfPacketSent, (physicsLayer->packetSendingFinished?bp:0), bp->type));
+      
+      }
+      else if (bp->dstGrpId != -1) { //group send
+        emit logEvent(QString("Group send type %1 from node %2 to group %3").arg(bp->type).arg(bp->srcId).arg(bp->dstGrpId));
         
-        Q_FOREACH(Node::BaseNode * node, sectorIdToNodeList[initPacket->dstSectorId]) {
-          signalList.append(Signal(idToNode[bp->srcId], idToNode[node->id], physicsLayer->bitsOfPacketSent, (physicsLayer->packetSendingFinished?bp:0)));
-          
-        //emit logEvent(QString("signal send from from node %1 to node %2").arg(bp->srcId).arg(node->id));
+        //std::vector<int>&  groupNodeIds = dynamic_cast<Node::SensorLayers::Network*>(idToNode[bp->srcId])->groupNodeIds;
+        Q_FOREACH(Node::BaseNode * node, groupIdToNodeList[bp->dstGrpId]) {
+          if (bp->srcId != node->id)
+            signalList.append(Signal(idToNode[bp->srcId], idToNode[node->id], physicsLayer->bitsOfPacketSent, (physicsLayer->packetSendingFinished?bp:0), bp->type));
         }
       }
-      else { //if (bp->type == PacketTypes::EnergyReq) {
-        //const Packet::EnergyReq * energyReqPacket = dynamic_cast<const Packet::EnergyReq*>(bp);
-        if (bp->dstId == -1) { //group send
-          emit logEvent(QString("Group send type %1 from node %2 to group %3").arg(bp->type).arg(bp->srcId).arg(bp->dstGrpId));
+      else { // other type of send
+        if (bp->type == PacketTypes::Init) { // sector send
+          const Packet::Init * initPacket = dynamic_cast<const Packet::Init*>(bp);
+          emit logEvent(QString("InitPacket send from node %1 to sector %2").arg(bp->srcId).arg(initPacket->dstSectorId));
+          //qDebug() << QString("InitPacket send from from node %1 to sector %2").arg(bp->srcId).arg(initPacket->dstSectorId);
           
-          //std::vector<int>&  groupNodeIds = dynamic_cast<Node::SensorLayers::Network*>(idToNode[bp->srcId])->groupNodeIds;
-          Q_FOREACH(Node::BaseNode * node, groupIdToNodeList[bp->dstGrpId]) {
-            signalList.append(Signal(idToNode[bp->srcId], idToNode[node->id], physicsLayer->bitsOfPacketSent, (physicsLayer->packetSendingFinished?bp:0)));
+          Q_FOREACH(Node::BaseNode * node, sectorIdToNodeList[initPacket->dstSectorId]) {
+            signalList.append(Signal(idToNode[bp->srcId], idToNode[node->id], physicsLayer->bitsOfPacketSent, (physicsLayer->packetSendingFinished?bp:0), bp->type));
+            
+            //emit logEvent(QString("signal send from from node %1 to node %2").arg(bp->srcId).arg(node->id));
           }
         }
-        else {
-          emit logEvent(QString("Single send type %1 from node %2 to node %3").arg(bp->type).arg(bp->srcId).arg(bp->dstId));
+        else if (bp->type == PacketTypes::HeadReAlloc) {  // send to surrounding groups
+          const Packet::HeadReAlloc * reallocPacket = dynamic_cast<const Packet::HeadReAlloc*>(bp);
+          emit logEvent(QString("HeadReAlloc send from node %1 its group's (grp %2) surrounding groups").arg(bp->srcId).arg(reallocPacket->srcGrpId));
           
-          signalList.append(Signal(idToNode[bp->srcId], idToNode[bp->dstId], physicsLayer->bitsOfPacketSent, (physicsLayer->packetSendingFinished?bp:0)));
-        
+          QVector<int> groups;
+          groups.append(reallocPacket->srcGrpId);
+          groups.append(reallocPacket->srcGrpId + 1);
+          groups.append(reallocPacket->srcGrpId - 1);
+          groups.append(reallocPacket->srcGrpId + sensorNetwork->numberOfSectors);
+          groups.append(reallocPacket->srcGrpId + sensorNetwork->numberOfSectors + 1);
+          groups.append(reallocPacket->srcGrpId + sensorNetwork->numberOfSectors - 1);
+          groups.append(reallocPacket->srcGrpId - sensorNetwork->numberOfSectors);
+          groups.append(reallocPacket->srcGrpId - sensorNetwork->numberOfSectors + 1);
+          groups.append(reallocPacket->srcGrpId - sensorNetwork->numberOfSectors - 1);
+          
+          Q_FOREACH(int groupId, groups) {
+            Q_FOREACH(Node::BaseNode * node, groupIdToNodeList[groupId]) {
+              if (bp->srcId != node->id)
+                signalList.append(Signal(idToNode[bp->srcId], idToNode[node->id], physicsLayer->bitsOfPacketSent, (physicsLayer->packetSendingFinished?bp:0), bp->type));
+            }
+          }
         }
       }
     }
@@ -124,6 +151,11 @@ void DiscreteSimulator::incrementTimeStep() {
     physicsLayer->receivingState = Node::PhysicalLayer::Receiving;
    
     discreteSim->receivedPacketDistance = SensorNetwork::dist(signal.dst->x(), signal.dst->y(), signal.src->x(), signal.src->y());
+    
+    /*if (signal.dst->id == 1)
+      qDebug() << "signal sent to 1";
+    if (signal.src->id == 14)
+      qDebug() << "signal sent from 14";*/
     if (signal.finishedPacket) {
       discreteSim->receivedPacket = signal.finishedPacket;
     }
@@ -145,6 +177,15 @@ void DiscreteSimulator::incrementTimeStep() {
   //case 5: wrapUpPhase();                break;
   for (int n = 0 ; n < nodes.size() ; n++)
     nodes[n]->doNextPhaseOfTimeStep();
+    
+  
+  
+  /*Q_FOREACH (const Signal & signal, signalList) {
+    if (signal.finishedPacket) {
+      delete signal.finishedPacket;
+    }
+    
+  }*/
     
   _currentTime++;
   
