@@ -90,6 +90,13 @@ void PhysicalLayer::physicalLayerSendLogic () {
 
           //printf("energyRemaining%.10f\n",energyRemaining);
           //std::cout << depletedTransTax<<std::endl<<depletedCircuitryTax<<std::endl <<receivedPacketDistance <<std::endl << energyRemaining<<std::endl;
+          
+          if (currentSendingPacket->type == PacketTypes::DataSend) {
+            
+            Packet::DataSend * dataSendPacket = const_cast<Packet::DataSend*>(dynamic_cast<const Packet::DataSend*>(currentSendingPacket));
+            dataSendPacket->energyUsed += depletedCircuitryTax + depletedTransTax;
+            
+          }
         }
         nextState = Phy_Sending;
         hardwareIsSending = true;

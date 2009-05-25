@@ -64,6 +64,7 @@ WSNsim::WSNsim ()
   connect (simulator, SIGNAL(timeUpdated ( int )), currentTimeLabel, SLOT(setNum( int )));
   
   connect (simulator, SIGNAL(tick ( )), graphicsScene, SLOT(updateScene( )));
+  connect (simulator, SIGNAL(tick ( )), this, SLOT(recordAndDisplay( )));
   
   connect (simulator, SIGNAL(logEvent ( const QString & )) , logTextEdit, SLOT (append ( const QString & )));
   
@@ -71,6 +72,12 @@ WSNsim::WSNsim ()
 }
 
 
+
+
+void WSNsim::recordAndDisplay( ) {
+
+  //resultsTextEdit->append( QString::number(simulator->getAverageBatteryLife()));
+}
 
 
 /****************************************************************************

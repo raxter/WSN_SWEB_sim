@@ -86,6 +86,7 @@ class DiscreteSimulator : public QThread  {
   void incrementTimeStep();
 
   public: /* methods */
+  double getAverageBatteryLife();
   void requestStopRunning();
 
   unsigned long currentTime();

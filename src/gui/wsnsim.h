@@ -37,6 +37,7 @@ class WSNsim : public QMainWindow, private Ui::WSNsim
   private slots: 
 
   void incrementTimeStep();
+  void recordAndDisplay( );
 
 
   private: /* methods */

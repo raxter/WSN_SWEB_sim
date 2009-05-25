@@ -137,14 +137,15 @@ void Network::networkLayerLogic (){
         DEBUG("type DataReq"); 
         int nextHopId = getNextHop();
         
-        outgoingPacketQueue.push_back(new Packet::DataSend(dist(nextHopId, id), *this, nextHopId, id));
+        outgoingPacketQueue.push_back(new Packet::DataSend(dist(nextHopId, id), *this, nextHopId, id, 1, 0));
       }
       if (receivedPacket->type == PacketTypes::DataSend) {
+        DEBUG("type DataSend"); 
       
         int nextHopId = getNextHop();
         
         const Packet::DataSend * dataSendPacket = dynamic_cast<const Packet::DataSend*>(receivedPacket);
-        outgoingPacketQueue.push_back(new Packet::DataSend(dist(nextHopId, id), *this, nextHopId, dataSendPacket->origSrcId));
+        outgoingPacketQueue.push_back(new Packet::DataSend(dist(nextHopId, id), *this, nextHopId, dataSendPacket->origSrcId, dataSendPacket->energyUsed, dataSendPacket->hops+1));
       }
     }
     

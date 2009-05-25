@@ -37,6 +37,8 @@ void Network::networkLayerLogic (){
   if (linkLayerInitialised) {
     if (currentNetworkState == WaitingForReply) {
       if (receivedPacket && receivedPacket->type == PacketTypes::DataSend) {
+        const Packet::DataSend * dataSendPacket = dynamic_cast<const Packet::DataSend*>(receivedPacket);
+        std::cout << dataSendPacket->hops << "\t" << dataSendPacket->energyUsed << std::endl;
         networkInitialisation_timer = currentTime + networkInitialisation_timeout;
         nextNetworkState = Running;
       }

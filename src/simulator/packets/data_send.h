@@ -16,9 +16,11 @@ class DataSend : public BasePacket {
 
   public:
 
-    DataSend (int sendStrength, const Node::BaseNode& node, int dstId, int origSrcId);
+    DataSend (int sendStrength, const Node::BaseNode& node, int dstId, int origSrcId, int energyUsed, int hops);
     ~DataSend ();
     
+    int energyUsed;
+    int hops;
   
     const int origSrcId;
 };

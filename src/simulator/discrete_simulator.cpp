@@ -202,6 +202,17 @@ void DiscreteSimulator::incrementTimeStep() {
 }
 
 
+double DiscreteSimulator::getAverageBatteryLife() {
+
+  double ret = 0;
+  for (int n = 0 ; n < nodes.size() ; n++)
+    ret += nodes[n]->energyRemaining;
+    
+  ret /= nodes.size();
+  
+  return ret;
+}
+
 /****************************************************************************
 **
 ** Author: Richard Baxter
