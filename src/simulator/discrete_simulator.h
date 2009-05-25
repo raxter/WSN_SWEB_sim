@@ -67,6 +67,7 @@ class DiscreteSimulator : public QThread  {
   void logEvent( const QString & event );
   void finishedTimeStep (const QVector<Simulator::Signal>& list);
   void tick( );
+  void clearSignals();
   
   void timeUpdated ( int time );
   
@@ -75,6 +76,8 @@ class DiscreteSimulator : public QThread  {
   //void lock();
   //void unlock();
   
+  
+  void setSpeed( int sp );
   void limitedTimeSimulation( int ms);
   void startSimulation();
   void stopSimulation();
@@ -109,7 +112,7 @@ class DiscreteSimulator : public QThread  {
   bool running;
   QMutex control;
   
-  qreal speed; /* ms/s */
+  int speed; /* ms/s */
   int stepsToRun; /* ms */
   
   SensorNetwork * sensorNetwork;

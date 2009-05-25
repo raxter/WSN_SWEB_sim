@@ -228,18 +228,30 @@ void DiscreteSimulator::requestStopRunning() {
 }
 
 
+void DiscreteSimulator::setSpeed( int sp) {
+  control.lock();
+  //doLimitedSimulation = true;
+  speed = sp;
+  control.unlock();
+}
 
 void DiscreteSimulator::limitedTimeSimulation( int ms) {
-  doLimitedSimulation = true;
+  control.lock();
+  //doLimitedSimulation = true;
   stepsToRun = ms;
+  control.unlock();
 }
 
 void DiscreteSimulator::startSimulation() {
+  control.lock();
   doSimulation = true;
+  control.unlock();
 }
 
 void DiscreteSimulator::stopSimulation(){
+  control.lock();
   doSimulation = false;
+  control.unlock();
 }
 
 /****************************************************************************
@@ -251,7 +263,7 @@ void DiscreteSimulator::stopSimulation(){
 void DiscreteSimulator::run() {
 
   control.lock();
-  speed = 0; /* ms/s */
+  speed = 5; /* ms/s */
   stepsToRun = 4040; /* ms */
   running = true;
   while(running) {
@@ -264,11 +276,15 @@ void DiscreteSimulator::run() {
       
       if((_currentTime-40)%stepsToRun == 0) {
       
-        msleep(100);
-        emit tick();
-        doSimulation = false;
+        //msleep(10);
+        emit clearSignals();
+        //doSimulation = false;
       }
-      msleep(0);
+      
+      if((_currentTime-40)%40 == 0) {
+        emit tick();
+      }
+      msleep(speed);
       emit timeUpdated(_currentTime);
         
       //qDebug() << _currentTime;

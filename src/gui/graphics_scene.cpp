@@ -54,6 +54,7 @@ GraphicsScene::~GraphicsScene() {
 
 }
 
+
 /****************************************************************************
 **
 ** Author: Richard Baxter
@@ -182,6 +183,7 @@ void GraphicsScene::setHighlightNodeValue(int highlightNodeValue) {
 
 void GraphicsScene::clearSignals( ) {
 
+  signalSet.clear();
 }
 void GraphicsScene::incomingSignalList( const QVector<Simulator::Signal>& list) {
 
@@ -227,45 +229,8 @@ void GraphicsScene::updateScene(int nothing ) {
       backPolyItem->setVisible(true);
   
     
-    
-  
-    /*QGraphicsLineItem * sendingLine = sendingLines[node];
-    sendingLine->setVisible(false);
-    QGraphicsPolygonItem * sendingBlob = sendingBlobs[node];
-    sendingBlob->setVisible(false);*/
-    /* TODO */
-    /*switch(node->state()) {
-    
-      case Simulator::Node::Receiving:
-        polyItem->setBrush(QBrush(Qt::red));
-        break;
-        
-      case Simulator::Node::Sending:
-        polyItem->setBrush(QBrush(Qt::blue));
-        sendingLine->setVisible(true);
-        sendingLine->setLine (node->getOtherNode()->x(), node->getOtherNode()->y(),  node->x(), node->y());
-        
-        sendingBlob->setVisible(true);
-        sendingBlob->setPos ( sendingLine->line().pointAt ( node->getPercentageDone() ) );
-        break;
-      
-      case Simulator::Node::Idle:      
-        polyItem->setBrush(QBrush(Qt::gray));
-      break;
-      
-      case Simulator::Node::OutOfEnergy:      
-        polyItem->setBrush(QBrush(Qt::black));
-      break;
-      
-      case Simulator::Node::ReadyToSend:      
-        polyItem->setBrush(QBrush(Qt::green));
-      break;
-      
-    
-    
-    }*/
-    
   }
+  
   
   QList<GraphicsSignal> signalList = signalSet.keys ();
   for (int index = 0 ;; index++) {
@@ -275,9 +240,9 @@ void GraphicsScene::updateScene(int nothing ) {
       //break;
     
     
-    if (index < signalList.size()) { /* index is in range of signals*/
-      if (index >= signalLines.size()) { /* index is out of range of lines*/
-        /* create more lines */
+    if (index < signalList.size()) { //* index is in range of signals
+      if (index >= signalLines.size()) { // index is out of range of lines
+        // create more lines 
         //qDebug() << "creating line";
         signalLines.append(addLine ( 0,0,0,0 , getPen(Qt::white) ));
         
@@ -295,8 +260,8 @@ void GraphicsScene::updateScene(int nothing ) {
       lineItem->setPen(getPen(packetTypeColours[signal.type]));
       lineItem->setVisible(true);
     }
-    else /* index is out of range of signals*/
-      if (index < signalLines.size())/* index is out of range of lines*/
+    else // index is out of range of signals
+      if (index < signalLines.size())// index is out of range of lines
         signalLines[index]->setVisible(false);
       else
         break;
@@ -308,7 +273,6 @@ void GraphicsScene::updateScene(int nothing ) {
   
   //qDebug() << "updateScene end";
   //signalList.clear();
-  signalSet.clear();
 }
 
 

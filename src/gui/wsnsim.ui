@@ -226,9 +226,9 @@
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
-             <widget class="QRadioButton" name="radioButton_3">
+             <widget class="QRadioButton" name="limitedSpeedRadioButton">
               <property name="text">
-               <string>Fast as possible</string>
+               <string>Speed</string>
               </property>
               <property name="checked">
                <bool>true</bool>
@@ -236,28 +236,15 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="limitedSpeedRadioButton">
-              <property name="text">
-               <string>Limited Speed</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QWidget" name="speedWidget" native="true">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
               <layout class="QHBoxLayout" name="horizontalLayout_3">
                <item>
-                <widget class="QDoubleSpinBox" name="doubleSpinBox">
+                <widget class="QSpinBox" name="speedSpinBox">
                  <property name="minimum">
-                  <double>0.010000000000000</double>
+                  <number>1</number>
                  </property>
                  <property name="maximum">
-                  <double>100000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>1.000000000000000</double>
+                  <number>1000</number>
                  </property>
                 </widget>
                </item>

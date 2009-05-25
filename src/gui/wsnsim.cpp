@@ -48,6 +48,9 @@ WSNsim::WSNsim ()
   
   connect (highlightSpinBox, SIGNAL(valueChanged ( int )), graphicsScene, SLOT(setHighlightNodeValue(int)));
   
+  connect (msSpinBox, SIGNAL(valueChanged ( int )), simulator, SLOT(limitedTimeSimulation(int)));
+  
+  connect (speedSpinBox, SIGNAL(valueChanged ( int )), simulator, SLOT(setSpeed(int)));
   //connect (highlightSpinBox, SIGNAL(valueChanged ( int )), graphicsScene, SLOT(updateScene( int )));
   
   connect (stepButton, SIGNAL(released ()), this, SLOT(incrementTimeStep()));
@@ -55,7 +58,7 @@ WSNsim::WSNsim ()
   //connect (graphicsScene, SIGNAL(releaseNetworkNodesLock()), simulator, SLOT(unlock()));
   
   
-  connect (simulator, SIGNAL(tick ( )), graphicsScene, SLOT(clearSignals( )),Qt::DirectConnection);
+  connect (simulator, SIGNAL(clearSignals ( )), graphicsScene, SLOT(clearSignals( )),Qt::DirectConnection);
   connect (simulator, SIGNAL(finishedTimeStep ( const QVector<Simulator::Signal>& )), graphicsScene, SLOT(incomingSignalList( const QVector<Simulator::Signal>& )),Qt::DirectConnection);
   
   connect (simulator, SIGNAL(timeUpdated ( int )), currentTimeLabel, SLOT(setNum( int )));

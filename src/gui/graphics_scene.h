@@ -3,6 +3,7 @@
 
 
 #include <QDebug>
+#include <QThread>
 #include <QHash>
 #include <QMap>
 #include <QSet>
@@ -64,7 +65,7 @@ struct GraphicsSignal{
   
 };
 
-class GraphicsScene : public QGraphicsScene {
+class GraphicsScene : public QGraphicsScene  {
   Q_OBJECT
 
   public: /* class specifc*/
@@ -97,8 +98,12 @@ class GraphicsScene : public QGraphicsScene {
   qreal penWidth;
   QPen getPen(const QColor& c, qreal width = -1);
   
+  bool running;
+  void run();
 
   protected: /* event handlers */
+  
+  
 
   void wheelEvent ( QGraphicsSceneWheelEvent * wheelEvent );
 

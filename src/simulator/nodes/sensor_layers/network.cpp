@@ -18,7 +18,7 @@ namespace SensorLayers
 
 Network::Network() {
   InitialisingGroup_timeout = 40;
-  HeadReAlloc_timeout = 200;
+  HeadReAlloc_timeout = 600;
   for (int i = 0 ; i < 3 ; i++)
     for (int j = 0 ; j < 3 ; j++)
       routeTable[i][j] = -1;
@@ -195,6 +195,7 @@ void Network::networkLayerLogic (){
       while(!groupEnergies.empty()) groupEnergies.pop();
       
       
+      HeadReAlloc_timer = currentTime + HeadReAlloc_timeout;
         
       DEBUG("Headnode transfer " << routeTable[1][1] << " -> " << newHead);
       routeTable[1][1] = newHead;
