@@ -45,9 +45,9 @@ class BaseNode {
 
 
     double dist(int id1, int id2) const;
-    const Simulator::SensorNetwork * sensorNetwork;
 
   public: /* variables */
+    const Simulator::SensorNetwork * sensorNetwork;
 
     long long energyRemaining;
     int id; // this node's id, if id == -1 it means undefined

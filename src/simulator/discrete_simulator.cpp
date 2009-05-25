@@ -15,7 +15,7 @@ namespace Simulator
 **
 ****************************************************************************/
 
-DiscreteSimulator::DiscreteSimulator(SensorNetwork * sensorNetwork) : sensorNetwork(sensorNetwork), _currentTime(0),running(false) {
+DiscreteSimulator::DiscreteSimulator(SensorNetwork * sensorNetwork) : sensorNetwork(sensorNetwork), _currentTime(0),running(false), doSimulation(false) {
 
 
   nodes = QVector<Node::DiscreteSim *>::fromStdVector (sensorNetwork->getSimNodePointers()); /* FIXME, still deciding whether this should be a class variable or not*/ 
@@ -135,6 +135,8 @@ void DiscreteSimulator::incrementTimeStep() {
           
           Q_FOREACH(int groupId, groups) {
             Q_FOREACH(Node::BaseNode * node, groupIdToNodeList[groupId]) {
+            
+                
               if (bp->srcId != node->id)
                 signalList.append(Signal(idToNode[bp->srcId], idToNode[node->id], physicsLayer->bitsOfPacketSent, (physicsLayer->packetSendingFinished?bp:0), bp->type));
             }
@@ -159,13 +161,12 @@ void DiscreteSimulator::incrementTimeStep() {
     if (signal.finishedPacket) {
       discreteSim->receivedPacket = signal.finishedPacket;
     }
-    
   }
     
   //case 2: physicalLayerReceiveLogic();  break;
   for (int n = 0 ; n < nodes.size() ; n++)
     nodes[n]->doNextPhaseOfTimeStep();
-    
+  
   //case 3: linkLayerLogic();             break;
   for (int n = 0 ; n < nodes.size() ; n++)
     nodes[n]->doNextPhaseOfTimeStep();
@@ -180,17 +181,23 @@ void DiscreteSimulator::incrementTimeStep() {
     
   
   
-  /*Q_FOREACH (const Signal & signal, signalList) {
+  QSet<const BasePacket*> toDelete;
+  Q_FOREACH (const Signal & signal, signalList) {
     if (signal.finishedPacket) {
-      delete signal.finishedPacket;
+      toDelete.insert(signal.finishedPacket);
     }
-    
-  }*/
+  }
+  
+  Q_FOREACH (const BasePacket* packet, toDelete) {
+    delete packet;
+  }
     
   _currentTime++;
   
   control.unlock();
-  emit finishedTimeStep ();
+  //qDebug() << "about to emit finishedTimeStep";
+  emit finishedTimeStep (signalList);
+  //qDebug() << "emited finishedTimeStep";
 
 }
 
@@ -201,14 +208,14 @@ void DiscreteSimulator::incrementTimeStep() {
 **
 ****************************************************************************/
 
-const QVector<Signal>& DiscreteSimulator::getSignalList() const {
-  return signalList;
+//const QVector<Signal>& DiscreteSimulator::getSignalList() const {
+//  return signalList;
 
-}
+//}
 
 
-void DiscreteSimulator::lock()  { control.lock();   }
-void DiscreteSimulator::unlock(){ control.unlock(); }
+//void DiscreteSimulator::lock()  { control.lock();   }
+//void DiscreteSimulator::unlock(){ control.unlock(); }
 
 /****************************************************************************
 **
@@ -220,6 +227,21 @@ void DiscreteSimulator::requestStopRunning() {
   running = false;
 }
 
+
+
+void DiscreteSimulator::limitedTimeSimulation( int ms) {
+  doLimitedSimulation = true;
+  stepsToRun = ms;
+}
+
+void DiscreteSimulator::startSimulation() {
+  doSimulation = true;
+}
+
+void DiscreteSimulator::stopSimulation(){
+  doSimulation = false;
+}
+
 /****************************************************************************
 **
 ** Author: Richard Baxter
@@ -229,12 +251,33 @@ void DiscreteSimulator::requestStopRunning() {
 void DiscreteSimulator::run() {
 
   control.lock();
-  speed = 10; /* ms/s */
-  stepsToRun = 10; /* ms */
+  speed = 0; /* ms/s */
+  stepsToRun = 4040; /* ms */
   running = true;
   while(running) {
   
     control.unlock();
+    
+    if (doSimulation || (doLimitedSimulation && stepsToRun > 0)) {
+    
+      incrementTimeStep();
+      
+      if((_currentTime-40)%stepsToRun == 0) {
+      
+        msleep(100);
+        emit tick();
+        doSimulation = false;
+      }
+      msleep(0);
+      emit timeUpdated(_currentTime);
+        
+      //qDebug() << _currentTime;
+      
+      /*if (stepsToRun > 0)
+        stepsToRun --;
+      else
+        doLimitedSimulation = false;*/
+    }
     //control.lock();
   
     
@@ -243,6 +286,7 @@ void DiscreteSimulator::run() {
       incrementTimeStep();
       stepsToRun--;
     }*/
+    
     
     control.lock();
   }

@@ -34,7 +34,7 @@ WSNsim::WSNsim ()
   
   sensorNetwork = new Simulator::SensorNetwork(100,100,100); /* FIXME paramaterise these 100's*/
   simulator = new Simulator::DiscreteSimulator(sensorNetwork);
-  graphicsScene = new GraphicsScene(sensorNetwork, simulator);
+  graphicsScene = new GraphicsScene(sensorNetwork);
   
   
   graphicsView->setScene ( graphicsScene );
@@ -43,11 +43,24 @@ WSNsim::WSNsim ()
   //connect (animator, SIGNAL(tick ()), graphicsScene, SLOT(updateScene()));
   //animator->start();
   
-  connect (stepButton, SIGNAL(released ()), this, SLOT(incrementTimeStep()));
-  connect (graphicsScene, SIGNAL(aquireNetworkNodesLock()), simulator, SLOT(lock()));
-  connect (graphicsScene, SIGNAL(releaseNetworkNodesLock()), simulator, SLOT(unlock()));
+  connect (startButton, SIGNAL(released ( )), simulator, SLOT(startSimulation()));
+  connect (stopButton, SIGNAL(released ( )), simulator, SLOT(stopSimulation()));
   
-  connect (simulator, SIGNAL(finishedTimeStep ()), graphicsScene, SLOT(updateScene()));
+  connect (highlightSpinBox, SIGNAL(valueChanged ( int )), graphicsScene, SLOT(setHighlightNodeValue(int)));
+  
+  //connect (highlightSpinBox, SIGNAL(valueChanged ( int )), graphicsScene, SLOT(updateScene( int )));
+  
+  connect (stepButton, SIGNAL(released ()), this, SLOT(incrementTimeStep()));
+  //connect (graphicsScene, SIGNAL(aquireNetworkNodesLock()), simulator, SLOT(lock()));
+  //connect (graphicsScene, SIGNAL(releaseNetworkNodesLock()), simulator, SLOT(unlock()));
+  
+  
+  connect (simulator, SIGNAL(tick ( )), graphicsScene, SLOT(clearSignals( )),Qt::DirectConnection);
+  connect (simulator, SIGNAL(finishedTimeStep ( const QVector<Simulator::Signal>& )), graphicsScene, SLOT(incomingSignalList( const QVector<Simulator::Signal>& )),Qt::DirectConnection);
+  
+  connect (simulator, SIGNAL(timeUpdated ( int )), currentTimeLabel, SLOT(setNum( int )));
+  
+  connect (simulator, SIGNAL(tick ( )), graphicsScene, SLOT(updateScene( )));
   
   connect (simulator, SIGNAL(logEvent ( const QString & )) , logTextEdit, SLOT (append ( const QString & )));
   
@@ -82,12 +95,13 @@ WSNsim::~WSNsim ()
 
 void WSNsim::incrementTimeStep() {
   
-    graphicsScene->signalList.clear();
-  for (int i = 0 ; i < msSpinBox->value() ; i++) /*FIXME, muxt rather pass the number to the simulator so that it'l do the loop in it's thread, not this one (which locks up the gui)*/ {
+  
+  simulator->limitedTimeSimulation( msSpinBox->value() );
+  //for (int i = 0 ; i < msSpinBox->value() ; i++) /*FIXME, muxt rather pass the number to the simulator so that it'l do the loop in it's thread, not this one (which locks up the gui)*/ {
     
-    simulator->incrementTimeStep();
+  //  simulator->incrementTimeStep();
     
-  }
+  //}
     
 }
 

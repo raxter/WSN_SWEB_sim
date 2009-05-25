@@ -36,9 +36,10 @@ void Network::networkLayerLogic (){
   //std::cout << "in BaseStationLayers::Network::networkLayerLogic ()" << std::endl;
   if (linkLayerInitialised) {
     if (currentNetworkState == WaitingForReply) {
-      if (receivedPacket && receivedPacket->type == PacketTypes::DataSend)
+      if (receivedPacket && receivedPacket->type == PacketTypes::DataSend) {
         networkInitialisation_timer = currentTime + networkInitialisation_timeout;
         nextNetworkState = Running;
+      }
     }
     if (currentNetworkState == NetworkUninitialised) {
       networkInitialisation_timer = currentTime + networkInitialisation_timeout;

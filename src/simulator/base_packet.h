@@ -13,6 +13,7 @@ namespace Simulator
 namespace PacketTypes
 {
   enum Type {NoType, Init, GrpInit, EnergyReq, EnergySend, DataReq, DataSend, HeadReAlloc};
+  const int numberOfTypes = 8;
 }
 
 /* TODO make const */

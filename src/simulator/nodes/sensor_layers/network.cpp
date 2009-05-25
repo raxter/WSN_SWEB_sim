@@ -18,7 +18,7 @@ namespace SensorLayers
 
 Network::Network() {
   InitialisingGroup_timeout = 40;
-  HeadReAlloc_timeout = 1000;
+  HeadReAlloc_timeout = 200;
   for (int i = 0 ; i < 3 ; i++)
     for (int j = 0 ; j < 3 ; j++)
       routeTable[i][j] = -1;
@@ -40,7 +40,7 @@ void Network::proxied_setUpPhase () {
 }
 
 
-#define DEBUG(x) if (this->id == 96 || this->id == 30) {if (this->id == 30) std::cout << "\t\t\t\t\t\t\t\t"; std::cout << "id = " << id << " | " << x << std::endl;}
+#define DEBUG(x) if (false/*this->id == 64 || this->id == 30*/) {if (this->id == 30) std::cout << "\t\t\t\t\t\t\t\t"; std::cout << "id = " << id << " | " << x << std::endl;}
 
 void Network::networkLayerLogic (){
   //DEBUG("in SensorLayers::Network::networkLayerLogic ()");
@@ -188,7 +188,7 @@ void Network::networkLayerLogic (){
         
         
         DEBUG("sending realloc - setting to " << newHead);
-        if (newHead != id)
+        //if (newHead != id)
           outgoingPacketQueue.push_back(new Packet::HeadReAlloc(a, *this, grpId, newHead));
         
       }
@@ -227,6 +227,13 @@ void Network::networkLayerLogic (){
     DEBUG("became HeadNode");
     HeadReAlloc_timer = currentTime + HeadReAlloc_timeout;
   }
+  
+  /*if (id == 95) {
+    std::cout << id << std::endl;
+
+    for (int i = 0 ; i < 3 ; i++)
+      std::cout << routeTable[i][0] << " \t " << routeTable[i][1] << " \t " << routeTable[i][2] << std::endl;
+  }*/
 }
 
 

@@ -59,6 +59,7 @@ public:
   public: /* variables */
     int numberOfSectors;
 
+    int numberOfNodes;
 
   private: /* variables */
 
@@ -68,7 +69,6 @@ public:
     double scanAngle;
     double threshDegree;
 
-    int numberOfNodes;
     int numberOfClusters; /*TODO what's this do? - rax*/
 };
 

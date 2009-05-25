@@ -2,7 +2,6 @@
 
 #include "graphics_scene.h"
 
-#include <QDebug>
 
 
 namespace WSN
@@ -19,7 +18,7 @@ namespace GUI
 **
 ****************************************************************************/
 
-GraphicsScene::GraphicsScene(const Simulator::SensorNetwork * sensorNetwork, const Simulator::DiscreteSimulator * simulator) : QGraphicsScene(), swebLines(0) , sensorNetwork(sensorNetwork), incomingSignalList(simulator->getSignalList()) {
+GraphicsScene::GraphicsScene(const Simulator::SensorNetwork * sensorNetwork) : QGraphicsScene(), swebLines(0) , sensorNetwork(sensorNetwork) {
   
    packetTypeColours[Simulator::PacketTypes::NoType]        = Qt::gray;
    packetTypeColours[Simulator::PacketTypes::Init]          = Qt::red;
@@ -170,6 +169,9 @@ QPolygonF GraphicsScene::makeCircle(qint32 segments, qreal radius) {
 }
 
 
+void GraphicsScene::setHighlightNodeValue(int highlightNodeValue) {
+  this->highlightNodeValue = highlightNodeValue;
+}
 
 /****************************************************************************
 **
@@ -177,9 +179,26 @@ QPolygonF GraphicsScene::makeCircle(qint32 segments, qreal radius) {
 **
 ****************************************************************************/
 
-void GraphicsScene::updateScene() {
 
-  emit aquireNetworkNodesLock();
+void GraphicsScene::clearSignals( ) {
+
+}
+void GraphicsScene::incomingSignalList( const QVector<Simulator::Signal>& list) {
+
+  //Q_FOREACH(const Simulator::Signal& signal, list)
+  //  qDebug() << signal.src << ":" << signal.dst;
+  
+  
+  Q_FOREACH(const Simulator::Signal& signal, list) {
+  
+    signalSet[GraphicsSignal(signal)] = true;
+  }
+}
+
+void GraphicsScene::updateScene(int nothing ) {
+
+  //qDebug() << "updateScene start";
+  //emit aquireNetworkNodesLock();
 
   
   Q_FOREACH(const Simulator::Node::DiscreteSim * node, sensorNetworkNodes) {
@@ -190,6 +209,12 @@ void GraphicsScene::updateScene() {
     if (node->type == Simulator::Node::DiscreteSim::Sensor) {
       const Simulator::Node::SensorLayers::Layers* sensor = dynamic_cast<const Simulator::Node::SensorLayers::Layers*>(node);
       //NetworkUninitialised, InitialisingGroup, HeadReAlloc, HeadReAllocWait, Running
+      if (node->id == highlightNodeValue)
+        polyItem->setBrush(QBrush(Qt::red));
+      else
+        polyItem->setBrush(QBrush(Qt::white));
+        
+      
       backPolyItem->setBrush(QBrush(sensorNodeNetworkStateColours[sensor->currentNetworkState]));
         
     }
@@ -242,22 +267,31 @@ void GraphicsScene::updateScene() {
     
   }
   
-  signalList += incomingSignalList;
-  
+  QList<GraphicsSignal> signalList = signalSet.keys ();
   for (int index = 0 ;; index++) {
+    //qDebug() << index << ":" << signalList.size() << " to draw, " << signalLines.size() << "available";
       
+    //if (signalLines.size() > 500)
+      //break;
+    
+    
     if (index < signalList.size()) { /* index is in range of signals*/
       if (index >= signalLines.size()) { /* index is out of range of lines*/
         /* create more lines */
         //qDebug() << "creating line";
         signalLines.append(addLine ( 0,0,0,0 , getPen(Qt::white) ));
+        
+        //qDebug() << "creating line, size = " << signalLines.size();
+        
       }
       
       QGraphicsLineItem * lineItem = signalLines[index];
     
-      const Simulator::Signal& signal = signalList[index];
-      lineItem->setLine (signal.src->x(), signal.src->y(), signal.dst->x(), signal.dst->y());
+      //qDebug() << index << " out of " << signalList.size();
+      GraphicsSignal& signal = signalList[index];
       
+      lineItem->setLine (signal.pos[0], signal.pos[1], signal.pos[2], signal.pos[3]);
+      //qDebug() << signal.type;
       lineItem->setPen(getPen(packetTypeColours[signal.type]));
       lineItem->setVisible(true);
     }
@@ -272,7 +306,9 @@ void GraphicsScene::updateScene() {
     
   }
   
-  emit releaseNetworkNodesLock();
+  //qDebug() << "updateScene end";
+  //signalList.clear();
+  signalSet.clear();
 }
 
 

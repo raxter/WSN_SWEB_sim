@@ -27,8 +27,12 @@ Sensor::~Sensor() {
 
 int Sensor::getNextHop() const {
 
-  //for (int i = 0 ; i < 3 ; i++)
-  //  std::cout << routeTable[i][0] << " \t " << routeTable[i][1] << " \t " << routeTable[i][2] << std::endl;
+  /*if (id == 95) {
+    std::cout << id << std::endl;
+
+    for (int i = 0 ; i < 3 ; i++)
+      std::cout << routeTable[i][0] << " \t " << routeTable[i][1] << " \t " << routeTable[i][2] << std::endl;
+  }*/
 
   if (isHead()) ///route to next cluster head
   {
